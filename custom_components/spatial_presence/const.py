@@ -4,12 +4,15 @@ from pathlib import Path
 
 DOMAIN = "spatial_presence"
 DATA_STORE = "map_store"
+DATA_MANAGER = "presence_manager"
 FRONTEND_BASE_URL = "/spatial_presence"
 FRONTEND_URL = "/spatial_presence/spatial-presence-card.js"
 FRONTEND_PATH = Path(__file__).parent / "frontend" / "spatial-presence-card.js"
 STORAGE_KEY = f"{DOMAIN}.maps"
 STORAGE_VERSION = 1
 STORAGE_MINOR_VERSION = 1
+
+PLATFORMS = ["binary_sensor", "event", "sensor"]
 
 WS_MAP_GET = f"{DOMAIN}/map/get"
 WS_MAP_LIST = f"{DOMAIN}/map/list"

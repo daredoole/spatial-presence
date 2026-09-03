@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from datetime import UTC, datetime
+from collections.abc import Callable
 from typing import Any
 
 from homeassistant.core import HomeAssistant
@@ -24,6 +25,7 @@ class SpatialMapStore:
             minor_version=STORAGE_MINOR_VERSION,
         )
         self._data: dict[str, Any] = {"maps": {}}
+        self._listeners: list[Callable[[], None]] = []
 
     async def async_load(self) -> None:
         """Load maps from Home Assistant's atomic storage helper."""
@@ -54,6 +56,24 @@ class SpatialMapStore:
             )
         return result
 
+    def maps(self) -> dict[str, dict[str, Any]]:
+        """Return defensive copies of every stored map envelope."""
+        return deepcopy(self._data["maps"])
+
+    def add_listener(self, listener: Callable[[], None]) -> Callable[[], None]:
+        """Notify a runtime consumer after a stored map changes."""
+        self._listeners.append(listener)
+
+        def remove_listener() -> None:
+            if listener in self._listeners:
+                self._listeners.remove(listener)
+
+        return remove_listener
+
+    def _notify_listeners(self) -> None:
+        for listener in tuple(self._listeners):
+            listener()
+
     async def async_save_map(
         self, map_id: str, config: Any, title: str | None = None
     ) -> dict[str, Any]:
@@ -79,6 +99,7 @@ class SpatialMapStore:
         }
         self._data["maps"][map_id] = envelope
         await self._store.async_save(self._data)
+        self._notify_listeners()
         return {"map_id": map_id, **self._metadata(envelope)}
 
     async def async_restore_previous(self, map_id: str) -> dict[str, Any]:
@@ -102,6 +123,7 @@ class SpatialMapStore:
         }
         self._data["maps"][map_id] = restored
         await self._store.async_save(self._data)
+        self._notify_listeners()
         return {"map_id": map_id, **self._metadata(restored)}
 
     @staticmethod

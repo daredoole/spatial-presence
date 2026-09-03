@@ -23,6 +23,24 @@ export function localTargetToFloor(
   };
 }
 
+export function calibrateRadarFromReference(
+  sensor: RadarSensor,
+  localXmm: number,
+  localYmm: number,
+  reference: Point,
+): { heading: number; pixelsPerMeter: number } | undefined {
+  const localDistanceMm = Math.hypot(localXmm, localYmm);
+  const floorDistance = Math.hypot(reference.x - sensor.x, reference.y - sensor.y);
+  if (localDistanceMm < 100 || floorDistance < 1) return undefined;
+
+  const localAngle = Math.atan2(-localYmm, localXmm);
+  const floorAngle = Math.atan2(reference.y - sensor.y, reference.x - sensor.x);
+  return {
+    heading: normalizeHeading((floorAngle - localAngle) / DEG_TO_RAD),
+    pixelsPerMeter: (floorDistance * 1000) / localDistanceMm,
+  };
+}
+
 export function coverageSectorPath(
   sensor: RadarSensor,
   pixelsPerMeter: number,
@@ -100,4 +118,3 @@ export function clientToFloorPoint(
 function clamp(value: number, minimum: number, maximum: number): number {
   return Math.min(maximum, Math.max(minimum, value));
 }
-

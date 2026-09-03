@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0-alpha.3 — unreleased
+
+- Add push-based native occupancy, target-count and enter/leave event entities
+  for every named room and non-exclusion zone.
+- Project up to nine ESPHome LD2450 targets per radar into floor coordinates,
+  with unit normalization and exclusion-zone filtering.
+- Keep unavailable radar sources distinct from an empty room.
+- Add configurable stationary-zone occupancy hold and live map reloads.
+- Add guided one-reference radar calibration for position, heading and scale.
+
 ## 0.1.0-alpha.2 — unreleased
 
 - Add validated, authenticated Home Assistant map storage websocket commands.

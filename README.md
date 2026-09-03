@@ -5,8 +5,9 @@ Assistant. Draw or trace floors, place mmWave sensors, calibrate their heading,
 and turn anonymous target coordinates into useful room and zone occupancy.
 
 > Early development preview. The map card, LD2450 adapter, geometry engine,
-> graphical editor, validated backend storage and HACS integration packaging
-> are functional foundations; live multi-radar fusion is roadmap work.
+> graphical editor, validated backend storage, native occupancy entities and
+> HACS integration packaging are functional foundations; cross-radar target
+> fusion remains roadmap work.
 
 ## Why this project
 
@@ -18,7 +19,8 @@ silently clone either project. See [the product decision](docs/PRODUCT_PLAN.md)
 and [the interoperability RFC](docs/RFC-0001-SPATIAL-MAP.md).
 Supported field mappings and conversion limits are documented in
 [INTEROPERABILITY.md](docs/INTEROPERABILITY.md); backend commands are documented
-in [BACKEND_API.md](docs/BACKEND_API.md).
+in [BACKEND_API.md](docs/BACKEND_API.md), and native derived entities in
+[ENTITY_MODEL.md](docs/ENTITY_MODEL.md).
 
 ## Current preview
 
@@ -29,7 +31,12 @@ in [BACKEND_API.md](docs/BACKEND_API.md).
 - Auto-discover ESPHome LD2450 `target_N_x` / `target_N_y` entity families.
 - Drag radars, rotate them in one-degree or fifteen-degree steps, and render
   three confidence bands instead of a misleading precision triangle.
+- Calibrate radar position, heading and floor scale from one live target at a
+  known point on the floorplan.
 - Live target trails and optional temperature/humidity in the inspector.
+- Create native occupancy, target-count and enter/leave event entities for
+  every room and detection zone; exclusion zones suppress false detections and
+  stationary zones can hold occupancy after a target disappears.
 - Versioned Spatial Map JSON Schema with migration-ready versions.
 - Admin-only integration storage with bounded input validation, map revisions
   and one-step rollback; dashboard JSON export remains available.

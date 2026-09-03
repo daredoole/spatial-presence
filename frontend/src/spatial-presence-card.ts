@@ -15,6 +15,7 @@ import {
   importRadarMapManager,
 } from "./interoperability";
 import {
+  calibrateRadarFromReference,
   clientToFloorPoint,
   coverageSectorPath,
   normalizeHeading,
@@ -33,12 +34,18 @@ import type {
   ViewBox,
 } from "./types";
 
-const CARD_VERSION = "0.1.0-alpha.2";
+const CARD_VERSION = "0.1.0-alpha.3";
 
 type DrawingTool = "pan" | "wall" | "room" | "zone";
 type DragState =
   | { kind: "pan"; clientX: number; clientY: number; view: ViewBox }
   | { kind: "sensor"; sensorId: string };
+type CalibrationState = {
+  sensorId: string;
+  targetIndex?: number;
+  step: "place" | "reference" | "done";
+  message?: string;
+};
 
 const EMPTY_HASS: HomeAssistant = { states: {} };
 
@@ -55,6 +62,7 @@ export class SpatialPresenceCard extends LitElement {
     _draftPoints: { state: true },
     _showCoverage: { state: true },
     _showTrails: { state: true },
+    _calibration: { state: true },
   };
 
   hass: HomeAssistant = EMPTY_HASS;
@@ -67,6 +75,7 @@ export class SpatialPresenceCard extends LitElement {
   private _draftPoints: Point[] = [];
   private _showCoverage = true;
   private _showTrails = true;
+  private _calibration: CalibrationState | undefined;
   private _drag: DragState | undefined;
   private _pointerMoved = false;
   private _trails = new Map<string, RadarTarget[]>();
@@ -81,6 +90,7 @@ export class SpatialPresenceCard extends LitElement {
       title: "Spatial presence",
       auto_discover: true,
       target_trail_seconds: 8,
+      stationary_hold_seconds: 30,
       floors: [defaultFloor()],
     };
   }
@@ -378,9 +388,83 @@ export class SpatialPresenceCard extends LitElement {
                 />
               </label>
               <small>${floor.pixels_per_meter} canvas px per metre</small>
+              ${this._renderCalibration(runtime, floor)}
             `
           : nothing}
       </aside>
+    `;
+  }
+
+  private _renderCalibration(runtime: RadarRuntime, floor: Floor): TemplateResult {
+    const calibration = this._calibration;
+    if (!calibration || calibration.sensorId !== runtime.sensor.id) {
+      return html`
+        <div class="calibration-start">
+          <button type="button" @click=${() => this._startCalibration(runtime.sensor)}>
+            Calibrate placement
+          </button>
+          <small>Align the floor scale and radar direction with one live reference point.</small>
+        </div>
+      `;
+    }
+
+    if (calibration.step === "place") {
+      return html`
+        <div class="calibration-panel" role="group" aria-label="Radar calibration step 1">
+          <strong>Place the radar</strong>
+          <p>Drag the radar marker to its exact physical location on this floor.</p>
+          <div class="calibration-actions">
+            <button
+              type="button"
+              ?disabled=${runtime.targets.length === 0}
+              @click=${() => this._beginReferenceStep(runtime)}
+            >Radar is placed</button>
+            <button type="button" @click=${this._cancelCalibration}>Cancel</button>
+          </div>
+          ${runtime.targets.length === 0
+            ? html`<small>A live target is required for the next step.</small>`
+            : html`<small>${runtime.targets.length} live target${runtime.targets.length === 1 ? "" : "s"} available.</small>`}
+        </div>
+      `;
+    }
+
+    if (calibration.step === "reference") {
+      return html`
+        <div class="calibration-panel" role="group" aria-label="Radar calibration step 2">
+          <strong>Mark the person’s location</strong>
+          <p>Have one person stand at a recognizable spot, choose their target, then click that spot on the floorplan.</p>
+          <label>
+            <span>Live target</span>
+            <select @change=${this._calibrationTargetChanged}>
+              ${runtime.targets.map(
+                (target) => html`<option
+                  value=${target.index}
+                  ?selected=${target.index === calibration.targetIndex}
+                >Target ${target.index} · ${(Math.hypot(target.localXmm, target.localYmm) / 1000).toFixed(2)} m</option>`,
+              )}
+            </select>
+          </label>
+          <div class="calibration-actions">
+            <button type="button" @click=${() => (this._calibration = { ...calibration, step: "place" })}>Back</button>
+            <button type="button" @click=${this._cancelCalibration}>Cancel</button>
+          </div>
+          ${calibration.message
+            ? html`<small class="calibration-error">${calibration.message}</small>`
+            : nothing}
+          <small>Current scale: ${floor.pixels_per_meter.toFixed(1)} px/m</small>
+        </div>
+      `;
+    }
+
+    return html`
+      <div class="calibration-panel calibration-done" role="status">
+        <strong>Calibration applied</strong>
+        <p>${calibration.message}</p>
+        <div class="calibration-actions">
+          <button type="button" @click=${() => this._startCalibration(runtime.sensor)}>Calibrate again</button>
+          <button type="button" @click=${this._cancelCalibration}>Done</button>
+        </div>
+      </div>
     `;
   }
 
@@ -442,11 +526,17 @@ export class SpatialPresenceCard extends LitElement {
       const sensorId = sensorElement.dataset.sensor;
       if (!sensorId) return;
       this._selectedSensorId = sensorId;
-      if (this.editorMode && this._tool === "pan") {
+      if (
+        this.editorMode &&
+        this._tool === "pan" &&
+        this._calibration?.step !== "reference"
+      ) {
         this._drag = { kind: "sensor", sensorId };
       }
       return;
     }
+
+    if (this._calibration?.step === "reference") return;
 
     if (this._tool === "pan") {
       this._drag = {
@@ -498,7 +588,7 @@ export class SpatialPresenceCard extends LitElement {
   }
 
   private _mapClick(event: MouseEvent): void {
-    if (!this.editorMode || this._tool === "pan" || this._pointerMoved) return;
+    if (!this.editorMode || this._pointerMoved) return;
     const svgElement = event.currentTarget as SVGSVGElement;
     const point = clientToFloorPoint(
       event.clientX,
@@ -506,6 +596,11 @@ export class SpatialPresenceCard extends LitElement {
       svgElement.getBoundingClientRect(),
       this._view,
     );
+    if (this._calibration?.step === "reference") {
+      this._applyCalibration(point);
+      return;
+    }
+    if (this._tool === "pan") return;
     this._draftPoints = [...this._draftPoints, point];
   }
 
@@ -537,6 +632,85 @@ export class SpatialPresenceCard extends LitElement {
   private _rotateSensor(sensor: RadarSensor, delta: number): void {
     this._updateSensor(sensor, { heading: normalizeHeading(sensor.heading + delta) });
   }
+
+  private _startCalibration(sensor: RadarSensor): void {
+    this._tool = "pan";
+    this._draftPoints = [];
+    this._calibration = { sensorId: sensor.id, step: "place" };
+  }
+
+  private _beginReferenceStep(runtime: RadarRuntime): void {
+    const first = runtime.targets[0];
+    if (!first) return;
+    this._calibration = {
+      sensorId: runtime.sensor.id,
+      targetIndex: first.index,
+      step: "reference",
+    };
+  }
+
+  private _calibrationTargetChanged(event: Event): void {
+    if (!this._calibration) return;
+    this._calibration = {
+      ...this._calibration,
+      targetIndex: Number((event.target as HTMLSelectElement).value),
+    };
+  }
+
+  private _applyCalibration(reference: Point): void {
+    const floor = this._floor;
+    const calibration = this._calibration;
+    if (!floor || !calibration || calibration.step !== "reference") return;
+    const runtime = this._runtimes.find(
+      (entry) => entry.sensor.id === calibration.sensorId,
+    );
+    const target = runtime?.targets.find(
+      (entry) => entry.index === calibration.targetIndex,
+    );
+    if (!runtime || !target) {
+      this._calibration = {
+        ...calibration,
+        message: "That live target disappeared. Choose a visible target and try again.",
+      };
+      return;
+    }
+    const result = calibrateRadarFromReference(
+      runtime.sensor,
+      target.localXmm,
+      target.localYmm,
+      reference,
+    );
+    if (!result) {
+      this._calibration = {
+        ...calibration,
+        message: "Use a reference point at least 10 cm from the radar.",
+      };
+      return;
+    }
+    const sensors = (floor.sensors ?? []).map((sensor) =>
+      sensor.id === runtime.sensor.id
+        ? { ...sensor, heading: result.heading }
+        : sensor,
+    );
+    if (!sensors.some((sensor) => sensor.id === runtime.sensor.id)) {
+      sensors.push({ ...runtime.sensor, heading: result.heading });
+    }
+    this._replaceFloor({
+      ...floor,
+      pixels_per_meter: result.pixelsPerMeter,
+      sensors,
+    });
+    this._emitConfig();
+    this._calibration = {
+      sensorId: runtime.sensor.id,
+      step: "done",
+      message: `Heading ${result.heading.toFixed(1)}° · scale ${result.pixelsPerMeter.toFixed(1)} px/m`,
+    };
+  }
+
+  private _cancelCalibration = (): void => {
+    this._calibration = undefined;
+  };
 
   private _updateSensor(
     sensor: RadarSensor,
@@ -906,6 +1080,36 @@ export class SpatialPresenceCard extends LitElement {
 
     .range-control input { width: 100%; accent-color: var(--sp-radar); }
 
+    .calibration-start {
+      display: grid;
+      gap: 6px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid color-mix(in srgb, var(--sp-ink) 14%, transparent);
+    }
+
+    .calibration-start button {
+      border-color: var(--sp-radar);
+      background: color-mix(in srgb, var(--sp-radar) 12%, white);
+      font-weight: 700;
+    }
+
+    .calibration-panel {
+      display: grid;
+      gap: 9px;
+      margin-top: 14px;
+      padding: 12px;
+      border-left: 4px solid var(--sp-radar);
+      background: color-mix(in srgb, var(--sp-radar) 8%, white);
+    }
+
+    .calibration-panel p { margin: 0; font-size: 13px; line-height: 1.4; }
+    .calibration-panel label { display: grid; gap: 4px; font-size: 12px; }
+    .calibration-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .calibration-actions button { flex: 1 1 auto; }
+    .calibration-error { color: var(--error-color, #b3261e) !important; }
+    .calibration-done { border-left-color: var(--sp-heading); }
+
     .map-empty {
       position: absolute;
       inset: 50% auto auto 50%;
@@ -1013,6 +1217,17 @@ export class SpatialPresenceCardEditor extends LitElement {
           />
         </label>
         <label>
+          <span>Stationary hold (seconds)</span>
+          <input
+            type="number"
+            min="0"
+            max="3600"
+            step="1"
+            .value=${String(this._config.stationary_hold_seconds ?? 30)}
+            @change=${this._stationaryHoldChanged}
+          />
+        </label>
+        <label>
           <span>Radar entity prefix</span>
           <input
             placeholder="ld2450_presence"
@@ -1096,6 +1311,13 @@ export class SpatialPresenceCardEditor extends LitElement {
     const value = Number((event.target as HTMLInputElement).value);
     if (Number.isFinite(value) && value > 0) {
       this._replaceFloor({ ...floor, pixels_per_meter: value });
+    }
+  }
+
+  private _stationaryHoldChanged(event: Event): void {
+    const value = Number((event.target as HTMLInputElement).value);
+    if (Number.isFinite(value) && value >= 0 && value <= 3600) {
+      this._commit({ ...this._config, stationary_hold_seconds: value });
     }
   }
 
@@ -1347,6 +1569,7 @@ function normalizeConfig(config: SpatialPresenceConfig): SpatialPresenceConfig {
     schema_version: "0.1",
     auto_discover: config.auto_discover !== false,
     target_trail_seconds: config.target_trail_seconds ?? 8,
+    stationary_hold_seconds: config.stationary_hold_seconds ?? 30,
     floors: config.floors.map((floor) => {
       const normalized = {
         ...floor,

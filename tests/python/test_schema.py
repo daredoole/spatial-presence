@@ -78,6 +78,20 @@ class MapValidationTests(unittest.TestCase):
                 with self.assertRaises(MapValidationError):
                     validate_map_id(value)
 
+    def test_validates_stationary_hold_bounds(self) -> None:
+        candidate = valid_map()
+        candidate["stationary_hold_seconds"] = 30
+        self.assertEqual(validate_map_config(candidate), candidate)
+        candidate["stationary_hold_seconds"] = 3601
+        with self.assertRaisesRegex(MapValidationError, "stationary_hold_seconds"):
+            validate_map_config(candidate)
+
+    def test_rejects_invalid_entity_prefix(self) -> None:
+        candidate = valid_map()
+        candidate["floors"][0]["sensors"][0]["entity_prefix"] = "sensor.Bad prefix"
+        with self.assertRaisesRegex(MapValidationError, "entity_prefix"):
+            validate_map_config(candidate)
+
     def test_rejects_missing_default_floor(self) -> None:
         candidate = valid_map()
         candidate["default_floor"] = "basement"

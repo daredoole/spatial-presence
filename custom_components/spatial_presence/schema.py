@@ -9,6 +9,7 @@ import re
 from typing import Any
 
 MAP_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
+ENTITY_PREFIX_PATTERN = re.compile(r"^(?:sensor\.)?[a-z0-9_]+$")
 MAX_MAP_BYTES = 2_000_000
 MAX_FLOORS = 12
 MAX_PATHS_PER_FLOOR = 5_000
@@ -86,6 +87,13 @@ def validate_map_config(candidate: Any) -> dict[str, Any]:
         value = _finite_number(trail_seconds, "target_trail_seconds")
         if not 0 <= value <= 300:
             raise MapValidationError("target_trail_seconds must be between 0 and 300")
+    hold_seconds = candidate.get("stationary_hold_seconds")
+    if hold_seconds is not None:
+        value = _finite_number(hold_seconds, "stationary_hold_seconds")
+        if not 0 <= value <= 3600:
+            raise MapValidationError(
+                "stationary_hold_seconds must be between 0 and 3600"
+            )
 
     return deepcopy(candidate)
 
@@ -133,6 +141,22 @@ def _validate_sensors(candidate: Any, path: str) -> None:
         if sensor_id in ids:
             raise MapValidationError(f"Duplicate sensor id in {path}: {sensor_id}")
         ids.add(sensor_id)
+        name = sensor.get("name")
+        if name is not None and (
+            not isinstance(name, str) or not name.strip() or len(name) > 128
+        ):
+            raise MapValidationError(
+                f"{sensor_path}.name must be a non-empty string up to 128 characters"
+            )
+        prefix = sensor.get("entity_prefix")
+        if prefix is not None and (
+            not isinstance(prefix, str)
+            or len(prefix) > 255
+            or not ENTITY_PREFIX_PATTERN.fullmatch(prefix)
+        ):
+            raise MapValidationError(
+                f"{sensor_path}.entity_prefix must be a valid sensor entity prefix"
+            )
         _coordinate(sensor.get("x"), f"{sensor_path}.x")
         _coordinate(sensor.get("y"), f"{sensor_path}.y")
         _finite_number(sensor.get("heading"), f"{sensor_path}.heading")

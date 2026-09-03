@@ -1,5 +1,5 @@
-const W = globalThis, at = W.ShadowRoot && (W.ShadyCSS === void 0 || W.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, lt = /* @__PURE__ */ Symbol(), gt = /* @__PURE__ */ new WeakMap();
-let It = class {
+const q = globalThis, at = q.ShadowRoot && (q.ShadyCSS === void 0 || q.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, lt = /* @__PURE__ */ Symbol(), ft = /* @__PURE__ */ new WeakMap();
+let Rt = class {
   constructor(t, e, s) {
     if (this._$cssResult$ = !0, s !== lt) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
     this.cssText = t, this.t = e;
@@ -9,7 +9,7 @@ let It = class {
     const e = this.t;
     if (at && t === void 0) {
       const s = e !== void 0 && e.length === 1;
-      s && (t = gt.get(e)), t === void 0 && ((this.o = t = new CSSStyleSheet()).replaceSync(this.cssText), s && gt.set(e, t));
+      s && (t = ft.get(e)), t === void 0 && ((this.o = t = new CSSStyleSheet()).replaceSync(this.cssText), s && ft.set(e, t));
     }
     return t;
   }
@@ -17,54 +17,54 @@ let It = class {
     return this.cssText;
   }
 };
-const Kt = (i) => new It(typeof i == "string" ? i : i + "", void 0, lt), Rt = (i, ...t) => {
-  const e = i.length === 1 ? i[0] : t.reduce((s, r, o) => s + ((n) => {
+const Kt = (r) => new Rt(typeof r == "string" ? r : r + "", void 0, lt), Tt = (r, ...t) => {
+  const e = r.length === 1 ? r[0] : t.reduce((s, i, o) => s + ((n) => {
     if (n._$cssResult$ === !0) return n.cssText;
     if (typeof n == "number") return n;
     throw Error("Value passed to 'css' function must be a 'css' function result: " + n + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
-  })(r) + i[o + 1], i[0]);
-  return new It(e, i, lt);
-}, Qt = (i, t) => {
-  if (at) i.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
+  })(i) + r[o + 1], r[0]);
+  return new Rt(e, r, lt);
+}, Qt = (r, t) => {
+  if (at) r.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
   else for (const e of t) {
-    const s = document.createElement("style"), r = W.litNonce;
-    r !== void 0 && s.setAttribute("nonce", r), s.textContent = e.cssText, i.appendChild(s);
+    const s = document.createElement("style"), i = q.litNonce;
+    i !== void 0 && s.setAttribute("nonce", i), s.textContent = e.cssText, r.appendChild(s);
   }
-}, ft = at ? (i) => i : (i) => i instanceof CSSStyleSheet ? ((t) => {
+}, _t = at ? (r) => r : (r) => r instanceof CSSStyleSheet ? ((t) => {
   let e = "";
   for (const s of t.cssRules) e += s.cssText;
   return Kt(e);
-})(i) : i;
-const { is: Gt, defineProperty: te, getOwnPropertyDescriptor: ee, getOwnPropertyNames: se, getOwnPropertySymbols: ie, getPrototypeOf: re } = Object, J = globalThis, _t = J.trustedTypes, oe = _t ? _t.emptyScript : "", ne = J.reactiveElementPolyfillSupport, F = (i, t) => i, it = { toAttribute(i, t) {
+})(r) : r;
+const { is: Gt, defineProperty: te, getOwnPropertyDescriptor: ee, getOwnPropertyNames: se, getOwnPropertySymbols: ie, getPrototypeOf: re } = Object, K = globalThis, mt = K.trustedTypes, oe = mt ? mt.emptyScript : "", ne = K.reactiveElementPolyfillSupport, U = (r, t) => r, rt = { toAttribute(r, t) {
   switch (t) {
     case Boolean:
-      i = i ? oe : null;
+      r = r ? oe : null;
       break;
     case Object:
     case Array:
-      i = i == null ? i : JSON.stringify(i);
+      r = r == null ? r : JSON.stringify(r);
   }
-  return i;
-}, fromAttribute(i, t) {
-  let e = i;
+  return r;
+}, fromAttribute(r, t) {
+  let e = r;
   switch (t) {
     case Boolean:
-      e = i !== null;
+      e = r !== null;
       break;
     case Number:
-      e = i === null ? null : Number(i);
+      e = r === null ? null : Number(r);
       break;
     case Object:
     case Array:
       try {
-        e = JSON.parse(i);
+        e = JSON.parse(r);
       } catch {
         e = null;
       }
   }
   return e;
-} }, Tt = (i, t) => !Gt(i, t), mt = { attribute: !0, type: String, converter: it, reflect: !1, useDefault: !1, hasChanged: Tt };
-Symbol.metadata ??= /* @__PURE__ */ Symbol("metadata"), J.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
+} }, Nt = (r, t) => !Gt(r, t), $t = { attribute: !0, type: String, converter: rt, reflect: !1, useDefault: !1, hasChanged: Nt };
+Symbol.metadata ??= /* @__PURE__ */ Symbol("metadata"), K.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
 let P = class extends HTMLElement {
   static addInitializer(t) {
     this._$Ei(), (this.l ??= []).push(t);
@@ -72,46 +72,46 @@ let P = class extends HTMLElement {
   static get observedAttributes() {
     return this.finalize(), this._$Eh && [...this._$Eh.keys()];
   }
-  static createProperty(t, e = mt) {
+  static createProperty(t, e = $t) {
     if (e.state && (e.attribute = !1), this._$Ei(), this.prototype.hasOwnProperty(t) && ((e = Object.create(e)).wrapped = !0), this.elementProperties.set(t, e), !e.noAccessor) {
-      const s = /* @__PURE__ */ Symbol(), r = this.getPropertyDescriptor(t, s, e);
-      r !== void 0 && te(this.prototype, t, r);
+      const s = /* @__PURE__ */ Symbol(), i = this.getPropertyDescriptor(t, s, e);
+      i !== void 0 && te(this.prototype, t, i);
     }
   }
   static getPropertyDescriptor(t, e, s) {
-    const { get: r, set: o } = ee(this.prototype, t) ?? { get() {
+    const { get: i, set: o } = ee(this.prototype, t) ?? { get() {
       return this[e];
     }, set(n) {
       this[e] = n;
     } };
-    return { get: r, set(n) {
-      const l = r?.call(this);
+    return { get: i, set(n) {
+      const l = i?.call(this);
       o?.call(this, n), this.requestUpdate(t, l, s);
     }, configurable: !0, enumerable: !0 };
   }
   static getPropertyOptions(t) {
-    return this.elementProperties.get(t) ?? mt;
+    return this.elementProperties.get(t) ?? $t;
   }
   static _$Ei() {
-    if (this.hasOwnProperty(F("elementProperties"))) return;
+    if (this.hasOwnProperty(U("elementProperties"))) return;
     const t = re(this);
     t.finalize(), t.l !== void 0 && (this.l = [...t.l]), this.elementProperties = new Map(t.elementProperties);
   }
   static finalize() {
-    if (this.hasOwnProperty(F("finalized"))) return;
-    if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(F("properties"))) {
+    if (this.hasOwnProperty(U("finalized"))) return;
+    if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(U("properties"))) {
       const e = this.properties, s = [...se(e), ...ie(e)];
-      for (const r of s) this.createProperty(r, e[r]);
+      for (const i of s) this.createProperty(i, e[i]);
     }
     const t = this[Symbol.metadata];
     if (t !== null) {
       const e = litPropertyMetadata.get(t);
-      if (e !== void 0) for (const [s, r] of e) this.elementProperties.set(s, r);
+      if (e !== void 0) for (const [s, i] of e) this.elementProperties.set(s, i);
     }
     this._$Eh = /* @__PURE__ */ new Map();
     for (const [e, s] of this.elementProperties) {
-      const r = this._$Eu(e, s);
-      r !== void 0 && this._$Eh.set(r, e);
+      const i = this._$Eu(e, s);
+      i !== void 0 && this._$Eh.set(i, e);
     }
     this.elementStyles = this.finalizeStyles(this.styles);
   }
@@ -119,8 +119,8 @@ let P = class extends HTMLElement {
     const e = [];
     if (Array.isArray(t)) {
       const s = new Set(t.flat(1 / 0).reverse());
-      for (const r of s) e.unshift(ft(r));
-    } else t !== void 0 && e.push(ft(t));
+      for (const i of s) e.unshift(_t(i));
+    } else t !== void 0 && e.push(_t(t));
     return e;
   }
   static _$Eu(t, e) {
@@ -160,31 +160,31 @@ let P = class extends HTMLElement {
     this._$AK(t, s);
   }
   _$ET(t, e) {
-    const s = this.constructor.elementProperties.get(t), r = this.constructor._$Eu(t, s);
-    if (r !== void 0 && s.reflect === !0) {
-      const o = (s.converter?.toAttribute !== void 0 ? s.converter : it).toAttribute(e, s.type);
-      this._$Em = t, o == null ? this.removeAttribute(r) : this.setAttribute(r, o), this._$Em = null;
+    const s = this.constructor.elementProperties.get(t), i = this.constructor._$Eu(t, s);
+    if (i !== void 0 && s.reflect === !0) {
+      const o = (s.converter?.toAttribute !== void 0 ? s.converter : rt).toAttribute(e, s.type);
+      this._$Em = t, o == null ? this.removeAttribute(i) : this.setAttribute(i, o), this._$Em = null;
     }
   }
   _$AK(t, e) {
-    const s = this.constructor, r = s._$Eh.get(t);
-    if (r !== void 0 && this._$Em !== r) {
-      const o = s.getPropertyOptions(r), n = typeof o.converter == "function" ? { fromAttribute: o.converter } : o.converter?.fromAttribute !== void 0 ? o.converter : it;
-      this._$Em = r;
+    const s = this.constructor, i = s._$Eh.get(t);
+    if (i !== void 0 && this._$Em !== i) {
+      const o = s.getPropertyOptions(i), n = typeof o.converter == "function" ? { fromAttribute: o.converter } : o.converter?.fromAttribute !== void 0 ? o.converter : rt;
+      this._$Em = i;
       const l = n.fromAttribute(e, o.type);
-      this[r] = l ?? this._$Ej?.get(r) ?? l, this._$Em = null;
+      this[i] = l ?? this._$Ej?.get(i) ?? l, this._$Em = null;
     }
   }
-  requestUpdate(t, e, s, r = !1, o) {
+  requestUpdate(t, e, s, i = !1, o) {
     if (t !== void 0) {
       const n = this.constructor;
-      if (r === !1 && (o = this[t]), s ??= n.getPropertyOptions(t), !((s.hasChanged ?? Tt)(o, e) || s.useDefault && s.reflect && o === this._$Ej?.get(t) && !this.hasAttribute(n._$Eu(t, s)))) return;
+      if (i === !1 && (o = this[t]), s ??= n.getPropertyOptions(t), !((s.hasChanged ?? Nt)(o, e) || s.useDefault && s.reflect && o === this._$Ej?.get(t) && !this.hasAttribute(n._$Eu(t, s)))) return;
       this.C(t, e, s);
     }
     this.isUpdatePending === !1 && (this._$ES = this._$EP());
   }
-  C(t, e, { useDefault: s, reflect: r, wrapped: o }, n) {
-    s && !(this._$Ej ??= /* @__PURE__ */ new Map()).has(t) && (this._$Ej.set(t, n ?? e ?? this[t]), o !== !0 || n !== void 0) || (this._$AL.has(t) || (this.hasUpdated || s || (e = void 0), this._$AL.set(t, e)), r === !0 && this._$Em !== t && (this._$Eq ??= /* @__PURE__ */ new Set()).add(t));
+  C(t, e, { useDefault: s, reflect: i, wrapped: o }, n) {
+    s && !(this._$Ej ??= /* @__PURE__ */ new Map()).has(t) && (this._$Ej.set(t, n ?? e ?? this[t]), o !== !0 || n !== void 0) || (this._$AL.has(t) || (this.hasUpdated || s || (e = void 0), this._$AL.set(t, e)), i === !0 && this._$Em !== t && (this._$Eq ??= /* @__PURE__ */ new Set()).add(t));
   }
   async _$EP() {
     this.isUpdatePending = !0;
@@ -203,13 +203,13 @@ let P = class extends HTMLElement {
     if (!this.isUpdatePending) return;
     if (!this.hasUpdated) {
       if (this.renderRoot ??= this.createRenderRoot(), this._$Ep) {
-        for (const [r, o] of this._$Ep) this[r] = o;
+        for (const [i, o] of this._$Ep) this[i] = o;
         this._$Ep = void 0;
       }
       const s = this.constructor.elementProperties;
-      if (s.size > 0) for (const [r, o] of s) {
-        const { wrapped: n } = o, l = this[r];
-        n !== !0 || this._$AL.has(r) || l === void 0 || this.C(r, void 0, o, l);
+      if (s.size > 0) for (const [i, o] of s) {
+        const { wrapped: n } = o, l = this[i];
+        n !== !0 || this._$AL.has(i) || l === void 0 || this.C(i, void 0, o, l);
       }
     }
     let t = !1;
@@ -246,54 +246,54 @@ let P = class extends HTMLElement {
   firstUpdated(t) {
   }
 };
-P.elementStyles = [], P.shadowRootOptions = { mode: "open" }, P[F("elementProperties")] = /* @__PURE__ */ new Map(), P[F("finalized")] = /* @__PURE__ */ new Map(), ne?.({ ReactiveElement: P }), (J.reactiveElementVersions ??= []).push("2.1.2");
-const ct = globalThis, $t = (i) => i, q = ct.trustedTypes, vt = q ? q.createPolicy("lit-html", { createHTML: (i) => i }) : void 0, Nt = "$lit$", A = `lit$${Math.random().toFixed(9).slice(2)}$`, Ut = "?" + A, ae = `<${Ut}>`, C = document, j = () => C.createComment(""), D = (i) => i === null || typeof i != "object" && typeof i != "function", dt = Array.isArray, le = (i) => dt(i) || typeof i?.[Symbol.iterator] == "function", tt = `[ 	
-\f\r]`, N = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, bt = /-->/g, yt = />/g, E = RegExp(`>|${tt}(?:([^\\s"'>=/]+)(${tt}*=${tt}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), xt = /'/g, wt = /"/g, Ft = /^(?:script|style|textarea|title)$/i, Ot = (i) => (t, ...e) => ({ _$litType$: i, strings: t, values: e }), f = Ot(1), $ = Ot(2), R = /* @__PURE__ */ Symbol.for("lit-noChange"), d = /* @__PURE__ */ Symbol.for("lit-nothing"), At = /* @__PURE__ */ new WeakMap(), M = C.createTreeWalker(C, 129);
-function Ht(i, t) {
-  if (!dt(i) || !i.hasOwnProperty("raw")) throw Error("invalid template strings array");
+P.elementStyles = [], P.shadowRootOptions = { mode: "open" }, P[U("elementProperties")] = /* @__PURE__ */ new Map(), P[U("finalized")] = /* @__PURE__ */ new Map(), ne?.({ ReactiveElement: P }), (K.reactiveElementVersions ??= []).push("2.1.2");
+const ct = globalThis, bt = (r) => r, W = ct.trustedTypes, vt = W ? W.createPolicy("lit-html", { createHTML: (r) => r }) : void 0, Ft = "$lit$", A = `lit$${Math.random().toFixed(9).slice(2)}$`, Ut = "?" + A, ae = `<${Ut}>`, C = document, D = () => C.createComment(""), j = (r) => r === null || typeof r != "object" && typeof r != "function", dt = Array.isArray, le = (r) => dt(r) || typeof r?.[Symbol.iterator] == "function", et = `[ 	
+\f\r]`, N = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, yt = /-->/g, xt = />/g, E = RegExp(`>|${et}(?:([^\\s"'>=/]+)(${et}*=${et}*(?:[^ 	
+\f\r"'\`<>=]|("|')|))|$)`, "g"), wt = /'/g, At = /"/g, Ot = /^(?:script|style|textarea|title)$/i, Ht = (r) => (t, ...e) => ({ _$litType$: r, strings: t, values: e }), u = Ht(1), $ = Ht(2), R = /* @__PURE__ */ Symbol.for("lit-noChange"), d = /* @__PURE__ */ Symbol.for("lit-nothing"), kt = /* @__PURE__ */ new WeakMap(), M = C.createTreeWalker(C, 129);
+function Dt(r, t) {
+  if (!dt(r) || !r.hasOwnProperty("raw")) throw Error("invalid template strings array");
   return vt !== void 0 ? vt.createHTML(t) : t;
 }
-const ce = (i, t) => {
-  const e = i.length - 1, s = [];
-  let r, o = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", n = N;
+const ce = (r, t) => {
+  const e = r.length - 1, s = [];
+  let i, o = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", n = N;
   for (let l = 0; l < e; l++) {
-    const a = i[l];
-    let p, h, c = -1, g = 0;
-    for (; g < a.length && (n.lastIndex = g, h = n.exec(a), h !== null); ) g = n.lastIndex, n === N ? h[1] === "!--" ? n = bt : h[1] !== void 0 ? n = yt : h[2] !== void 0 ? (Ft.test(h[2]) && (r = RegExp("</" + h[2], "g")), n = E) : h[3] !== void 0 && (n = E) : n === E ? h[0] === ">" ? (n = r ?? N, c = -1) : h[1] === void 0 ? c = -2 : (c = n.lastIndex - h[2].length, p = h[1], n = h[3] === void 0 ? E : h[3] === '"' ? wt : xt) : n === wt || n === xt ? n = E : n === bt || n === yt ? n = N : (n = E, r = void 0);
-    const _ = n === E && i[l + 1].startsWith("/>") ? " " : "";
-    o += n === N ? a + ae : c >= 0 ? (s.push(p), a.slice(0, c) + Nt + a.slice(c) + A + _) : a + A + (c === -2 ? l : _);
+    const a = r[l];
+    let h, p, c = -1, f = 0;
+    for (; f < a.length && (n.lastIndex = f, p = n.exec(a), p !== null); ) f = n.lastIndex, n === N ? p[1] === "!--" ? n = yt : p[1] !== void 0 ? n = xt : p[2] !== void 0 ? (Ot.test(p[2]) && (i = RegExp("</" + p[2], "g")), n = E) : p[3] !== void 0 && (n = E) : n === E ? p[0] === ">" ? (n = i ?? N, c = -1) : p[1] === void 0 ? c = -2 : (c = n.lastIndex - p[2].length, h = p[1], n = p[3] === void 0 ? E : p[3] === '"' ? At : wt) : n === At || n === wt ? n = E : n === yt || n === xt ? n = N : (n = E, i = void 0);
+    const _ = n === E && r[l + 1].startsWith("/>") ? " " : "";
+    o += n === N ? a + ae : c >= 0 ? (s.push(h), a.slice(0, c) + Ft + a.slice(c) + A + _) : a + A + (c === -2 ? l : _);
   }
-  return [Ht(i, o + (i[e] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), s];
+  return [Dt(r, o + (r[e] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), s];
 };
 class B {
   constructor({ strings: t, _$litType$: e }, s) {
-    let r;
+    let i;
     this.parts = [];
     let o = 0, n = 0;
-    const l = t.length - 1, a = this.parts, [p, h] = ce(t, e);
-    if (this.el = B.createElement(p, s), M.currentNode = this.el.content, e === 2 || e === 3) {
+    const l = t.length - 1, a = this.parts, [h, p] = ce(t, e);
+    if (this.el = B.createElement(h, s), M.currentNode = this.el.content, e === 2 || e === 3) {
       const c = this.el.content.firstChild;
       c.replaceWith(...c.childNodes);
     }
-    for (; (r = M.nextNode()) !== null && a.length < l; ) {
-      if (r.nodeType === 1) {
-        if (r.hasAttributes()) for (const c of r.getAttributeNames()) if (c.endsWith(Nt)) {
-          const g = h[n++], _ = r.getAttribute(c).split(A), y = /([.?@])?(.*)/.exec(g);
-          a.push({ type: 1, index: o, name: y[2], strings: _, ctor: y[1] === "." ? he : y[1] === "?" ? pe : y[1] === "@" ? ue : K }), r.removeAttribute(c);
-        } else c.startsWith(A) && (a.push({ type: 6, index: o }), r.removeAttribute(c));
-        if (Ft.test(r.tagName)) {
-          const c = r.textContent.split(A), g = c.length - 1;
-          if (g > 0) {
-            r.textContent = q ? q.emptyScript : "";
-            for (let _ = 0; _ < g; _++) r.append(c[_], j()), M.nextNode(), a.push({ type: 2, index: ++o });
-            r.append(c[g], j());
+    for (; (i = M.nextNode()) !== null && a.length < l; ) {
+      if (i.nodeType === 1) {
+        if (i.hasAttributes()) for (const c of i.getAttributeNames()) if (c.endsWith(Ft)) {
+          const f = p[n++], _ = i.getAttribute(c).split(A), y = /([.?@])?(.*)/.exec(f);
+          a.push({ type: 1, index: o, name: y[2], strings: _, ctor: y[1] === "." ? pe : y[1] === "?" ? he : y[1] === "@" ? ue : Q }), i.removeAttribute(c);
+        } else c.startsWith(A) && (a.push({ type: 6, index: o }), i.removeAttribute(c));
+        if (Ot.test(i.tagName)) {
+          const c = i.textContent.split(A), f = c.length - 1;
+          if (f > 0) {
+            i.textContent = W ? W.emptyScript : "";
+            for (let _ = 0; _ < f; _++) i.append(c[_], D()), M.nextNode(), a.push({ type: 2, index: ++o });
+            i.append(c[f], D());
           }
         }
-      } else if (r.nodeType === 8) if (r.data === Ut) a.push({ type: 2, index: o });
+      } else if (i.nodeType === 8) if (i.data === Ut) a.push({ type: 2, index: o });
       else {
         let c = -1;
-        for (; (c = r.data.indexOf(A, c + 1)) !== -1; ) a.push({ type: 7, index: o }), c += A.length - 1;
+        for (; (c = i.data.indexOf(A, c + 1)) !== -1; ) a.push({ type: 7, index: o }), c += A.length - 1;
       }
       o++;
     }
@@ -303,11 +303,11 @@ class B {
     return s.innerHTML = t, s;
   }
 }
-function T(i, t, e = i, s) {
+function T(r, t, e = r, s) {
   if (t === R) return t;
-  let r = s !== void 0 ? e._$Co?.[s] : e._$Cl;
-  const o = D(t) ? void 0 : t._$litDirective$;
-  return r?.constructor !== o && (r?._$AO?.(!1), o === void 0 ? r = void 0 : (r = new o(i), r._$AT(i, e, s)), s !== void 0 ? (e._$Co ??= [])[s] = r : e._$Cl = r), r !== void 0 && (t = T(i, r._$AS(i, t.values), r, s)), t;
+  let i = s !== void 0 ? e._$Co?.[s] : e._$Cl;
+  const o = j(t) ? void 0 : t._$litDirective$;
+  return i?.constructor !== o && (i?._$AO?.(!1), o === void 0 ? i = void 0 : (i = new o(r), i._$AT(r, e, s)), s !== void 0 ? (e._$Co ??= [])[s] = i : e._$Cl = i), i !== void 0 && (t = T(r, i._$AS(r, t.values), i, s)), t;
 }
 class de {
   constructor(t, e) {
@@ -320,17 +320,17 @@ class de {
     return this._$AM._$AU;
   }
   u(t) {
-    const { el: { content: e }, parts: s } = this._$AD, r = (t?.creationScope ?? C).importNode(e, !0);
-    M.currentNode = r;
+    const { el: { content: e }, parts: s } = this._$AD, i = (t?.creationScope ?? C).importNode(e, !0);
+    M.currentNode = i;
     let o = M.nextNode(), n = 0, l = 0, a = s[0];
     for (; a !== void 0; ) {
       if (n === a.index) {
-        let p;
-        a.type === 2 ? p = new L(o, o.nextSibling, this, t) : a.type === 1 ? p = new a.ctor(o, a.name, a.strings, this, t) : a.type === 6 && (p = new ge(o, this, t)), this._$AV.push(p), a = s[++l];
+        let h;
+        a.type === 2 ? h = new L(o, o.nextSibling, this, t) : a.type === 1 ? h = new a.ctor(o, a.name, a.strings, this, t) : a.type === 6 && (h = new ge(o, this, t)), this._$AV.push(h), a = s[++l];
       }
       n !== a?.index && (o = M.nextNode(), n++);
     }
-    return M.currentNode = C, r;
+    return M.currentNode = C, i;
   }
   p(t) {
     let e = 0;
@@ -341,8 +341,8 @@ class L {
   get _$AU() {
     return this._$AM?._$AU ?? this._$Cv;
   }
-  constructor(t, e, s, r) {
-    this.type = 2, this._$AH = d, this._$AN = void 0, this._$AA = t, this._$AB = e, this._$AM = s, this.options = r, this._$Cv = r?.isConnected ?? !0;
+  constructor(t, e, s, i) {
+    this.type = 2, this._$AH = d, this._$AN = void 0, this._$AA = t, this._$AB = e, this._$AM = s, this.options = i, this._$Cv = i?.isConnected ?? !0;
   }
   get parentNode() {
     let t = this._$AA.parentNode;
@@ -356,7 +356,7 @@ class L {
     return this._$AB;
   }
   _$AI(t, e = this) {
-    t = T(this, t, e), D(t) ? t === d || t == null || t === "" ? (this._$AH !== d && this._$AR(), this._$AH = d) : t !== this._$AH && t !== R && this._(t) : t._$litType$ !== void 0 ? this.$(t) : t.nodeType !== void 0 ? this.T(t) : le(t) ? this.k(t) : this._(t);
+    t = T(this, t, e), j(t) ? t === d || t == null || t === "" ? (this._$AH !== d && this._$AR(), this._$AH = d) : t !== this._$AH && t !== R && this._(t) : t._$litType$ !== void 0 ? this.$(t) : t.nodeType !== void 0 ? this.T(t) : le(t) ? this.k(t) : this._(t);
   }
   O(t) {
     return this._$AA.parentNode.insertBefore(t, this._$AB);
@@ -365,63 +365,63 @@ class L {
     this._$AH !== t && (this._$AR(), this._$AH = this.O(t));
   }
   _(t) {
-    this._$AH !== d && D(this._$AH) ? this._$AA.nextSibling.data = t : this.T(C.createTextNode(t)), this._$AH = t;
+    this._$AH !== d && j(this._$AH) ? this._$AA.nextSibling.data = t : this.T(C.createTextNode(t)), this._$AH = t;
   }
   $(t) {
-    const { values: e, _$litType$: s } = t, r = typeof s == "number" ? this._$AC(t) : (s.el === void 0 && (s.el = B.createElement(Ht(s.h, s.h[0]), this.options)), s);
-    if (this._$AH?._$AD === r) this._$AH.p(e);
+    const { values: e, _$litType$: s } = t, i = typeof s == "number" ? this._$AC(t) : (s.el === void 0 && (s.el = B.createElement(Dt(s.h, s.h[0]), this.options)), s);
+    if (this._$AH?._$AD === i) this._$AH.p(e);
     else {
-      const o = new de(r, this), n = o.u(this.options);
+      const o = new de(i, this), n = o.u(this.options);
       o.p(e), this.T(n), this._$AH = o;
     }
   }
   _$AC(t) {
-    let e = At.get(t.strings);
-    return e === void 0 && At.set(t.strings, e = new B(t)), e;
+    let e = kt.get(t.strings);
+    return e === void 0 && kt.set(t.strings, e = new B(t)), e;
   }
   k(t) {
     dt(this._$AH) || (this._$AH = [], this._$AR());
     const e = this._$AH;
-    let s, r = 0;
-    for (const o of t) r === e.length ? e.push(s = new L(this.O(j()), this.O(j()), this, this.options)) : s = e[r], s._$AI(o), r++;
-    r < e.length && (this._$AR(s && s._$AB.nextSibling, r), e.length = r);
+    let s, i = 0;
+    for (const o of t) i === e.length ? e.push(s = new L(this.O(D()), this.O(D()), this, this.options)) : s = e[i], s._$AI(o), i++;
+    i < e.length && (this._$AR(s && s._$AB.nextSibling, i), e.length = i);
   }
   _$AR(t = this._$AA.nextSibling, e) {
     for (this._$AP?.(!1, !0, e); t !== this._$AB; ) {
-      const s = $t(t).nextSibling;
-      $t(t).remove(), t = s;
+      const s = bt(t).nextSibling;
+      bt(t).remove(), t = s;
     }
   }
   setConnected(t) {
     this._$AM === void 0 && (this._$Cv = t, this._$AP?.(t));
   }
 }
-class K {
+class Q {
   get tagName() {
     return this.element.tagName;
   }
   get _$AU() {
     return this._$AM._$AU;
   }
-  constructor(t, e, s, r, o) {
-    this.type = 1, this._$AH = d, this._$AN = void 0, this.element = t, this.name = e, this._$AM = r, this.options = o, s.length > 2 || s[0] !== "" || s[1] !== "" ? (this._$AH = Array(s.length - 1).fill(new String()), this.strings = s) : this._$AH = d;
+  constructor(t, e, s, i, o) {
+    this.type = 1, this._$AH = d, this._$AN = void 0, this.element = t, this.name = e, this._$AM = i, this.options = o, s.length > 2 || s[0] !== "" || s[1] !== "" ? (this._$AH = Array(s.length - 1).fill(new String()), this.strings = s) : this._$AH = d;
   }
-  _$AI(t, e = this, s, r) {
+  _$AI(t, e = this, s, i) {
     const o = this.strings;
     let n = !1;
-    if (o === void 0) t = T(this, t, e, 0), n = !D(t) || t !== this._$AH && t !== R, n && (this._$AH = t);
+    if (o === void 0) t = T(this, t, e, 0), n = !j(t) || t !== this._$AH && t !== R, n && (this._$AH = t);
     else {
       const l = t;
-      let a, p;
-      for (t = o[0], a = 0; a < o.length - 1; a++) p = T(this, l[s + a], e, a), p === R && (p = this._$AH[a]), n ||= !D(p) || p !== this._$AH[a], p === d ? t = d : t !== d && (t += (p ?? "") + o[a + 1]), this._$AH[a] = p;
+      let a, h;
+      for (t = o[0], a = 0; a < o.length - 1; a++) h = T(this, l[s + a], e, a), h === R && (h = this._$AH[a]), n ||= !j(h) || h !== this._$AH[a], h === d ? t = d : t !== d && (t += (h ?? "") + o[a + 1]), this._$AH[a] = h;
     }
-    n && !r && this.j(t);
+    n && !i && this.j(t);
   }
   j(t) {
     t === d ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, t ?? "");
   }
 }
-class he extends K {
+class pe extends Q {
   constructor() {
     super(...arguments), this.type = 3;
   }
@@ -429,7 +429,7 @@ class he extends K {
     this.element[this.name] = t === d ? void 0 : t;
   }
 }
-class pe extends K {
+class he extends Q {
   constructor() {
     super(...arguments), this.type = 4;
   }
@@ -437,14 +437,14 @@ class pe extends K {
     this.element.toggleAttribute(this.name, !!t && t !== d);
   }
 }
-class ue extends K {
-  constructor(t, e, s, r, o) {
-    super(t, e, s, r, o), this.type = 5;
+class ue extends Q {
+  constructor(t, e, s, i, o) {
+    super(t, e, s, i, o), this.type = 5;
   }
   _$AI(t, e = this) {
     if ((t = T(this, t, e, 0) ?? d) === R) return;
-    const s = this._$AH, r = t === d && s !== d || t.capture !== s.capture || t.once !== s.once || t.passive !== s.passive, o = t !== d && (s === d || r);
-    r && this.element.removeEventListener(this.name, this, s), o && this.element.addEventListener(this.name, this, t), this._$AH = t;
+    const s = this._$AH, i = t === d && s !== d || t.capture !== s.capture || t.once !== s.once || t.passive !== s.passive, o = t !== d && (s === d || i);
+    i && this.element.removeEventListener(this.name, this, s), o && this.element.addEventListener(this.name, this, t), this._$AH = t;
   }
   handleEvent(t) {
     typeof this._$AH == "function" ? this._$AH.call(this.options?.host ?? this.element, t) : this._$AH.handleEvent(t);
@@ -463,17 +463,17 @@ class ge {
 }
 const fe = ct.litHtmlPolyfillSupport;
 fe?.(B, L), (ct.litHtmlVersions ??= []).push("3.3.3");
-const _e = (i, t, e) => {
+const _e = (r, t, e) => {
   const s = e?.renderBefore ?? t;
-  let r = s._$litPart$;
-  if (r === void 0) {
+  let i = s._$litPart$;
+  if (i === void 0) {
     const o = e?.renderBefore ?? null;
-    s._$litPart$ = r = new L(t.insertBefore(j(), o), o, void 0, e ?? {});
+    s._$litPart$ = i = new L(t.insertBefore(D(), o), o, void 0, e ?? {});
   }
-  return r._$AI(i), r;
+  return i._$AI(r), i;
 };
-const ht = globalThis;
-class I extends P {
+const pt = globalThis;
+class z extends P {
   constructor() {
     super(...arguments), this.renderOptions = { host: this }, this._$Do = void 0;
   }
@@ -495,110 +495,119 @@ class I extends P {
     return R;
   }
 }
-I._$litElement$ = !0, I.finalized = !0, ht.litElementHydrateSupport?.({ LitElement: I });
-const me = ht.litElementPolyfillSupport;
-me?.({ LitElement: I });
-(ht.litElementVersions ??= []).push("4.2.2");
-function pt(i, t) {
-  return i.callWS ? i.callWS(t) : Promise.reject(
+z._$litElement$ = !0, z.finalized = !0, pt.litElementHydrateSupport?.({ LitElement: z });
+const me = pt.litElementPolyfillSupport;
+me?.({ LitElement: z });
+(pt.litElementVersions ??= []).push("4.2.2");
+function ht(r, t) {
+  return r.callWS ? r.callWS(t) : Promise.reject(
     new Error("Spatial Presence integration is not connected")
   );
 }
-function $e(i, t) {
-  return pt(i, { type: "spatial_presence/map/get", map_id: t });
+function $e(r, t) {
+  return ht(r, { type: "spatial_presence/map/get", map_id: t });
 }
-function ve(i, t, e) {
+function be(r, t, e) {
   const s = jt(e);
-  return pt(i, {
+  return ht(r, {
     type: "spatial_presence/map/save",
     map_id: t,
     title: e.title ?? t,
     config: { ...s, schema_version: "0.1" }
   });
 }
-function jt(i) {
-  const { type: t, backend_map_id: e, ...s } = i;
+function jt(r) {
+  const { type: t, backend_map_id: e, ...s } = r;
   return { ...s, schema_version: "0.1" };
 }
-function be(i, t) {
-  return pt(i, {
+function ve(r, t) {
+  return ht(r, {
     type: "spatial_presence/map/restore_previous",
     map_id: t
   });
 }
-const Dt = Math.PI / 180;
-function rt(i) {
-  return (i % 360 + 360) % 360;
+const ut = Math.PI / 180;
+function X(r) {
+  return (r % 360 + 360) % 360;
 }
-function ye(i, t, e, s) {
-  const r = s / 1e3, o = t * r, n = -e * r, l = rt(i.heading) * Dt;
+function ye(r, t, e, s) {
+  const i = s / 1e3, o = t * i, n = -e * i, l = X(r.heading) * ut;
   return {
-    x: i.x + o * Math.cos(l) - n * Math.sin(l),
-    y: i.y + o * Math.sin(l) + n * Math.cos(l)
+    x: r.x + o * Math.cos(l) - n * Math.sin(l),
+    y: r.y + o * Math.sin(l) + n * Math.cos(l)
   };
 }
-function et(i, t, e = 1) {
-  const s = (i.range_m ?? 6) * t * e, r = (i.fov_degrees ?? 120) / 2, o = St(i, s, -r), n = St(i, s, r), l = r * 2 > 180 ? 1 : 0;
+function xe(r, t, e, s) {
+  const i = Math.hypot(t, e), o = Math.hypot(s.x - r.x, s.y - r.y);
+  if (i < 100 || o < 1) return;
+  const n = Math.atan2(-e, t), l = Math.atan2(s.y - r.y, s.x - r.x);
+  return {
+    heading: X((l - n) / ut),
+    pixelsPerMeter: o * 1e3 / i
+  };
+}
+function st(r, t, e = 1) {
+  const s = (r.range_m ?? 6) * t * e, i = (r.fov_degrees ?? 120) / 2, o = St(r, s, -i), n = St(r, s, i), l = i * 2 > 180 ? 1 : 0;
   return [
-    `M ${w(i.x)} ${w(i.y)}`,
+    `M ${w(r.x)} ${w(r.y)}`,
     `L ${w(o.x)} ${w(o.y)}`,
     `A ${w(s)} ${w(s)} 0 ${l} 1 ${w(n.x)} ${w(n.y)}`,
     "Z"
   ].join(" ");
 }
-function St(i, t, e) {
-  const s = (i.heading + e - 90) * Dt;
+function St(r, t, e) {
+  const s = (r.heading + e - 90) * ut;
   return {
-    x: i.x + t * Math.cos(s),
-    y: i.y + t * Math.sin(s)
+    x: r.x + t * Math.cos(s),
+    y: r.y + t * Math.sin(s)
   };
 }
-function w(i) {
-  return Math.round(i * 100) / 100;
+function w(r) {
+  return Math.round(r * 100) / 100;
 }
-function xe(i, t, e, s) {
-  const r = kt(i.width * e, s.width * 0.08, s.width * 4), o = kt(
-    i.height * e,
+function we(r, t, e, s) {
+  const i = Et(r.width * e, s.width * 0.08, s.width * 4), o = Et(
+    r.height * e,
     s.height * 0.08,
     s.height * 4
-  ), n = (t.x - i.x) / i.width, l = (t.y - i.y) / i.height;
+  ), n = (t.x - r.x) / r.width, l = (t.y - r.y) / r.height;
   return {
-    x: t.x - n * r,
+    x: t.x - n * i,
     y: t.y - l * o,
-    width: r,
+    width: i,
     height: o
   };
 }
-function U(i) {
-  return i.map((t) => `${t.x},${t.y}`).join(" ");
+function F(r) {
+  return r.map((t) => `${t.x},${t.y}`).join(" ");
 }
-function st(i, t, e, s) {
+function it(r, t, e, s) {
   return {
-    x: s.x + (i - e.left) / e.width * s.width,
+    x: s.x + (r - e.left) / e.width * s.width,
     y: s.y + (t - e.top) / e.height * s.height
   };
 }
-function kt(i, t, e) {
-  return Math.min(e, Math.max(t, i));
+function Et(r, t, e) {
+  return Math.min(e, Math.max(t, r));
 }
-const we = /^sensor\.(.+)_target_([1-9]\d*)_x$/;
-function Ae(i) {
+const Ae = /^sensor\.(.+)_target_([1-9]\d*)_x$/;
+function ke(r) {
   const t = /* @__PURE__ */ new Set();
-  for (const e of Object.keys(i.states)) {
-    const s = we.exec(e);
+  for (const e of Object.keys(r.states)) {
+    const s = Ae.exec(e);
     if (!s) continue;
-    const r = s[1], o = s[2];
-    r && o && i.states[`sensor.${r}_target_${o}_y`] && t.add(r);
+    const i = s[1], o = s[2];
+    i && o && r.states[`sensor.${i}_target_${o}_y`] && t.add(i);
   }
   return [...t].sort();
 }
-function Et(i, t, e = !0, s = Date.now()) {
-  const r = [...t.sensors ?? []], o = new Set(
-    r.map((n) => n.entity_prefix ?? n.id)
+function Mt(r, t, e = !0, s = Date.now()) {
+  const i = [...t.sensors ?? []], o = new Set(
+    i.map((n) => n.entity_prefix ?? n.id)
   );
   if (e)
-    for (const n of Ae(i))
-      o.has(n) || r.push({
+    for (const n of ke(r))
+      o.has(n) || i.push({
         id: n,
         name: Bt(n),
         entity_prefix: n,
@@ -609,104 +618,104 @@ function Et(i, t, e = !0, s = Date.now()) {
         fov_degrees: 120,
         mount: "wall"
       });
-  return r.map((n) => Se(i, t, n, s));
+  return i.map((n) => Se(r, t, n, s));
 }
-function Se(i, t, e, s) {
-  const r = e.entity_prefix ?? e.id, o = [];
+function Se(r, t, e, s) {
+  const i = e.entity_prefix ?? e.id, o = [];
   for (let a = 1; a <= 9; a += 1) {
-    const p = i.states[`sensor.${r}_target_${a}_x`], h = i.states[`sensor.${r}_target_${a}_y`];
-    if (!p || !h) continue;
-    const c = Mt(p), g = Mt(h);
-    c === void 0 || g === void 0 || c === 0 && g === 0 || o.push({
+    const h = r.states[`sensor.${i}_target_${a}_x`], p = r.states[`sensor.${i}_target_${a}_y`];
+    if (!h || !p) continue;
+    const c = Ct(h), f = Ct(p);
+    c === void 0 || f === void 0 || c === 0 && f === 0 || o.push({
       id: `${e.id}:${a}`,
       sensorId: e.id,
-      sensorName: e.name ?? Bt(r),
+      sensorName: e.name ?? Bt(i),
       index: a,
       localXmm: c,
-      localYmm: g,
+      localYmm: f,
       floorPoint: ye(
         e,
         c,
-        g,
+        f,
         t.pixels_per_meter
       ),
       updatedAt: s
     });
   }
-  const n = ot(i.states[`sensor.${r}_temperature`]), l = ot(i.states[`sensor.${r}_humidity`]);
+  const n = ot(r.states[`sensor.${i}_temperature`]), l = ot(r.states[`sensor.${i}_humidity`]);
   return {
     sensor: e,
     targets: o,
     ...n === void 0 ? {} : { temperature: n },
     ...l === void 0 ? {} : { humidity: l },
-    online: ke(i, r),
+    online: Ee(r, i),
     discovered: !(t.sensors ?? []).some((a) => a.id === e.id)
   };
 }
-function ke(i, t) {
-  const e = i.states[`binary_sensor.${t}_online`] ?? i.states[`binary_sensor.${t}_status`];
+function Ee(r, t) {
+  const e = r.states[`binary_sensor.${t}_online`] ?? r.states[`binary_sensor.${t}_status`];
   if (e) return e.state === "on";
-  const s = i.states[`binary_sensor.${t}_presence`];
+  const s = r.states[`binary_sensor.${t}_presence`];
   return s ? !["unavailable", "unknown"].includes(s.state) : !0;
 }
-function Mt(i) {
-  const t = ot(i);
+function Ct(r) {
+  const t = ot(r);
   if (t === void 0) return;
-  const e = String(i.attributes.unit_of_measurement ?? "mm").toLowerCase();
+  const e = String(r.attributes.unit_of_measurement ?? "mm").toLowerCase();
   return e === "m" ? t * 1e3 : e === "cm" ? t * 10 : t;
 }
-function ot(i) {
-  if (!i || ["unknown", "unavailable"].includes(i.state)) return;
-  const t = Number(i.state);
+function ot(r) {
+  if (!r || ["unknown", "unavailable"].includes(r.state)) return;
+  const t = Number(r.state);
   return Number.isFinite(t) ? t : void 0;
 }
-function Bt(i) {
-  return i.split("_").filter(Boolean).map((t) => t[0]?.toUpperCase() + t.slice(1)).join(" ");
+function Bt(r) {
+  return r.split("_").filter(Boolean).map((t) => t[0]?.toUpperCase() + t.slice(1)).join(" ");
 }
-function Ee(i, t = 100) {
-  if (!v(i)) throw new Error("Easy Floorplan configuration must be an object");
-  const e = i, s = O(e.width, 1e3), r = O(e.height, 700), o = Array.isArray(e.floors) && e.floors.length ? e.floors : [e], n = [], l = /* @__PURE__ */ new Set(), a = o.map((c, g) => {
-    const _ = H(c.id ?? `floor-${g + 1}`, l), y = /* @__PURE__ */ new Set(), Q = /* @__PURE__ */ new Set(), G = (c.walls ?? []).flatMap((u, b) => [u.x1, u.y1, u.x2, u.y2].every(S) ? [{
-      id: H(String(u.id ?? `wall-${b + 1}`), y),
+function Me(r, t = 100) {
+  if (!b(r)) throw new Error("Easy Floorplan configuration must be an object");
+  const e = r, s = O(e.width, 1e3), i = O(e.height, 700), o = Array.isArray(e.floors) && e.floors.length ? e.floors : [e], n = [], l = /* @__PURE__ */ new Set(), a = o.map((c, f) => {
+    const _ = H(c.id ?? `floor-${f + 1}`, l), y = /* @__PURE__ */ new Set(), G = /* @__PURE__ */ new Set(), tt = (c.walls ?? []).flatMap((g, v) => [g.x1, g.y1, g.x2, g.y2].every(k) ? [{
+      id: H(String(g.id ?? `wall-${v + 1}`), y),
       points: [
-        { x: Number(u.x1), y: Number(u.y1) },
-        { x: Number(u.x2), y: Number(u.y2) }
+        { x: Number(g.x1), y: Number(g.y1) },
+        { x: Number(g.x2), y: Number(g.y2) }
       ]
-    }] : (n.push(`${_}: skipped wall ${u.id ?? b + 1} with invalid coordinates`), [])), ut = (c.areas ?? []).flatMap((u, b) => {
-      const m = Lt(u.points);
-      return m.length < 3 ? (n.push(`${_}: skipped area ${u.id ?? b + 1} with fewer than three points`), []) : [{
-        id: H(String(u.id ?? `room-${b + 1}`), Q),
-        ...u.name ? { name: u.name } : {},
-        ...u.haArea ? { area_id: u.haArea } : {},
+    }] : (n.push(`${_}: skipped wall ${g.id ?? v + 1} with invalid coordinates`), [])), gt = (c.areas ?? []).flatMap((g, v) => {
+      const m = Lt(g.points);
+      return m.length < 3 ? (n.push(`${_}: skipped area ${g.id ?? v + 1} with fewer than three points`), []) : [{
+        id: H(String(g.id ?? `room-${v + 1}`), G),
+        ...g.name ? { name: g.name } : {},
+        ...g.haArea ? { area_id: g.haArea } : {},
         points: m
       }];
     });
-    for (const u of ["openings", "items", "texts", "furniture", "trackers"]) {
-      const b = c[u]?.length ?? 0;
-      b && n.push(`${_}: ${b} ${u} retained only by Easy Floorplan`);
+    for (const g of ["openings", "items", "texts", "furniture", "trackers"]) {
+      const v = c[g]?.length ?? 0;
+      v && n.push(`${_}: ${v} ${g} retained only by Easy Floorplan`);
     }
     return {
       id: _,
-      name: c.name ?? `Floor ${g + 1}`,
+      name: c.name ?? `Floor ${f + 1}`,
       width: s,
-      height: r,
+      height: i,
       pixels_per_meter: O(t, 100),
-      ...Wt(c.image) ? { background: c.image } : {},
-      walls: G,
-      rooms: ut,
+      ...qt(c.image) ? { background: c.image } : {},
+      walls: tt,
+      rooms: gt,
       zones: [],
       sensors: []
     };
   });
   n.unshift("Easy Floorplan has no physical scale; verify pixels per metre after import");
-  const p = o.findIndex(
+  const h = o.findIndex(
     (c) => c.id === e.defaultFloor
-  ), h = a[Math.max(0, p)]?.id ?? a[0].id;
+  ), p = a[Math.max(0, h)]?.id ?? a[0].id;
   return {
     map: {
       schema_version: "0.1",
       title: e.title ?? "Imported Easy Floorplan",
-      default_floor: h,
+      default_floor: p,
       auto_discover: !0,
       target_trail_seconds: 8,
       floors: a
@@ -714,26 +723,26 @@ function Ee(i, t = 100) {
     warnings: n
   };
 }
-function Me(i) {
-  const t = i.floors[0];
+function Ce(r) {
+  const t = r.floors[0];
   if (!t) throw new Error("Spatial map has no floors");
   return {
     type: "custom:easy-floorplan-card",
-    title: i.title,
+    title: r.title,
     width: t.width,
     height: t.height,
-    defaultFloor: i.default_floor,
-    floors: i.floors.map((e) => ({
+    defaultFloor: r.default_floor,
+    floors: r.floors.map((e) => ({
       id: e.id,
       name: e.name,
       ...e.background ? { image: e.background, imageFit: "contain" } : {},
       walls: (e.walls ?? []).flatMap(
-        (s) => s.points.slice(0, -1).map((r, o) => {
+        (s) => s.points.slice(0, -1).map((i, o) => {
           const n = s.points[o + 1];
           return {
             id: `${s.id}-${o + 1}`,
-            x1: r.x,
-            y1: r.y,
+            x1: i.x,
+            y1: i.y,
             x2: n.x,
             y2: n.y
           };
@@ -753,9 +762,9 @@ function Me(i) {
     }))
   };
 }
-function Ce(i) {
-  if (!v(i)) throw new Error("Radar Map Manager backup must be an object");
-  const t = v(i.maps) ? i.maps : {}, e = Object.keys(t).length ? t : { default: {} }, s = v(i.radars) ? i.radars : {}, r = [
+function Pe(r) {
+  if (!b(r)) throw new Error("Radar Map Manager backup must be an object");
+  const t = b(r.maps) ? r.maps : {}, e = Object.keys(t).length ? t : { default: {} }, s = b(r.radars) ? r.radars : {}, i = [
     "Radar Map Manager uses percentage coordinates; verify floor scale and background alignment",
     "Fusion and smoothing settings stay in Radar Map Manager and are not imported"
   ], o = /* @__PURE__ */ new Set();
@@ -765,93 +774,95 @@ function Ce(i) {
       title: "Imported Radar Map Manager map",
       auto_discover: !0,
       target_trail_seconds: 8,
-      floors: Object.entries(e).map(([l, a], p) => {
-        const h = v(a) ? a : {}, c = v(h.config) ? h.config : {}, g = 1e3, _ = 1e3, y = /* @__PURE__ */ new Set(), Q = Object.entries(s).flatMap(([m, x]) => {
-          if (!v(x) || String(x.map_group ?? "default") !== l) return [];
-          const k = v(x.layout) ? x.layout : {}, Zt = O(k.scale_x, 5), Jt = O(k.scale_y, 5);
-          return Math.abs(Zt - Jt) > 0.01 && r.push(`${l}/${m}: non-uniform RMM scale requires manual calibration`), Array.isArray(x.monitor_zones) && x.monitor_zones.length && r.push(`${l}/${m}: radar-local monitor zones require manual review`), [{
+      floors: Object.entries(e).map(([l, a], h) => {
+        const p = b(a) ? a : {}, c = b(p.config) ? p.config : {}, f = 1e3, _ = 1e3, y = /* @__PURE__ */ new Set(), G = Object.entries(s).flatMap(([m, x]) => {
+          if (!b(x) || String(x.map_group ?? "default") !== l) return [];
+          const S = b(x.layout) ? x.layout : {}, Zt = O(S.scale_x, 5), Jt = O(S.scale_y, 5);
+          return Math.abs(Zt - Jt) > 0.01 && i.push(`${l}/${m}: non-uniform RMM scale requires manual calibration`), Array.isArray(x.monitor_zones) && x.monitor_zones.length && i.push(`${l}/${m}: radar-local monitor zones require manual review`), [{
             id: H(m, y),
             name: m,
             entity_prefix: Yt(m),
-            x: Ct(k.origin_x, 50) * g,
-            y: Ct(k.origin_y, 50) * _,
-            heading: S(k.rotation) ? Number(k.rotation) : 0,
+            x: Pt(S.origin_x, 50) * f,
+            y: Pt(S.origin_y, 50) * _,
+            heading: k(S.rotation) ? Number(S.rotation) : 0,
             range_m: 6,
             fov_degrees: 120,
-            mount: k.ceiling_mount ? "ceiling" : "wall"
+            mount: S.ceiling_mount ? "ceiling" : "wall"
           }];
-        }), G = v(h.zones) ? h.zones : {}, u = [
+        }), tt = b(p.zones) ? p.zones : {}, g = [
           ["include_zones", "detection"],
           ["exclude_zones", "exclusion"],
           ["entrance_zones", "entrance"],
           ["stationary_zones", "stationary"]
         ].flatMap(
-          ([m, x]) => Pe(G[m], m, g, _, x, r)
-        ), b = [c.bg_image, c.background_image, c.background].find((m) => Wt(m));
+          ([m, x]) => Ie(tt[m], m, f, _, x, i)
+        ), v = [c.bg_image, c.background_image, c.background].find((m) => qt(m));
         return {
-          id: H(l || `floor-${p + 1}`, o),
+          id: H(l || `floor-${h + 1}`, o),
           name: l === "default" ? "Main floor" : l,
-          width: g,
+          width: f,
           height: _,
           pixels_per_meter: 100,
-          ...typeof b == "string" ? { background: b } : {},
+          ...typeof v == "string" ? { background: v } : {},
           walls: [],
           rooms: [],
-          zones: u,
-          sensors: Q
+          zones: g,
+          sensors: G
         };
       })
     },
-    warnings: r
+    warnings: i
   };
 }
-function Pe(i, t, e, s, r, o) {
-  return Array.isArray(i) ? i.flatMap((n, l) => {
-    const a = v(n) && Array.isArray(n.points) ? n.points : n, p = Lt(a).map((h) => ({
-      x: Math.abs(h.x) <= 100 ? h.x / 100 * e : h.x,
-      y: Math.abs(h.y) <= 100 ? h.y / 100 * s : h.y
+function Ie(r, t, e, s, i, o) {
+  return Array.isArray(r) ? r.flatMap((n, l) => {
+    const a = b(n) && Array.isArray(n.points) ? n.points : n, h = Lt(a).map((p) => ({
+      x: Math.abs(p.x) <= 100 ? p.x / 100 * e : p.x,
+      y: Math.abs(p.y) <= 100 ? p.y / 100 * s : p.y
     }));
-    return p.length < 3 ? (o.push(`${t}[${l}]: skipped zone with fewer than three points`), []) : [{
+    return h.length < 3 ? (o.push(`${t}[${l}]: skipped zone with fewer than three points`), []) : [{
       id: `${t}-${l + 1}`,
-      name: v(n) && typeof n.name == "string" ? n.name : `${r} ${l + 1}`,
-      kind: r,
-      points: p
+      name: b(n) && typeof n.name == "string" ? n.name : `${i} ${l + 1}`,
+      kind: i,
+      points: h
     }];
   }) : [];
 }
-function Lt(i) {
-  return Array.isArray(i) ? i.flatMap((t) => Array.isArray(t) && S(t[0]) && S(t[1]) ? [{ x: Number(t[0]), y: Number(t[1]) }] : v(t) && S(t.x) && S(t.y) ? [{ x: Number(t.x), y: Number(t.y) }] : []) : [];
+function Lt(r) {
+  return Array.isArray(r) ? r.flatMap((t) => Array.isArray(t) && k(t[0]) && k(t[1]) ? [{ x: Number(t[0]), y: Number(t[1]) }] : b(t) && k(t.x) && k(t.y) ? [{ x: Number(t.x), y: Number(t.y) }] : []) : [];
 }
-function v(i) {
-  return typeof i == "object" && i !== null && !Array.isArray(i);
+function b(r) {
+  return typeof r == "object" && r !== null && !Array.isArray(r);
 }
-function S(i) {
-  return typeof i == "number" && Number.isFinite(i);
+function k(r) {
+  return typeof r == "number" && Number.isFinite(r);
 }
-function O(i, t) {
-  return S(i) && Number(i) > 0 ? Number(i) : t;
+function O(r, t) {
+  return k(r) && Number(r) > 0 ? Number(r) : t;
 }
-function Ct(i, t) {
-  const e = S(i) ? Number(i) : t;
+function Pt(r, t) {
+  const e = k(r) ? Number(r) : t;
   return Math.max(0, Math.min(100, e)) / 100;
 }
-function Yt(i) {
-  return i.toLowerCase().trim().replace(/[^a-z0-9_-]+/g, "_").replace(/^_+|_+$/g, "") || "item";
+function Yt(r) {
+  return r.toLowerCase().trim().replace(/[^a-z0-9_-]+/g, "_").replace(/^_+|_+$/g, "") || "item";
 }
-function H(i, t) {
-  const e = Yt(i);
-  let s = e, r = 2;
-  for (; t.has(s); ) s = `${e}_${r++}`;
+function H(r, t) {
+  const e = Yt(r);
+  let s = e, i = 2;
+  for (; t.has(s); ) s = `${e}_${i++}`;
   return t.add(s), s;
 }
-function Wt(i) {
-  return typeof i == "string" && /^(\/|https?:\/\/)/i.test(i.trim());
+function qt(r) {
+  return typeof r == "string" && /^(\/|https?:\/\/)/i.test(r.trim());
 }
-const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
+const ze = "0.1.0-alpha.3", Wt = { states: {} }, Z = class Z extends z {
   constructor() {
-    super(...arguments), this.hass = qt, this.editorMode = !1, this._floorId = "", this._view = { x: 0, y: 0, width: 1200, height: 800 }, this._tool = "pan", this._draftPoints = [], this._showCoverage = !0, this._showTrails = !0, this._pointerMoved = !1, this._trails = /* @__PURE__ */ new Map(), this._fit = () => {
+    super(...arguments), this.hass = Wt, this.editorMode = !1, this._floorId = "", this._view = { x: 0, y: 0, width: 1200, height: 800 }, this._tool = "pan", this._draftPoints = [], this._showCoverage = !0, this._showTrails = !0, this._pointerMoved = !1, this._trails = /* @__PURE__ */ new Map(), this._fit = () => {
       const t = this._floor;
       t && (this._view = { x: 0, y: 0, width: t.width, height: t.height });
+    }, this._cancelCalibration = () => {
+      this._calibration = void 0;
     };
   }
   static getConfigElement() {
@@ -863,13 +874,14 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
       title: "Spatial presence",
       auto_discover: !0,
       target_trail_seconds: 8,
+      stationary_hold_seconds: 30,
       floors: [Xt()]
     };
   }
   setConfig(t) {
     if (!Array.isArray(t.floors) || t.floors.length === 0)
       throw new Error("Add at least one floor to Spatial Presence.");
-    this._config = z(t);
+    this._config = I(t);
     const e = t.default_floor;
     (!this._floorId || !this._config.floors.some((s) => s.id === this._floorId)) && (this._floorId = (e && this._config.floors.some((s) => s.id === e) ? e : this._config.floors[0]?.id) ?? "", this._fit());
   }
@@ -885,21 +897,21 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
   render() {
     const t = this._config, e = this._floor;
     if (!t || !e)
-      return f`<ha-card><p class="empty">Add a floor to begin.</p></ha-card>`;
-    const s = Et(
+      return u`<ha-card><p class="empty">Add a floor to begin.</p></ha-card>`;
+    const s = Mt(
       this.hass,
       e,
       t.auto_discover !== !1
-    ), r = s.find(
+    ), i = s.find(
       (o) => o.sensor.id === this._selectedSensorId
     );
-    return f`
+    return u`
       <ha-card>
         <section class="shell" aria-label=${t.title ?? "Spatial presence"}>
           ${this._renderToolbar(t, e)}
           <div class="workspace">
             ${this._renderMap(e, s)}
-            ${r ? this._renderInspector(r, e) : d}
+            ${i ? this._renderInspector(i, e) : d}
           </div>
           ${this.editorMode ? this._renderEditorHint() : d}
         </section>
@@ -907,13 +919,13 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
     `;
   }
   _renderToolbar(t, e) {
-    return f`
+    return u`
       <header class="toolbar">
         <label class="floor-select">
           <span class="sr-only">Floor</span>
           <select @change=${this._changeFloor} .value=${e.id}>
             ${t.floors.map(
-      (s) => f`<option value=${s.id}>${s.name}</option>`
+      (s) => u`<option value=${s.id}>${s.name}</option>`
     )}
           </select>
         </label>
@@ -931,13 +943,13 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
             @click=${() => this._showTrails = !this._showTrails}
             aria-pressed=${this._showTrails}
           >Trails</button>
-          ${this.editorMode ? f`
+          ${this.editorMode ? u`
                 <span class="tool-separator" aria-hidden="true"></span>
                 ${this._toolButton("pan", "Move")}
                 ${this._toolButton("wall", "Draw wall")}
                 ${this._toolButton("room", "Draw room")}
                 ${this._toolButton("zone", "Draw zone")}
-                ${this._draftPoints.length > 0 ? f`<button type="button" class="commit" @click=${this._finishDrawing}>
+                ${this._draftPoints.length > 0 ? u`<button type="button" class="commit" @click=${this._finishDrawing}>
                       Finish ${this._tool}
                     </button>` : d}
               ` : d}
@@ -946,7 +958,7 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
     `;
   }
   _toolButton(t, e) {
-    return f`<button
+    return u`<button
       type="button"
       class=${this._tool === t ? "active" : ""}
       aria-pressed=${this._tool === t}
@@ -957,7 +969,7 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
   }
   _renderMap(t, e) {
     const s = this._view;
-    return f`
+    return u`
       <div class="map-frame">
         <svg
           class="map"
@@ -980,25 +992,25 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
                 height=${t.height}
                 preserveAspectRatio="xMidYMid meet"
               ></image>` : d}
-          <g class="rooms">${(t.rooms ?? []).map((r) => this._renderRoom(r))}</g>
-          <g class="zones">${(t.zones ?? []).map((r) => this._renderZone(r))}</g>
-          <g class="walls">${(t.walls ?? []).map((r) => this._renderWall(r))}</g>
-          ${this._showCoverage ? $`<g class="coverage">${e.map((r) => this._renderCoverage(r, t))}</g>` : d}
+          <g class="rooms">${(t.rooms ?? []).map((i) => this._renderRoom(i))}</g>
+          <g class="zones">${(t.zones ?? []).map((i) => this._renderZone(i))}</g>
+          <g class="walls">${(t.walls ?? []).map((i) => this._renderWall(i))}</g>
+          ${this._showCoverage ? $`<g class="coverage">${e.map((i) => this._renderCoverage(i, t))}</g>` : d}
           ${this._showTrails ? this._renderTrails() : d}
           <g class="targets">
             ${e.flatMap(
-      (r) => r.targets.map((o) => this._renderTarget(o))
+      (i) => i.targets.map((o) => this._renderTarget(o))
     )}
           </g>
           <g class="sensors">
-            ${e.map((r) => this._renderSensor(r))}
+            ${e.map((i) => this._renderSensor(i))}
           </g>
-          ${this._draftPoints.length ? $`<polyline class="draft" points=${U(this._draftPoints)}></polyline>
+          ${this._draftPoints.length ? $`<polyline class="draft" points=${F(this._draftPoints)}></polyline>
                 ${this._draftPoints.map(
-      (r) => $`<circle class="draft-point" cx=${r.x} cy=${r.y} r="6"></circle>`
+      (i) => $`<circle class="draft-point" cx=${i.x} cy=${i.y} r="6"></circle>`
     )}` : d}
         </svg>
-        ${e.length === 0 ? f`<div class="map-empty">
+        ${e.length === 0 ? u`<div class="map-empty">
               <strong>No compatible radar found</strong>
               <span>Add an LD2450 sensor or configure an entity prefix.</span>
             </div>` : d}
@@ -1007,28 +1019,28 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
   }
   _renderRoom(t) {
     return $`
-      <polygon points=${U(t.points)}></polygon>
+      <polygon points=${F(t.points)}></polygon>
       ${t.name && t.points[0] ? $`<text x=${t.points[0].x + 12} y=${t.points[0].y + 24}>${t.name}</text>` : d}
     `;
   }
   _renderZone(t) {
-    return $`<polygon points=${U(t.points)}></polygon>`;
+    return $`<polygon points=${F(t.points)}></polygon>`;
   }
   _renderWall(t) {
-    return $`<polyline points=${U(t.points)}></polyline>`;
+    return $`<polyline points=${F(t.points)}></polyline>`;
   }
   _renderCoverage(t, e) {
     const s = t.sensor;
     return $`
-      <path class="coverage-fringe" d=${et(s, e.pixels_per_meter, 1)}></path>
-      <path class="coverage-usable" d=${et(s, e.pixels_per_meter, 0.72)}></path>
-      <path class="coverage-strong" d=${et(s, e.pixels_per_meter, 0.4)}></path>
+      <path class="coverage-fringe" d=${st(s, e.pixels_per_meter, 1)}></path>
+      <path class="coverage-usable" d=${st(s, e.pixels_per_meter, 0.72)}></path>
+      <path class="coverage-strong" d=${st(s, e.pixels_per_meter, 0.4)}></path>
     `;
   }
   _renderTrails() {
-    const t = Date.now() - (this._config?.target_trail_seconds ?? 8) * 1e3, e = [...this._trails.entries()].map(([s, r]) => {
-      const o = r.filter((n) => n.updatedAt >= t);
-      return o.length > 1 ? $`<polyline class="trail" data-track=${s} points=${U(
+    const t = Date.now() - (this._config?.target_trail_seconds ?? 8) * 1e3, e = [...this._trails.entries()].map(([s, i]) => {
+      const o = i.filter((n) => n.updatedAt >= t);
+      return o.length > 1 ? $`<polyline class="trail" data-track=${s} points=${F(
         o.map((n) => n.floorPoint)
       )}></polyline>` : d;
     });
@@ -1062,7 +1074,7 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
   }
   _renderInspector(t, e) {
     const s = t.sensor;
-    return f`
+    return u`
       <aside class="inspector" aria-label="Selected radar details">
         <div class="inspector-heading">
           <div>
@@ -1071,16 +1083,16 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
           </div>
           <button type="button" class="icon-button" @click=${() => this._selectedSensorId = void 0} aria-label="Close inspector">×</button>
         </div>
-        ${t.discovered ? f`<p class="notice">Discovered automatically. Move it in the editor to save its placement.</p>` : d}
+        ${t.discovered ? u`<p class="notice">Discovered automatically. Move it in the editor to save its placement.</p>` : d}
         <dl>
           <div><dt>Targets</dt><dd>${t.targets.length}</dd></div>
           <div><dt>Position</dt><dd>${Math.round(s.x)}, ${Math.round(s.y)}</dd></div>
-          <div><dt>Heading</dt><dd>${Math.round(rt(s.heading))}°</dd></div>
+          <div><dt>Heading</dt><dd>${Math.round(X(s.heading))}°</dd></div>
           <div><dt>Range</dt><dd>${s.range_m ?? 6} m</dd></div>
-          ${t.temperature === void 0 ? d : f`<div><dt>Temperature</dt><dd>${t.temperature.toFixed(1)}°</dd></div>`}
-          ${t.humidity === void 0 ? d : f`<div><dt>Humidity</dt><dd>${t.humidity.toFixed(1)}%</dd></div>`}
+          ${t.temperature === void 0 ? d : u`<div><dt>Temperature</dt><dd>${t.temperature.toFixed(1)}°</dd></div>`}
+          ${t.humidity === void 0 ? d : u`<div><dt>Humidity</dt><dd>${t.humidity.toFixed(1)}%</dd></div>`}
         </dl>
-        ${this.editorMode ? f`
+        ${this.editorMode ? u`
               <div class="rotation">
                 <span>Rotate</span>
                 <button type="button" @click=${() => this._rotateSensor(s, -15)}>−15°</button>
@@ -1096,19 +1108,76 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
                   max="12"
                   step="0.25"
                   .value=${String(s.range_m ?? 6)}
-                  @input=${(r) => this._updateSensor(s, {
-      range_m: Number(r.target.value)
+                  @input=${(i) => this._updateSensor(s, {
+      range_m: Number(i.target.value)
     })}
                 />
               </label>
               <small>${e.pixels_per_meter} canvas px per metre</small>
+              ${this._renderCalibration(t, e)}
             ` : d}
       </aside>
     `;
   }
+  _renderCalibration(t, e) {
+    const s = this._calibration;
+    return !s || s.sensorId !== t.sensor.id ? u`
+        <div class="calibration-start">
+          <button type="button" @click=${() => this._startCalibration(t.sensor)}>
+            Calibrate placement
+          </button>
+          <small>Align the floor scale and radar direction with one live reference point.</small>
+        </div>
+      ` : s.step === "place" ? u`
+        <div class="calibration-panel" role="group" aria-label="Radar calibration step 1">
+          <strong>Place the radar</strong>
+          <p>Drag the radar marker to its exact physical location on this floor.</p>
+          <div class="calibration-actions">
+            <button
+              type="button"
+              ?disabled=${t.targets.length === 0}
+              @click=${() => this._beginReferenceStep(t)}
+            >Radar is placed</button>
+            <button type="button" @click=${this._cancelCalibration}>Cancel</button>
+          </div>
+          ${t.targets.length === 0 ? u`<small>A live target is required for the next step.</small>` : u`<small>${t.targets.length} live target${t.targets.length === 1 ? "" : "s"} available.</small>`}
+        </div>
+      ` : s.step === "reference" ? u`
+        <div class="calibration-panel" role="group" aria-label="Radar calibration step 2">
+          <strong>Mark the person’s location</strong>
+          <p>Have one person stand at a recognizable spot, choose their target, then click that spot on the floorplan.</p>
+          <label>
+            <span>Live target</span>
+            <select @change=${this._calibrationTargetChanged}>
+              ${t.targets.map(
+      (i) => u`<option
+                  value=${i.index}
+                  ?selected=${i.index === s.targetIndex}
+                >Target ${i.index} · ${(Math.hypot(i.localXmm, i.localYmm) / 1e3).toFixed(2)} m</option>`
+    )}
+            </select>
+          </label>
+          <div class="calibration-actions">
+            <button type="button" @click=${() => this._calibration = { ...s, step: "place" }}>Back</button>
+            <button type="button" @click=${this._cancelCalibration}>Cancel</button>
+          </div>
+          ${s.message ? u`<small class="calibration-error">${s.message}</small>` : d}
+          <small>Current scale: ${e.pixels_per_meter.toFixed(1)} px/m</small>
+        </div>
+      ` : u`
+      <div class="calibration-panel calibration-done" role="status">
+        <strong>Calibration applied</strong>
+        <p>${s.message}</p>
+        <div class="calibration-actions">
+          <button type="button" @click=${() => this._startCalibration(t.sensor)}>Calibrate again</button>
+          <button type="button" @click=${this._cancelCalibration}>Done</button>
+        </div>
+      </div>
+    `;
+  }
   _renderEditorHint() {
     const t = this._tool === "pan" ? "Drag the map to pan. Drag a radar to place it." : `Click to add ${this._tool} points, then choose Finish ${this._tool}.`;
-    return f`<footer class="editor-hint">${t}</footer>`;
+    return u`<footer class="editor-hint">${t}</footer>`;
   }
   _changeFloor(t) {
     this._floorId = t.target.value, this.dispatchEvent(
@@ -1123,15 +1192,15 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
     const e = this._floor, s = t.currentTarget;
     if (!e) return;
     t.preventDefault();
-    const r = st(
+    const i = it(
       t.clientX,
       t.clientY,
       s.getBoundingClientRect(),
       this._view
     );
-    this._view = xe(
+    this._view = we(
       this._view,
-      r,
+      i,
       t.deltaY > 0 ? 1.12 : 0.88,
       e
     );
@@ -1141,10 +1210,10 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
     if (t.currentTarget.setPointerCapture(t.pointerId), this._pointerMoved = !1, s) {
       const o = s.dataset.sensor;
       if (!o) return;
-      this._selectedSensorId = o, this.editorMode && this._tool === "pan" && (this._drag = { kind: "sensor", sensorId: o });
+      this._selectedSensorId = o, this.editorMode && this._tool === "pan" && this._calibration?.step !== "reference" && (this._drag = { kind: "sensor", sensorId: o });
       return;
     }
-    this._tool === "pan" && (this._drag = {
+    this._calibration?.step !== "reference" && this._tool === "pan" && (this._drag = {
       kind: "pan",
       clientX: t.clientX,
       clientY: t.clientY,
@@ -1155,21 +1224,21 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
     if (!this._drag) return;
     const e = t.currentTarget;
     if (this._pointerMoved = !0, this._drag.kind === "sensor") {
-      const n = this._drag.sensorId, l = st(
+      const n = this._drag.sensorId, l = it(
         t.clientX,
         t.clientY,
         e.getBoundingClientRect(),
         this._view
       ), a = this._runtimes.find(
-        (p) => p.sensor.id === n
+        (h) => h.sensor.id === n
       )?.sensor;
       a && this._updateSensor(a, l, !1);
       return;
     }
-    const s = e.getBoundingClientRect(), r = this._drag.view.width / s.width, o = this._drag.view.height / s.height;
+    const s = e.getBoundingClientRect(), i = this._drag.view.width / s.width, o = this._drag.view.height / s.height;
     this._view = {
       ...this._drag.view,
-      x: this._drag.view.x - (t.clientX - this._drag.clientX) * r,
+      x: this._drag.view.x - (t.clientX - this._drag.clientX) * i,
       y: this._drag.view.y - (t.clientY - this._drag.clientY) * o
     };
   }
@@ -1178,14 +1247,18 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
     e.hasPointerCapture(t.pointerId) && e.releasePointerCapture(t.pointerId), this._drag?.kind === "sensor" && this._emitConfig(), this._drag = void 0;
   }
   _mapClick(t) {
-    if (!this.editorMode || this._tool === "pan" || this._pointerMoved) return;
-    const e = t.currentTarget, s = st(
+    if (!this.editorMode || this._pointerMoved) return;
+    const e = t.currentTarget, s = it(
       t.clientX,
       t.clientY,
       e.getBoundingClientRect(),
       this._view
     );
-    this._draftPoints = [...this._draftPoints, s];
+    if (this._calibration?.step === "reference") {
+      this._applyCalibration(s);
+      return;
+    }
+    this._tool !== "pan" && (this._draftPoints = [...this._draftPoints, s]);
   }
   _finishDrawing() {
     const t = this._floor;
@@ -1199,17 +1272,75 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
         kind: "detection"
       } : {},
       points: [...this._draftPoints]
-    }, r = this._tool === "room" ? "rooms" : this._tool === "zone" ? "zones" : "walls";
-    this._replaceFloor({ ...t, [r]: [...t[r] ?? [], s] }), this._draftPoints = [], this._emitConfig();
+    }, i = this._tool === "room" ? "rooms" : this._tool === "zone" ? "zones" : "walls";
+    this._replaceFloor({ ...t, [i]: [...t[i] ?? [], s] }), this._draftPoints = [], this._emitConfig();
   }
   _rotateSensor(t, e) {
-    this._updateSensor(t, { heading: rt(t.heading + e) });
+    this._updateSensor(t, { heading: X(t.heading + e) });
+  }
+  _startCalibration(t) {
+    this._tool = "pan", this._draftPoints = [], this._calibration = { sensorId: t.id, step: "place" };
+  }
+  _beginReferenceStep(t) {
+    const e = t.targets[0];
+    e && (this._calibration = {
+      sensorId: t.sensor.id,
+      targetIndex: e.index,
+      step: "reference"
+    });
+  }
+  _calibrationTargetChanged(t) {
+    this._calibration && (this._calibration = {
+      ...this._calibration,
+      targetIndex: Number(t.target.value)
+    });
+  }
+  _applyCalibration(t) {
+    const e = this._floor, s = this._calibration;
+    if (!e || !s || s.step !== "reference") return;
+    const i = this._runtimes.find(
+      (a) => a.sensor.id === s.sensorId
+    ), o = i?.targets.find(
+      (a) => a.index === s.targetIndex
+    );
+    if (!i || !o) {
+      this._calibration = {
+        ...s,
+        message: "That live target disappeared. Choose a visible target and try again."
+      };
+      return;
+    }
+    const n = xe(
+      i.sensor,
+      o.localXmm,
+      o.localYmm,
+      t
+    );
+    if (!n) {
+      this._calibration = {
+        ...s,
+        message: "Use a reference point at least 10 cm from the radar."
+      };
+      return;
+    }
+    const l = (e.sensors ?? []).map(
+      (a) => a.id === i.sensor.id ? { ...a, heading: n.heading } : a
+    );
+    l.some((a) => a.id === i.sensor.id) || l.push({ ...i.sensor, heading: n.heading }), this._replaceFloor({
+      ...e,
+      pixels_per_meter: n.pixelsPerMeter,
+      sensors: l
+    }), this._emitConfig(), this._calibration = {
+      sensorId: i.sensor.id,
+      step: "done",
+      message: `Heading ${n.heading.toFixed(1)}° · scale ${n.pixelsPerMeter.toFixed(1)} px/m`
+    };
   }
   _updateSensor(t, e, s = !0) {
-    const r = this._floor;
-    if (!r) return;
-    const o = [...r.sensors ?? []], n = o.findIndex((a) => a.id === t.id), l = { ...t, ...e };
-    n >= 0 ? o[n] = l : o.push(l), this._replaceFloor({ ...r, sensors: o }), s && this._emitConfig();
+    const i = this._floor;
+    if (!i) return;
+    const o = [...i.sensors ?? []], n = o.findIndex((a) => a.id === t.id), l = { ...t, ...e };
+    n >= 0 ? o[n] = l : o.push(l), this._replaceFloor({ ...i, sensors: o }), s && this._emitConfig();
   }
   _replaceFloor(t) {
     this._config && (this._config = {
@@ -1232,10 +1363,10 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
     const t = Date.now() - (this._config?.target_trail_seconds ?? 8) * 1e3;
     for (const e of this._runtimes)
       for (const s of e.targets) {
-        const r = this._trails.get(s.id) ?? [];
-        r.push(s), this._trails.set(
+        const i = this._trails.get(s.id) ?? [];
+        i.push(s), this._trails.set(
           s.id,
-          r.filter((o) => o.updatedAt >= t).slice(-80)
+          i.filter((o) => o.updatedAt >= t).slice(-80)
         );
       }
   }
@@ -1244,14 +1375,14 @@ const ze = "0.1.0-alpha.2", qt = { states: {} }, V = class V extends I {
   }
   get _runtimes() {
     const t = this._floor;
-    return t ? Et(
+    return t ? Mt(
       this.hass,
       t,
       this._config?.auto_discover !== !1
     ) : [];
   }
 };
-V.properties = {
+Z.properties = {
   hass: { attribute: !1 },
   editorMode: { attribute: !1 },
   _config: { state: !0 },
@@ -1262,8 +1393,9 @@ V.properties = {
   _tool: { state: !0 },
   _draftPoints: { state: !0 },
   _showCoverage: { state: !0 },
-  _showTrails: { state: !0 }
-}, V.styles = Rt`
+  _showTrails: { state: !0 },
+  _calibration: { state: !0 }
+}, Z.styles = Tt`
     :host {
       display: block;
       --sp-ink: #14232b;
@@ -1566,6 +1698,36 @@ V.properties = {
 
     .range-control input { width: 100%; accent-color: var(--sp-radar); }
 
+    .calibration-start {
+      display: grid;
+      gap: 6px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid color-mix(in srgb, var(--sp-ink) 14%, transparent);
+    }
+
+    .calibration-start button {
+      border-color: var(--sp-radar);
+      background: color-mix(in srgb, var(--sp-radar) 12%, white);
+      font-weight: 700;
+    }
+
+    .calibration-panel {
+      display: grid;
+      gap: 9px;
+      margin-top: 14px;
+      padding: 12px;
+      border-left: 4px solid var(--sp-radar);
+      background: color-mix(in srgb, var(--sp-radar) 8%, white);
+    }
+
+    .calibration-panel p { margin: 0; font-size: 13px; line-height: 1.4; }
+    .calibration-panel label { display: grid; gap: 4px; font-size: 12px; }
+    .calibration-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .calibration-actions button { flex: 1 1 auto; }
+    .calibration-error { color: var(--error-color, #b3261e) !important; }
+    .calibration-done { border-left-color: var(--sp-heading); }
+
     .map-empty {
       position: absolute;
       inset: 50% auto auto 50%;
@@ -1621,19 +1783,19 @@ V.properties = {
       *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
     }
   `;
-let X = V;
-const Z = class Z extends I {
+let V = Z;
+const J = class J extends z {
   constructor() {
-    super(...arguments), this.hass = qt, this._config = {
+    super(...arguments), this.hass = Wt, this._config = {
       type: "custom:spatial-presence-card",
-      ...X.getStubConfig()
+      ...V.getStubConfig()
     }, this._radarPrefix = "", this._mapId = "house", this._storageStatus = "";
   }
   setConfig(t) {
-    this._config = z(t), this._mapId = t.backend_map_id ?? "house";
+    this._config = I(t), this._mapId = t.backend_map_id ?? "house";
   }
   render() {
-    return f`
+    return u`
       <div class="editor-fields">
         <label>
           <span>Card title</span>
@@ -1662,6 +1824,17 @@ const Z = class Z extends I {
           />
         </label>
         <label>
+          <span>Stationary hold (seconds)</span>
+          <input
+            type="number"
+            min="0"
+            max="3600"
+            step="1"
+            .value=${String(this._config.stationary_hold_seconds ?? 30)}
+            @change=${this._stationaryHoldChanged}
+          />
+        </label>
+        <label>
           <span>Radar entity prefix</span>
           <input
             placeholder="ld2450_presence"
@@ -1680,7 +1853,7 @@ const Z = class Z extends I {
         <div class="editor-actions">
           <button type="button" @click=${this._addRadar}>Add radar</button>
           <button type="button" @click=${this._addFloor}>Add floor</button>
-          ${this._config.floors.length > 1 ? f`<button type="button" class="danger" @click=${this._removeFloor}>Remove floor</button>` : d}
+          ${this._config.floors.length > 1 ? u`<button type="button" class="danger" @click=${this._removeFloor}>Remove floor</button>` : d}
           <button type="button" @click=${this._exportMap}>Export JSON</button>
           <button type="button" @click=${this._exportEasyFloorplan}>Export for Easy Floorplan</button>
           <button type="button" @click=${this._saveBackend}>Save map</button>
@@ -1691,7 +1864,7 @@ const Z = class Z extends I {
             <input type="file" accept="application/json,.json" @change=${this._importMap} />
           </label>
         </div>
-        ${this._storageStatus ? f`<p class="storage-status" role="status">${this._storageStatus}</p>` : d}
+        ${this._storageStatus ? u`<p class="storage-status" role="status">${this._storageStatus}</p>` : d}
       </div>
       <spatial-presence-card
         .hass=${this.hass}
@@ -1716,8 +1889,8 @@ const Z = class Z extends I {
   _backgroundChanged(t) {
     const e = this._activeFloor;
     if (!e) return;
-    const s = t.target.value.trim(), r = { ...e };
-    s && Vt(s) ? r.background = s : delete r.background, this._replaceFloor(r);
+    const s = t.target.value.trim(), i = { ...e };
+    s && Vt(s) ? i.background = s : delete i.background, this._replaceFloor(i);
   }
   _floorNameChanged(t) {
     const e = this._activeFloor, s = t.target.value.trim();
@@ -1728,6 +1901,10 @@ const Z = class Z extends I {
     if (!e) return;
     const s = Number(t.target.value);
     Number.isFinite(s) && s > 0 && this._replaceFloor({ ...e, pixels_per_meter: s });
+  }
+  _stationaryHoldChanged(t) {
+    const e = Number(t.target.value);
+    Number.isFinite(e) && e >= 0 && e <= 3600 && this._commit({ ...this._config, stationary_hold_seconds: e });
   }
   _addFloor() {
     const t = this._config.floors.length + 1, e = Xt(`floor-${t}`, `Floor ${t}`);
@@ -1746,8 +1923,8 @@ const Z = class Z extends I {
   _addRadar() {
     const t = this._activeFloor, e = this._radarPrefix.trim();
     if (!t || !e) return;
-    const r = {
-      id: Ie(e.replace(/[^a-z0-9_]+/gi, "_"), t.sensors ?? []),
+    const i = {
+      id: Re(e.replace(/[^a-z0-9_]+/gi, "_"), t.sensors ?? []),
       name: e.split("_").map((o) => o[0]?.toUpperCase() + o.slice(1)).join(" "),
       entity_prefix: e,
       x: t.width / 2,
@@ -1757,7 +1934,7 @@ const Z = class Z extends I {
       fov_degrees: 120,
       mount: "wall"
     };
-    this._replaceFloor({ ...t, sensors: [...t.sensors ?? [], r] }), this._radarPrefix = "", this.requestUpdate();
+    this._replaceFloor({ ...t, sensors: [...t.sensors ?? [], i] }), this._radarPrefix = "", this.requestUpdate();
   }
   _floorChanged(t) {
     t.stopPropagation(), this._commit({ ...this._config, default_floor: t.detail.floorId });
@@ -1767,7 +1944,7 @@ const Z = class Z extends I {
   }
   _exportEasyFloorplan() {
     zt(
-      Me(this._config),
+      Ce(this._config),
       "spatial-presence-easy-floorplan.json"
     );
   }
@@ -1775,30 +1952,30 @@ const Z = class Z extends I {
     const e = t.target, s = e.files?.[0];
     if (!(!s || s.size > 2e6))
       try {
-        const r = JSON.parse(await s.text());
+        const i = JSON.parse(await s.text());
         let o, n = [];
-        if (r.schema_version === "0.1" && Array.isArray(r.floors))
-          o = z({
-            ...r,
+        if (i.schema_version === "0.1" && Array.isArray(i.floors))
+          o = I({
+            ...i,
             type: "custom:spatial-presence-card"
           });
-        else if (String(r.type ?? "").includes("easy-floorplan") || Array.isArray(r.areas) || Array.isArray(r.walls)) {
-          const l = Ee(r);
-          o = z({
+        else if (String(i.type ?? "").includes("easy-floorplan") || Array.isArray(i.areas) || Array.isArray(i.walls)) {
+          const l = Me(i);
+          o = I({
             ...l.map,
             type: "custom:spatial-presence-card"
           }), n = l.warnings;
-        } else if (Pt(r.maps) || Pt(r.radars)) {
-          const l = Ce(r);
-          o = z({
+        } else if (It(i.maps) || It(i.radars)) {
+          const l = Pe(i);
+          o = I({
             ...l.map,
             type: "custom:spatial-presence-card"
           }), n = l.warnings;
         } else
           throw new Error("Use a Spatial Presence, Easy Floorplan or Radar Map Manager JSON file");
         this._commit(o), this._storageStatus = n.length ? `Imported with ${n.length} review note${n.length === 1 ? "" : "s"}: ${n.join(" ")}` : "Map imported.";
-      } catch (r) {
-        this._storageStatus = `Map was not imported: ${Y(r)}`;
+      } catch (i) {
+        this._storageStatus = `Map was not imported: ${Y(i)}`;
       } finally {
         e.value = "";
       }
@@ -1810,7 +1987,7 @@ const Z = class Z extends I {
     }
     this._storageStatus = "Saving map…";
     try {
-      const t = await ve(this.hass, this._mapId, this._config);
+      const t = await be(this.hass, this._mapId, this._config);
       this._commit({ ...this._config, backend_map_id: this._mapId }), this._storageStatus = `Saved revision ${t.revision}.`;
     } catch (t) {
       this._storageStatus = `Map was not saved: ${Y(t)}`;
@@ -1825,7 +2002,7 @@ const Z = class Z extends I {
     try {
       const t = await $e(this.hass, this._mapId);
       this._commit(
-        z({
+        I({
           ...t.config,
           type: "custom:spatial-presence-card",
           backend_map_id: this._mapId
@@ -1842,7 +2019,7 @@ const Z = class Z extends I {
     }
     this._storageStatus = "Restoring previous revision…";
     try {
-      await be(this.hass, this._mapId), await this._loadBackend();
+      await ve(this.hass, this._mapId), await this._loadBackend();
     } catch (t) {
       this._storageStatus = `Previous revision was not restored: ${Y(t)}`;
     }
@@ -1876,10 +2053,10 @@ const Z = class Z extends I {
     return /^[a-z0-9][a-z0-9_-]{0,63}$/.test(this._mapId);
   }
 };
-Z.properties = {
+J.properties = {
   hass: { attribute: !1 },
   _config: { state: !0 }
-}, Z.styles = Rt`
+}, J.styles = Tt`
     :host { display: grid; gap: 16px; }
     .editor-fields {
       display: grid;
@@ -1929,15 +2106,16 @@ Z.properties = {
       .editor-fields { grid-template-columns: 1fr; }
     }
   `;
-let nt = Z;
-function z(i) {
+let nt = J;
+function I(r) {
   return {
-    ...i,
-    type: i.type || "custom:spatial-presence-card",
+    ...r,
+    type: r.type || "custom:spatial-presence-card",
     schema_version: "0.1",
-    auto_discover: i.auto_discover !== !1,
-    target_trail_seconds: i.target_trail_seconds ?? 8,
-    floors: i.floors.map((t) => {
+    auto_discover: r.auto_discover !== !1,
+    target_trail_seconds: r.target_trail_seconds ?? 8,
+    stationary_hold_seconds: r.stationary_hold_seconds ?? 30,
+    floors: r.floors.map((t) => {
       const e = {
         ...t,
         pixels_per_meter: t.pixels_per_meter || 100,
@@ -1950,9 +2128,9 @@ function z(i) {
     })
   };
 }
-function Xt(i = "main", t = "Main floor") {
+function Xt(r = "main", t = "Main floor") {
   return {
-    id: i,
+    id: r,
     name: t,
     width: 1200,
     height: 800,
@@ -1963,27 +2141,27 @@ function Xt(i = "main", t = "Main floor") {
     sensors: []
   };
 }
-function Ie(i, t) {
-  const e = i || "radar";
-  if (!t.some((r) => r.id === e)) return e;
+function Re(r, t) {
+  const e = r || "radar";
+  if (!t.some((i) => i.id === e)) return e;
   let s = 2;
-  for (; t.some((r) => r.id === `${e}_${s}`); ) s += 1;
+  for (; t.some((i) => i.id === `${e}_${s}`); ) s += 1;
   return `${e}_${s}`;
 }
-function Vt(i) {
-  return /^(\/|https?:\/\/)/i.test(i.trim());
+function Vt(r) {
+  return /^(\/|https?:\/\/)/i.test(r.trim());
 }
-function Y(i) {
-  return i instanceof Error ? i.message : String(i);
+function Y(r) {
+  return r instanceof Error ? r.message : String(r);
 }
-function Pt(i) {
-  return typeof i == "object" && i !== null && !Array.isArray(i);
+function It(r) {
+  return typeof r == "object" && r !== null && !Array.isArray(r);
 }
-function zt(i, t) {
-  const e = JSON.stringify(i, null, 2), s = URL.createObjectURL(new Blob([e], { type: "application/json" })), r = document.createElement("a");
-  r.href = s, r.download = t, r.click(), URL.revokeObjectURL(s);
+function zt(r, t) {
+  const e = JSON.stringify(r, null, 2), s = URL.createObjectURL(new Blob([e], { type: "application/json" })), i = document.createElement("a");
+  i.href = s, i.download = t, i.click(), URL.revokeObjectURL(s);
 }
-customElements.get("spatial-presence-card") || customElements.define("spatial-presence-card", X);
+customElements.get("spatial-presence-card") || customElements.define("spatial-presence-card", V);
 customElements.get("spatial-presence-card-editor") || customElements.define("spatial-presence-card-editor", nt);
 window.customCards = window.customCards ?? [];
 window.customCards.push({
@@ -1999,7 +2177,7 @@ console.info(
   "color:#14232b;background:#f2a93b;font-weight:700;padding:3px 5px"
 );
 export {
-  X as SpatialPresenceCard,
+  V as SpatialPresenceCard,
   nt as SpatialPresenceCardEditor
 };
 //# sourceMappingURL=spatial-presence-card.js.map

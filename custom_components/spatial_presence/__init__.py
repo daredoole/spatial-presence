@@ -9,7 +9,16 @@ from homeassistant.components.frontend import add_extra_js_url
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
-from .const import DATA_STORE, DOMAIN, FRONTEND_BASE_URL, FRONTEND_PATH, FRONTEND_URL
+from .const import (
+    DATA_MANAGER,
+    DATA_STORE,
+    DOMAIN,
+    FRONTEND_BASE_URL,
+    FRONTEND_PATH,
+    FRONTEND_URL,
+    PLATFORMS,
+)
+from .runtime import SpatialPresenceManager
 from .store import SpatialMapStore
 from .websocket import async_register_websocket_commands
 
@@ -38,11 +47,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         add_extra_js_url(hass, f"{FRONTEND_URL}?v={FRONTEND_PATH.stat().st_mtime_ns}")
         domain_data["frontend_registered"] = True
 
+    manager = SpatialPresenceManager(hass, domain_data[DATA_STORE])
+    await manager.async_start()
+    domain_data[DATA_MANAGER] = manager
     domain_data[entry.entry_id] = {"frontend_url": FRONTEND_URL}
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a Spatial Presence config entry."""
-    hass.data.get(DOMAIN, {}).pop(entry.entry_id, None)
+    if not await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
+        return False
+    domain_data = hass.data.get(DOMAIN, {})
+    manager: SpatialPresenceManager | None = domain_data.pop(DATA_MANAGER, None)
+    if manager is not None:
+        await manager.async_stop()
+    domain_data.pop(entry.entry_id, None)
     return True

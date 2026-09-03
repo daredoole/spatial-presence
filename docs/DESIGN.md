@@ -32,7 +32,25 @@ scale establish hierarchy; the card downloads no decorative font.
 On phones, the inspector becomes a bottom sheet. The document never grows to
 the floorplan's aspect ratio: pan and zoom remain inside the map viewport.
 
+Calibration stays inside the selected-radar inspector so the map remains the
+working surface. It is a two-step field procedure, not a settings form:
+
+```text
+place radar marker → choose a live target → click the known floor position
+```
+
+The teal left rule identifies an active calibration without adding another
+floating card. Amber marks the completed result because it already means
+orientation in the radar glyph. Buttons use exact verbs and errors explain the
+next recoverable action. Keyboard focus, reduced motion and the mobile bottom
+sheet behavior remain unchanged.
+
 The memorable element is the live spatial field: soft concentric confidence
 bands and crisp target tracks over a restrained architectural drawing. Avoid a
 generic grid of cards, decorative gradients and ambient animation.
 
+This flow was checked against the project's subject: a generic multi-step
+dialog would obscure the floorplan and separate the physical action from its
+spatial result. Keeping one restrained instrument panel over the live map is
+specific to radar alignment and preserves the interface's single memorable
+element.

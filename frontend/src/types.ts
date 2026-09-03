@@ -58,6 +58,7 @@ export interface SpatialPresenceConfig {
   default_floor?: string;
   auto_discover?: boolean;
   target_trail_seconds?: number;
+  stationary_hold_seconds?: number;
   backend_map_id?: string;
 }
 

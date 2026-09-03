@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  calibrateRadarFromReference,
   coverageSectorPath,
   localTargetToFloor,
   normalizeHeading,
@@ -37,6 +38,23 @@ describe("radar coordinate transforms", () => {
       y: 600,
     });
   });
+
+  it("solves heading and scale from one physical reference", () => {
+    const result = calibrateRadarFromReference(
+      sensor,
+      0,
+      2000,
+      { x: 700, y: 600 },
+    );
+    expect(result?.heading).toBeCloseTo(90);
+    expect(result?.pixelsPerMeter).toBeCloseTo(100);
+  });
+
+  it("rejects a reference too close to the radar", () => {
+    expect(
+      calibrateRadarFromReference(sensor, 0, 50, { x: 501, y: 600 }),
+    ).toBeUndefined();
+  });
 });
 
 describe("heading and view helpers", () => {
@@ -62,4 +80,3 @@ describe("heading and view helpers", () => {
     expect(path).toContain("A 600 600");
   });
 });
-

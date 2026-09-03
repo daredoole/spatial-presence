@@ -121,6 +121,25 @@ class SpatialMapStoreTests(unittest.IsolatedAsyncioTestCase):
             "Main",
         )
 
+    async def test_notifies_listener_after_save_and_restore(self) -> None:
+        calls: list[str] = []
+        remove = self.store.add_listener(lambda: calls.append("changed"))
+        await self.store.async_save_map("house", valid_map("First"))
+        await self.store.async_save_map("house", valid_map("Second"))
+        await self.store.async_restore_previous("house")
+        remove()
+        await self.store.async_save_map("house", valid_map("Third"))
+        self.assertEqual(calls, ["changed", "changed", "changed"])
+
+    async def test_maps_returns_defensive_copy(self) -> None:
+        await self.store.async_save_map("house", valid_map())
+        loaded = self.store.maps()
+        loaded["house"]["config"]["floors"][0]["name"] = "Mutated"
+        self.assertEqual(
+            self.store.maps()["house"]["config"]["floors"][0]["name"],
+            "Main",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

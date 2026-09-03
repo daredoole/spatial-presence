@@ -15,6 +15,11 @@
       "minimum": 0,
       "maximum": 300
     },
+    "stationary_hold_seconds": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 3600
+    },
     "floors": {
       "type": "array",
       "minItems": 1,

@@ -78,5 +78,38 @@ describe("Spatial Presence card", () => {
     await card.updateComplete;
     expect(card.renderRoot.querySelector(".inspector")).not.toBeNull();
   });
-});
 
+  it("guides radar calibration from placement to a live reference", async () => {
+    const card = new SpatialPresenceCard();
+    card.editorMode = true;
+    card.hass = {
+      states: {
+        "sensor.radar_target_1_x": {
+          state: "0",
+          attributes: { unit_of_measurement: "mm" },
+        },
+        "sensor.radar_target_1_y": {
+          state: "2000",
+          attributes: { unit_of_measurement: "mm" },
+        },
+      },
+    };
+    card.setConfig(config);
+    document.body.append(card);
+    await card.updateComplete;
+
+    card.renderRoot
+      .querySelector<SVGGElement>("[data-sensor=radar]")
+      ?.dispatchEvent(new MouseEvent("pointerdown", { bubbles: true }));
+    await card.updateComplete;
+    const buttons = () => [...card.renderRoot.querySelectorAll("button")];
+    buttons().find((button) => button.textContent?.includes("Calibrate placement"))?.click();
+    await card.updateComplete;
+    expect(card.renderRoot.textContent).toContain("Place the radar");
+
+    buttons().find((button) => button.textContent?.includes("Radar is placed"))?.click();
+    await card.updateComplete;
+    expect(card.renderRoot.textContent).toContain("Mark the person’s location");
+    expect(card.renderRoot.textContent).toContain("Target 1");
+  });
+});
