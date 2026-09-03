@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">Spatial Presence radar floorplan</title>
+  <path d="M42 198V48h172v150M42 118h62V48m0 70h110" fill="none" stroke="#14232b" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M128 196 59 97a119 119 0 0 1 138 0Z" fill="#00a7a5" opacity=".16"/>
+  <path d="M128 196 83 119a89 89 0 0 1 90 0Z" fill="#00a7a5" opacity=".24"/>
+  <path d="M128 196 105 145a58 58 0 0 1 46 0Z" fill="#00a7a5" opacity=".38"/>
+  <circle cx="128" cy="196" r="17" fill="#14232b" stroke="#f6f8f7" stroke-width="6"/>
+  <circle cx="128" cy="196" r="7" fill="#00a7a5"/>
+  <path d="m128 168-9 17h18Z" fill="#f2a93b"/>
+  <g fill="#c026d3" stroke="#f6f8f7" stroke-width="5">
+    <circle cx="90" cy="123" r="12"/>
+    <circle cx="164" cy="92" r="12"/>
+  </g>
+</svg>
