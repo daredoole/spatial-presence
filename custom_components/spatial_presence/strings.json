@@ -1,0 +1,15 @@
+{
+  "title": "Spatial Presence",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Spatial Presence",
+        "description": "Adds the local floorplan and mmWave map frontend to Home Assistant. No cloud account is used."
+      }
+    },
+    "abort": {
+      "already_configured": "Spatial Presence is already configured."
+    }
+  }
+}
+

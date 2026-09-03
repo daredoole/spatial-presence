@@ -1,0 +1,32 @@
+name: Bug report
+description: Report reproducible incorrect behavior
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: checkboxes
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed tokens, private URLs, precise floorplans and identifiable target recordings.
+          required: true
+  - type: input
+    attributes:
+      label: Spatial Presence version
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Home Assistant version
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Include the expected result and minimal steps to reproduce it.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Sanitized configuration
+      render: yaml
+

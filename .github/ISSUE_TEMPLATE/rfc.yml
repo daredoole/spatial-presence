@@ -1,0 +1,23 @@
+name: Architecture RFC
+description: Propose a map-schema, persistence, fusion or interoperability change
+title: "[RFC]: "
+labels: [rfc]
+body:
+  - type: textarea
+    attributes:
+      label: Problem
+      description: Describe the user problem without prescribing a solution.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Proposed contract
+      description: Describe compatibility, migration and upstream impact.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: true
+

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spatial-presence.dev/schema/map/v0.1.json",
+  "title": "Spatial Presence Map",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "floors"],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "floors": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/floor" }
+    }
+  },
+  "$defs": {
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "path": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "points"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string" },
+        "area_id": { "type": "string" },
+        "points": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/point" }
+        }
+      }
+    },
+    "sensor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "x", "y", "heading"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string" },
+        "entity_prefix": { "type": "string" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "heading": { "type": "number" },
+        "range_m": { "type": "number", "exclusiveMinimum": 0 },
+        "fov_degrees": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 180
+        },
+        "mount": { "enum": ["wall", "ceiling"] }
+      }
+    },
+    "floor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "width", "height", "pixels_per_meter"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 },
+        "pixels_per_meter": { "type": "number", "exclusiveMinimum": 0 },
+        "background": { "type": "string" },
+        "walls": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/path" },
+          "default": []
+        },
+        "rooms": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/path" },
+          "default": []
+        },
+        "zones": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/path" },
+          "default": []
+        },
+        "sensors": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sensor" },
+          "default": []
+        }
+      }
+    }
+  }
+}
+

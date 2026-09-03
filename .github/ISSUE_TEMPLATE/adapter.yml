@@ -1,0 +1,28 @@
+name: Radar adapter request
+description: Propose support for another spatial sensor entity format
+title: "[Adapter]: "
+labels: [adapter]
+body:
+  - type: input
+    attributes:
+      label: Device and firmware
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Entity contract
+      description: List sanitized entity IDs, units, update rate and unavailable behavior.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Coordinate system
+      description: Explain axes, origin, units, range, field of view and maximum targets.
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Test fixture
+      options:
+        - label: I can provide a synthetic or anonymized recording for automated tests.
+

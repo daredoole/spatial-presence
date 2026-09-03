@@ -1,0 +1,13 @@
+# Changelog
+
+## 0.1.0-alpha.1 — unreleased
+
+- Initial HACS custom-integration and Lovelace-card packaging.
+- Spatial Map Schema 0.1 with a portable example.
+- Responsive multi-floor SVG viewport with pan, zoom and fit.
+- Graphical wall, room and zone drawing.
+- LD2450 entity discovery, unit normalization and target transforms.
+- Radar drag placement, fine/coarse rotation and confidence-band coverage.
+- Ephemeral target trails plus temperature and humidity inspection.
+- JSON import/export, test suite, CI and upstream interoperability RFC.
+

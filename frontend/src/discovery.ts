@@ -1,0 +1,135 @@
+import { localTargetToFloor } from "./geometry";
+import type {
+  Floor,
+  HassEntity,
+  HomeAssistant,
+  RadarRuntime,
+  RadarSensor,
+  RadarTarget,
+} from "./types";
+
+const TARGET_X = /^sensor\.(.+)_target_([1-9]\d*)_x$/;
+
+export function discoverLd2450Prefixes(hass: HomeAssistant): string[] {
+  const prefixes = new Set<string>();
+  for (const entityId of Object.keys(hass.states)) {
+    const match = TARGET_X.exec(entityId);
+    if (!match) continue;
+    const prefix = match[1];
+    const index = match[2];
+    if (prefix && index && hass.states[`sensor.${prefix}_target_${index}_y`]) {
+      prefixes.add(prefix);
+    }
+  }
+  return [...prefixes].sort();
+}
+
+export function runtimeForFloor(
+  hass: HomeAssistant,
+  floor: Floor,
+  autoDiscover = true,
+  now = Date.now(),
+): RadarRuntime[] {
+  const configured = [...(floor.sensors ?? [])];
+  const configuredPrefixes = new Set(
+    configured.map((sensor) => sensor.entity_prefix ?? sensor.id),
+  );
+
+  if (autoDiscover) {
+    for (const prefix of discoverLd2450Prefixes(hass)) {
+      if (configuredPrefixes.has(prefix)) continue;
+      configured.push({
+        id: prefix,
+        name: friendlyPrefix(prefix),
+        entity_prefix: prefix,
+        x: floor.width / 2,
+        y: floor.height * 0.85,
+        heading: 0,
+        range_m: 6,
+        fov_degrees: 120,
+        mount: "wall",
+      });
+    }
+  }
+
+  return configured.map((sensor) => runtimeForSensor(hass, floor, sensor, now));
+}
+
+function runtimeForSensor(
+  hass: HomeAssistant,
+  floor: Floor,
+  sensor: RadarSensor,
+  now: number,
+): RadarRuntime {
+  const prefix = sensor.entity_prefix ?? sensor.id;
+  const targets: RadarTarget[] = [];
+
+  for (let index = 1; index <= 9; index += 1) {
+    const xEntity = hass.states[`sensor.${prefix}_target_${index}_x`];
+    const yEntity = hass.states[`sensor.${prefix}_target_${index}_y`];
+    if (!xEntity || !yEntity) continue;
+    const localXmm = stateToMillimetres(xEntity);
+    const localYmm = stateToMillimetres(yEntity);
+    if (localXmm === undefined || localYmm === undefined) continue;
+    if (localXmm === 0 && localYmm === 0) continue;
+
+    targets.push({
+      id: `${sensor.id}:${index}`,
+      sensorId: sensor.id,
+      sensorName: sensor.name ?? friendlyPrefix(prefix),
+      index,
+      localXmm,
+      localYmm,
+      floorPoint: localTargetToFloor(
+        sensor,
+        localXmm,
+        localYmm,
+        floor.pixels_per_meter,
+      ),
+      updatedAt: now,
+    });
+  }
+
+  const temperature = numericState(hass.states[`sensor.${prefix}_temperature`]);
+  const humidity = numericState(hass.states[`sensor.${prefix}_humidity`]);
+  return {
+    sensor,
+    targets,
+    ...(temperature === undefined ? {} : { temperature }),
+    ...(humidity === undefined ? {} : { humidity }),
+    online: sensorOnline(hass, prefix),
+    discovered: !(floor.sensors ?? []).some((entry) => entry.id === sensor.id),
+  };
+}
+
+function sensorOnline(hass: HomeAssistant, prefix: string): boolean {
+  const status =
+    hass.states[`binary_sensor.${prefix}_online`] ??
+    hass.states[`binary_sensor.${prefix}_status`];
+  if (status) return status.state === "on";
+  const presence = hass.states[`binary_sensor.${prefix}_presence`];
+  return presence ? !["unavailable", "unknown"].includes(presence.state) : true;
+}
+
+function stateToMillimetres(entity: HassEntity): number | undefined {
+  const value = numericState(entity);
+  if (value === undefined) return undefined;
+  const unit = String(entity.attributes.unit_of_measurement ?? "mm").toLowerCase();
+  if (unit === "m") return value * 1000;
+  if (unit === "cm") return value * 10;
+  return value;
+}
+
+function numericState(entity: HassEntity | undefined): number | undefined {
+  if (!entity || ["unknown", "unavailable"].includes(entity.state)) return undefined;
+  const value = Number(entity.state);
+  return Number.isFinite(value) ? value : undefined;
+}
+
+function friendlyPrefix(prefix: string): string {
+  return prefix
+    .split("_")
+    .filter(Boolean)
+    .map((part) => part[0]?.toUpperCase() + part.slice(1))
+    .join(" ");
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1",
+  "floors": [
+    {
+      "id": "main",
+      "name": "Main floor",
+      "width": 1200,
+      "height": 800,
+      "pixels_per_meter": 100,
+      "walls": [
+        {
+          "id": "outer-wall",
+          "points": [
+            { "x": 80, "y": 80 },
+            { "x": 1120, "y": 80 },
+            { "x": 1120, "y": 720 },
+            { "x": 80, "y": 720 },
+            { "x": 80, "y": 80 }
+          ]
+        }
+      ],
+      "rooms": [],
+      "zones": [],
+      "sensors": [
+        {
+          "id": "demo_radar",
+          "name": "Living room radar",
+          "entity_prefix": "ld2450_presence",
+          "x": 600,
+          "y": 700,
+          "heading": 0,
+          "range_m": 6,
+          "fov_degrees": 120,
+          "mount": "wall"
+        }
+      ]
+    }
+  ]
+}

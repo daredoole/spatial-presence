@@ -1,0 +1,82 @@
+// @vitest-environment happy-dom
+
+import { beforeEach, describe, expect, it } from "vitest";
+
+import {
+  SpatialPresenceCard,
+  SpatialPresenceCardEditor,
+} from "../src/spatial-presence-card";
+import type { SpatialPresenceConfig } from "../src/types";
+
+const config: SpatialPresenceConfig = {
+  type: "custom:spatial-presence-card",
+  schema_version: "0.1",
+  floors: [
+    {
+      id: "main",
+      name: "Main floor",
+      width: 1200,
+      height: 800,
+      pixels_per_meter: 100,
+      sensors: [
+        {
+          id: "radar",
+          entity_prefix: "radar",
+          x: 600,
+          y: 700,
+          heading: 0,
+        },
+      ],
+    },
+  ],
+};
+
+describe("Spatial Presence card", () => {
+  beforeEach(() => {
+    document.body.replaceChildren();
+  });
+
+  it("registers the card and graphical editor", () => {
+    expect(customElements.get("spatial-presence-card")).toBe(SpatialPresenceCard);
+    expect(customElements.get("spatial-presence-card-editor")).toBe(
+      SpatialPresenceCardEditor,
+    );
+    expect(SpatialPresenceCard.getConfigElement()).toBeInstanceOf(
+      SpatialPresenceCardEditor,
+    );
+  });
+
+  it("rejects a configuration without floors", () => {
+    const card = new SpatialPresenceCard();
+    expect(() => card.setConfig({ ...config, floors: [] })).toThrow(
+      "Add at least one floor",
+    );
+  });
+
+  it("renders an LD2450 target and opens its radar inspector", async () => {
+    const card = new SpatialPresenceCard();
+    card.hass = {
+      states: {
+        "sensor.radar_target_1_x": {
+          state: "250",
+          attributes: { unit_of_measurement: "mm" },
+        },
+        "sensor.radar_target_1_y": {
+          state: "2000",
+          attributes: { unit_of_measurement: "mm" },
+        },
+      },
+    };
+    card.setConfig(config);
+    document.body.append(card);
+    await card.updateComplete;
+
+    expect(card.renderRoot.querySelectorAll(".target")).toHaveLength(1);
+    const radar = card.renderRoot.querySelector<SVGGElement>("[data-sensor=radar]");
+    expect(radar).not.toBeNull();
+    radar?.dispatchEvent(new MouseEvent("pointerdown", { bubbles: true }));
+    await card.updateComplete;
+    expect(card.renderRoot.querySelector(".inspector")).not.toBeNull();
+  });
+});
+
