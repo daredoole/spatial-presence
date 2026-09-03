@@ -856,7 +856,7 @@ function H(r, t) {
 function qt(r) {
   return typeof r == "string" && /^(\/|https?:\/\/)/i.test(r.trim());
 }
-const ze = "0.1.0-alpha.3", Wt = { states: {} }, Z = class Z extends z {
+const ze = "0.1.0-alpha.4", Wt = { states: {} }, Z = class Z extends z {
   constructor() {
     super(...arguments), this.hass = Wt, this.editorMode = !1, this._floorId = "", this._view = { x: 0, y: 0, width: 1200, height: 800 }, this._tool = "pan", this._draftPoints = [], this._showCoverage = !0, this._showTrails = !0, this._pointerMoved = !1, this._trails = /* @__PURE__ */ new Map(), this._fit = () => {
       const t = this._floor;

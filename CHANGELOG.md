@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.0-alpha.4 — unreleased
+
+- Normalize Home Assistant imperial coordinate states in inches or feet before
+  projecting radar targets onto a floor.
+
 ## 0.1.0-alpha.3 — unreleased
 
 - Add push-based native occupancy, target-count and enter/leave event entities

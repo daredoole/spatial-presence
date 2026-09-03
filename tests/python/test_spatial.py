@@ -88,6 +88,19 @@ def target_states(x: str = "0", y: str = "2") -> dict:
     }
 
 
+def target_states_with_unit(y: str, unit: str) -> dict:
+    return {
+        "sensor.ld2450_target_1_x": {
+            "state": "0",
+            "attributes": {"unit_of_measurement": unit},
+        },
+        "sensor.ld2450_target_1_y": {
+            "state": y,
+            "attributes": {"unit_of_measurement": unit},
+        },
+    }
+
+
 class SpatialEngineTests(unittest.TestCase):
     def test_projects_target_and_counts_room(self) -> None:
         source = maps()
@@ -96,6 +109,26 @@ class SpatialEngineTests(unittest.TestCase):
         reading = readings["house:main:rooms:living"]
         self.assertEqual(reading.count, 1)
         self.assertTrue(reading.source_available)
+
+    def test_projects_home_assistant_imperial_inch_coordinates(self) -> None:
+        source = maps()
+        definitions = SPATIAL.collect_definitions(source)
+        readings = SPATIAL.calculate_readings(
+            source,
+            target_states_with_unit("78.74015748", "in"),
+            definitions,
+        )
+        self.assertEqual(readings["house:main:rooms:living"].count, 1)
+
+    def test_projects_home_assistant_imperial_foot_coordinates(self) -> None:
+        source = maps()
+        definitions = SPATIAL.collect_definitions(source)
+        readings = SPATIAL.calculate_readings(
+            source,
+            target_states_with_unit("6.56167979", "ft"),
+            definitions,
+        )
+        self.assertEqual(readings["house:main:rooms:living"].count, 1)
 
     def test_exclusion_zone_suppresses_target(self) -> None:
         source = maps(exclusion=True)

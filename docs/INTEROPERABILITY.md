@@ -44,3 +44,6 @@ Adapters consume documented or clearly versioned upstream shapes. Fixtures and
 tests cover every supported mapping. Unknown or lossy fields produce warnings;
 they are never silently presented as equivalent. Upstream maintainers should be
 consulted before declaring either format stable.
+
+Runtime coordinate adapters accept metric units plus inches and feet so Home
+Assistant's configured display-unit system does not alter physical placement.

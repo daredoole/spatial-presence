@@ -248,9 +248,24 @@ def _state_to_mm(state: Any) -> float | None:
         return None
     fallback = state.get("attributes", {}) if isinstance(state, dict) else {}
     attributes = getattr(state, "attributes", fallback)
-    unit = str(attributes.get("unit_of_measurement", "mm")).lower()
-    if unit == "m":
-        return value * 1000
-    if unit == "cm":
-        return value * 10
-    return value
+    unit = str(attributes.get("unit_of_measurement", "mm")).strip().lower()
+    unit_to_mm = {
+        "m": 1000,
+        "meter": 1000,
+        "meters": 1000,
+        "cm": 10,
+        "centimeter": 10,
+        "centimeters": 10,
+        "mm": 1,
+        "millimeter": 1,
+        "millimeters": 1,
+        "in": 25.4,
+        "inch": 25.4,
+        "inches": 25.4,
+        '"': 25.4,
+        "ft": 304.8,
+        "foot": 304.8,
+        "feet": 304.8,
+        "'": 304.8,
+    }
+    return value * unit_to_mm.get(unit, 1)

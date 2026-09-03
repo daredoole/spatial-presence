@@ -18,9 +18,10 @@ registry entries without direct registry mutation.
 
 The integration subscribes to configured ESPHome entity families named
 `sensor.<prefix>_target_N_x` and `sensor.<prefix>_target_N_y`. It normalizes
-millimetres, centimetres and metres, applies each radar pose and floor scale,
-then tests the projected point against room and zone polygons. State changes
-are push-driven; there is no polling interval.
+millimetres, centimetres, metres, inches and feet—including Home Assistant's
+automatic imperial display-unit conversion—then applies each radar pose and
+floor scale and tests the projected point against room and zone polygons.
+State changes are push-driven; there is no polling interval.
 
 If every configured coordinate source for a floor is unavailable, its derived
 entities are unavailable rather than falsely reporting an empty room. A target
@@ -36,6 +37,6 @@ returns to zero and the `held` attribute becomes true.
 
 Targets are anonymous and history is not persisted by the integration. Counts
 are raw radar targets, not identified people. When two radars see the same
-person, alpha.3 can count both observations; cross-radar fusion is deliberately
+person, alpha.4 can count both observations; cross-radar fusion is deliberately
 reserved for a later release so the current behavior remains deterministic and
 auditable.
