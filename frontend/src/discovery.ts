@@ -70,6 +70,9 @@ function runtimeForSensor(
     if (!xEntity || !yEntity) continue;
     const localXmm = stateToMillimetres(xEntity);
     const localYmm = stateToMillimetres(yEntity);
+    const speedMmPerSecond = stateToMillimetresPerSecond(
+      hass.states[`sensor.${prefix}_target_${index}_speed`],
+    );
     if (localXmm === undefined || localYmm === undefined) continue;
     if (localXmm === 0 && localYmm === 0) continue;
 
@@ -80,6 +83,7 @@ function runtimeForSensor(
       index,
       localXmm,
       localYmm,
+      ...(speedMmPerSecond === undefined ? {} : { speedMmPerSecond }),
       floorPoint: localTargetToFloor(
         sensor,
         localXmm,
@@ -117,6 +121,19 @@ function stateToMillimetres(entity: HassEntity): number | undefined {
   const unit = String(entity.attributes.unit_of_measurement ?? "mm").toLowerCase();
   if (unit === "m") return value * 1000;
   if (unit === "cm") return value * 10;
+  return value;
+}
+
+function stateToMillimetresPerSecond(entity: HassEntity | undefined): number | undefined {
+  if (!entity) return undefined;
+  const value = numericState(entity);
+  if (value === undefined) return undefined;
+  const unit = String(entity.attributes.unit_of_measurement ?? "mm/s").toLowerCase();
+  if (unit === "m/s") return value * 1000;
+  if (unit === "cm/s") return value * 10;
+  if (unit === "in/s") return value * 25.4;
+  if (unit === "ft/s") return value * 304.8;
+  if (unit === "mph") return value * 447.04;
   return value;
 }
 

@@ -34,7 +34,7 @@ import type {
   ViewBox,
 } from "./types";
 
-const CARD_VERSION = "0.1.0-alpha.5";
+const CARD_VERSION = "0.1.0-alpha.6";
 
 type DrawingTool = "pan" | "wall" | "room" | "zone";
 type DragState =
@@ -331,14 +331,62 @@ export class SpatialPresenceCard extends LitElement {
   }
 
   private _renderTarget(target: RadarTarget): TemplateResult {
+    const motion = this._targetMotion(target);
+    const stateLabel = motion.moving ? "moving" : "stationary";
+    const speedLabel = target.speedMmPerSecond === undefined
+      ? ""
+      : ` at ${(Math.abs(target.speedMmPerSecond) / 1000).toFixed(1)} metres per second`;
     return svg`
-      <g class="target" transform="translate(${target.floorPoint.x} ${target.floorPoint.y})">
-        <circle class="target-halo" r="28"></circle>
-        <circle r="18"></circle>
-        <circle class="target-core" r="6"></circle>
-        <text x="26" y="7">${target.index}</text>
+      <g
+        class="target ${motion.moving ? "moving" : "stationary"}"
+        data-motion=${stateLabel}
+        data-speed-mm-s=${target.speedMmPerSecond ?? "unknown"}
+        style="transform: translate(${target.floorPoint.x}px, ${target.floorPoint.y}px); --walk-cycle: ${motion.cycleSeconds}s; --motion-cycle: ${motion.cycleSeconds * 2}s"
+        role="img"
+        aria-label="Target ${target.index}, ${stateLabel}${speedLabel}"
+      >
+        <title>Target ${target.index} · ${stateLabel}${speedLabel}</title>
+        <circle class="target-halo" r="40"></circle>
+        ${motion.moving ? svg`<circle class="motion-ring" r="34"></circle>` : nothing}
+        <circle class="target-disc" r="27"></circle>
+        <g class="person-body" aria-hidden="true">
+          <circle class="person-head" cy="-12" r="5"></circle>
+          <path class="person-torso" d="M 0 -6 L 0 8"></path>
+          <path class="person-arm person-arm-left" d="M 0 -2 L -9 6"></path>
+          <path class="person-arm person-arm-right" d="M 0 -2 L 9 6"></path>
+          <path class="person-leg person-leg-left" d="M 0 8 L -8 19"></path>
+          <path class="person-leg person-leg-right" d="M 0 8 L 8 19"></path>
+        </g>
+        <text class="target-index" x="35" y="8">${target.index}</text>
       </g>
     `;
+  }
+
+  private _targetMotion(target: RadarTarget): {
+    moving: boolean;
+    cycleSeconds: number;
+  } {
+    let speed = Math.abs(target.speedMmPerSecond ?? 0);
+    if (target.speedMmPerSecond === undefined) {
+      const previous = [...(this._trails.get(target.id) ?? [])]
+        .reverse()
+        .find((entry) => entry.updatedAt < target.updatedAt);
+      if (previous) {
+        const elapsedSeconds = (target.updatedAt - previous.updatedAt) / 1000;
+        if (elapsedSeconds > 0) {
+          const distancePixels = Math.hypot(
+            target.floorPoint.x - previous.floorPoint.x,
+            target.floorPoint.y - previous.floorPoint.y,
+          );
+          const pixelsPerMeter = this._floor?.pixels_per_meter ?? 100;
+          speed = (distancePixels / pixelsPerMeter / elapsedSeconds) * 1000;
+        }
+      }
+    }
+    return {
+      moving: speed >= 80,
+      cycleSeconds: Math.min(1.05, Math.max(0.42, 800 / Math.max(speed, 1))),
+    };
   }
 
   private _renderSensor(runtime: RadarRuntime): TemplateResult {
@@ -1005,28 +1053,103 @@ export class SpatialPresenceCard extends LitElement {
       stroke-linejoin: round;
     }
 
+    .target {
+      transform-box: view-box;
+      transform-origin: 0 0;
+      transition: transform 180ms linear;
+      pointer-events: none;
+    }
+
     .target-halo {
       fill: color-mix(in srgb, var(--sp-target) 12%, transparent) !important;
       stroke: none !important;
     }
 
-    .target circle:nth-child(2) {
+    .target-disc {
       fill: color-mix(in srgb, var(--sp-target) 16%, transparent);
       stroke: var(--sp-target);
       stroke-width: 3;
       vector-effect: non-scaling-stroke;
     }
 
-    .target-core { fill: var(--sp-target); }
+    .motion-ring {
+      fill: none;
+      stroke: var(--sp-target);
+      stroke-width: 2;
+      stroke-dasharray: 7 8;
+      vector-effect: non-scaling-stroke;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: motion-orbit var(--motion-cycle) linear infinite;
+    }
 
-    .target text {
+    .person-head {
+      fill: #fff;
+      stroke: none;
+    }
+
+    .person-torso,
+    .person-arm,
+    .person-leg {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 3.2;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      transform-box: fill-box;
+      transform-origin: 50% 10%;
+    }
+
+    .target.moving .target-halo {
+      animation: target-pulse 1.4s ease-out infinite;
+    }
+
+    .target.moving .person-body {
+      animation: person-bob var(--walk-cycle) ease-in-out infinite;
+    }
+
+    .target.moving .person-arm-left,
+    .target.moving .person-leg-right {
+      animation: stride-forward var(--walk-cycle) ease-in-out infinite alternate;
+    }
+
+    .target.moving .person-arm-right,
+    .target.moving .person-leg-left {
+      animation: stride-back var(--walk-cycle) ease-in-out infinite alternate;
+    }
+
+    .target-index {
       fill: var(--sp-target);
-      font-size: 22px;
+      font-size: 26px;
       font-weight: 750;
       paint-order: stroke;
       stroke: var(--sp-paper);
       stroke-width: 4px;
       vector-effect: non-scaling-stroke;
+    }
+
+    @keyframes target-pulse {
+      0% { opacity: 0.55; transform: scale(0.82); }
+      75%, 100% { opacity: 0; transform: scale(1.18); }
+    }
+
+    @keyframes person-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+
+    @keyframes motion-orbit {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes stride-forward {
+      from { transform: rotate(-16deg); }
+      to { transform: rotate(18deg); }
+    }
+
+    @keyframes stride-back {
+      from { transform: rotate(16deg); }
+      to { transform: rotate(-18deg); }
     }
 
     .sensor {
@@ -1232,7 +1355,11 @@ export class SpatialPresenceCard extends LitElement {
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+      }
     }
   `;
 }

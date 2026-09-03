@@ -30,12 +30,12 @@ const Kt = (r) => new Rt(typeof r == "string" ? r : r + "", void 0, lt), Tt = (r
     const s = document.createElement("style"), i = q.litNonce;
     i !== void 0 && s.setAttribute("nonce", i), s.textContent = e.cssText, r.appendChild(s);
   }
-}, _t = at ? (r) => r : (r) => r instanceof CSSStyleSheet ? ((t) => {
+}, mt = at ? (r) => r : (r) => r instanceof CSSStyleSheet ? ((t) => {
   let e = "";
   for (const s of t.cssRules) e += s.cssText;
   return Kt(e);
 })(r) : r;
-const { is: Gt, defineProperty: te, getOwnPropertyDescriptor: ee, getOwnPropertyNames: se, getOwnPropertySymbols: ie, getPrototypeOf: re } = Object, K = globalThis, mt = K.trustedTypes, oe = mt ? mt.emptyScript : "", ne = K.reactiveElementPolyfillSupport, U = (r, t) => r, rt = { toAttribute(r, t) {
+const { is: Gt, defineProperty: te, getOwnPropertyDescriptor: ee, getOwnPropertyNames: se, getOwnPropertySymbols: ie, getPrototypeOf: re } = Object, Q = globalThis, _t = Q.trustedTypes, oe = _t ? _t.emptyScript : "", ne = Q.reactiveElementPolyfillSupport, U = (r, t) => r, ot = { toAttribute(r, t) {
   switch (t) {
     case Boolean:
       r = r ? oe : null;
@@ -63,8 +63,8 @@ const { is: Gt, defineProperty: te, getOwnPropertyDescriptor: ee, getOwnProperty
       }
   }
   return e;
-} }, Nt = (r, t) => !Gt(r, t), bt = { attribute: !0, type: String, converter: rt, reflect: !1, useDefault: !1, hasChanged: Nt };
-Symbol.metadata ??= /* @__PURE__ */ Symbol("metadata"), K.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
+} }, Nt = (r, t) => !Gt(r, t), bt = { attribute: !0, type: String, converter: ot, reflect: !1, useDefault: !1, hasChanged: Nt };
+Symbol.metadata ??= /* @__PURE__ */ Symbol("metadata"), Q.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
 let P = class extends HTMLElement {
   static addInitializer(t) {
     this._$Ei(), (this.l ??= []).push(t);
@@ -119,8 +119,8 @@ let P = class extends HTMLElement {
     const e = [];
     if (Array.isArray(t)) {
       const s = new Set(t.flat(1 / 0).reverse());
-      for (const i of s) e.unshift(_t(i));
-    } else t !== void 0 && e.push(_t(t));
+      for (const i of s) e.unshift(mt(i));
+    } else t !== void 0 && e.push(mt(t));
     return e;
   }
   static _$Eu(t, e) {
@@ -162,14 +162,14 @@ let P = class extends HTMLElement {
   _$ET(t, e) {
     const s = this.constructor.elementProperties.get(t), i = this.constructor._$Eu(t, s);
     if (i !== void 0 && s.reflect === !0) {
-      const o = (s.converter?.toAttribute !== void 0 ? s.converter : rt).toAttribute(e, s.type);
+      const o = (s.converter?.toAttribute !== void 0 ? s.converter : ot).toAttribute(e, s.type);
       this._$Em = t, o == null ? this.removeAttribute(i) : this.setAttribute(i, o), this._$Em = null;
     }
   }
   _$AK(t, e) {
     const s = this.constructor, i = s._$Eh.get(t);
     if (i !== void 0 && this._$Em !== i) {
-      const o = s.getPropertyOptions(i), n = typeof o.converter == "function" ? { fromAttribute: o.converter } : o.converter?.fromAttribute !== void 0 ? o.converter : rt;
+      const o = s.getPropertyOptions(i), n = typeof o.converter == "function" ? { fromAttribute: o.converter } : o.converter?.fromAttribute !== void 0 ? o.converter : ot;
       this._$Em = i;
       const l = n.fromAttribute(e, o.type);
       this[i] = l ?? this._$Ej?.get(i) ?? l, this._$Em = null;
@@ -246,10 +246,10 @@ let P = class extends HTMLElement {
   firstUpdated(t) {
   }
 };
-P.elementStyles = [], P.shadowRootOptions = { mode: "open" }, P[U("elementProperties")] = /* @__PURE__ */ new Map(), P[U("finalized")] = /* @__PURE__ */ new Map(), ne?.({ ReactiveElement: P }), (K.reactiveElementVersions ??= []).push("2.1.2");
-const ct = globalThis, $t = (r) => r, W = ct.trustedTypes, vt = W ? W.createPolicy("lit-html", { createHTML: (r) => r }) : void 0, Ft = "$lit$", A = `lit$${Math.random().toFixed(9).slice(2)}$`, Ut = "?" + A, ae = `<${Ut}>`, C = document, D = () => C.createComment(""), j = (r) => r === null || typeof r != "object" && typeof r != "function", dt = Array.isArray, le = (r) => dt(r) || typeof r?.[Symbol.iterator] == "function", et = `[ 	
-\f\r]`, N = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, yt = /-->/g, xt = />/g, E = RegExp(`>|${et}(?:([^\\s"'>=/]+)(${et}*=${et}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), wt = /'/g, At = /"/g, Ot = /^(?:script|style|textarea|title)$/i, Ht = (r) => (t, ...e) => ({ _$litType$: r, strings: t, values: e }), u = Ht(1), b = Ht(2), R = /* @__PURE__ */ Symbol.for("lit-noChange"), d = /* @__PURE__ */ Symbol.for("lit-nothing"), kt = /* @__PURE__ */ new WeakMap(), M = C.createTreeWalker(C, 129);
+P.elementStyles = [], P.shadowRootOptions = { mode: "open" }, P[U("elementProperties")] = /* @__PURE__ */ new Map(), P[U("finalized")] = /* @__PURE__ */ new Map(), ne?.({ ReactiveElement: P }), (Q.reactiveElementVersions ??= []).push("2.1.2");
+const ct = globalThis, $t = (r) => r, W = ct.trustedTypes, vt = W ? W.createPolicy("lit-html", { createHTML: (r) => r }) : void 0, Ft = "$lit$", k = `lit$${Math.random().toFixed(9).slice(2)}$`, Ut = "?" + k, ae = `<${Ut}>`, C = document, D = () => C.createComment(""), L = (r) => r === null || typeof r != "object" && typeof r != "function", dt = Array.isArray, le = (r) => dt(r) || typeof r?.[Symbol.iterator] == "function", st = `[ 	
+\f\r]`, N = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, yt = /-->/g, xt = />/g, M = RegExp(`>|${st}(?:([^\\s"'>=/]+)(${st}*=${st}*(?:[^ 	
+\f\r"'\`<>=]|("|')|))|$)`, "g"), wt = /'/g, kt = /"/g, Ot = /^(?:script|style|textarea|title)$/i, Ht = (r) => (t, ...e) => ({ _$litType$: r, strings: t, values: e }), u = Ht(1), _ = Ht(2), R = /* @__PURE__ */ Symbol.for("lit-noChange"), d = /* @__PURE__ */ Symbol.for("lit-nothing"), At = /* @__PURE__ */ new WeakMap(), E = C.createTreeWalker(C, 129);
 function Dt(r, t) {
   if (!dt(r) || !r.hasOwnProperty("raw")) throw Error("invalid template strings array");
   return vt !== void 0 ? vt.createHTML(t) : t;
@@ -260,40 +260,40 @@ const ce = (r, t) => {
   for (let l = 0; l < e; l++) {
     const a = r[l];
     let h, p, c = -1, f = 0;
-    for (; f < a.length && (n.lastIndex = f, p = n.exec(a), p !== null); ) f = n.lastIndex, n === N ? p[1] === "!--" ? n = yt : p[1] !== void 0 ? n = xt : p[2] !== void 0 ? (Ot.test(p[2]) && (i = RegExp("</" + p[2], "g")), n = E) : p[3] !== void 0 && (n = E) : n === E ? p[0] === ">" ? (n = i ?? N, c = -1) : p[1] === void 0 ? c = -2 : (c = n.lastIndex - p[2].length, h = p[1], n = p[3] === void 0 ? E : p[3] === '"' ? At : wt) : n === At || n === wt ? n = E : n === yt || n === xt ? n = N : (n = E, i = void 0);
-    const _ = n === E && r[l + 1].startsWith("/>") ? " " : "";
-    o += n === N ? a + ae : c >= 0 ? (s.push(h), a.slice(0, c) + Ft + a.slice(c) + A + _) : a + A + (c === -2 ? l : _);
+    for (; f < a.length && (n.lastIndex = f, p = n.exec(a), p !== null); ) f = n.lastIndex, n === N ? p[1] === "!--" ? n = yt : p[1] !== void 0 ? n = xt : p[2] !== void 0 ? (Ot.test(p[2]) && (i = RegExp("</" + p[2], "g")), n = M) : p[3] !== void 0 && (n = M) : n === M ? p[0] === ">" ? (n = i ?? N, c = -1) : p[1] === void 0 ? c = -2 : (c = n.lastIndex - p[2].length, h = p[1], n = p[3] === void 0 ? M : p[3] === '"' ? kt : wt) : n === kt || n === wt ? n = M : n === yt || n === xt ? n = N : (n = M, i = void 0);
+    const m = n === M && r[l + 1].startsWith("/>") ? " " : "";
+    o += n === N ? a + ae : c >= 0 ? (s.push(h), a.slice(0, c) + Ft + a.slice(c) + k + m) : a + k + (c === -2 ? l : m);
   }
   return [Dt(r, o + (r[e] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), s];
 };
-class B {
+class j {
   constructor({ strings: t, _$litType$: e }, s) {
     let i;
     this.parts = [];
     let o = 0, n = 0;
     const l = t.length - 1, a = this.parts, [h, p] = ce(t, e);
-    if (this.el = B.createElement(h, s), M.currentNode = this.el.content, e === 2 || e === 3) {
+    if (this.el = j.createElement(h, s), E.currentNode = this.el.content, e === 2 || e === 3) {
       const c = this.el.content.firstChild;
       c.replaceWith(...c.childNodes);
     }
-    for (; (i = M.nextNode()) !== null && a.length < l; ) {
+    for (; (i = E.nextNode()) !== null && a.length < l; ) {
       if (i.nodeType === 1) {
         if (i.hasAttributes()) for (const c of i.getAttributeNames()) if (c.endsWith(Ft)) {
-          const f = p[n++], _ = i.getAttribute(c).split(A), y = /([.?@])?(.*)/.exec(f);
-          a.push({ type: 1, index: o, name: y[2], strings: _, ctor: y[1] === "." ? pe : y[1] === "?" ? he : y[1] === "@" ? ue : Q }), i.removeAttribute(c);
-        } else c.startsWith(A) && (a.push({ type: 6, index: o }), i.removeAttribute(c));
+          const f = p[n++], m = i.getAttribute(c).split(k), y = /([.?@])?(.*)/.exec(f);
+          a.push({ type: 1, index: o, name: y[2], strings: m, ctor: y[1] === "." ? pe : y[1] === "?" ? he : y[1] === "@" ? ue : G }), i.removeAttribute(c);
+        } else c.startsWith(k) && (a.push({ type: 6, index: o }), i.removeAttribute(c));
         if (Ot.test(i.tagName)) {
-          const c = i.textContent.split(A), f = c.length - 1;
+          const c = i.textContent.split(k), f = c.length - 1;
           if (f > 0) {
             i.textContent = W ? W.emptyScript : "";
-            for (let _ = 0; _ < f; _++) i.append(c[_], D()), M.nextNode(), a.push({ type: 2, index: ++o });
+            for (let m = 0; m < f; m++) i.append(c[m], D()), E.nextNode(), a.push({ type: 2, index: ++o });
             i.append(c[f], D());
           }
         }
       } else if (i.nodeType === 8) if (i.data === Ut) a.push({ type: 2, index: o });
       else {
         let c = -1;
-        for (; (c = i.data.indexOf(A, c + 1)) !== -1; ) a.push({ type: 7, index: o }), c += A.length - 1;
+        for (; (c = i.data.indexOf(k, c + 1)) !== -1; ) a.push({ type: 7, index: o }), c += k.length - 1;
       }
       o++;
     }
@@ -306,7 +306,7 @@ class B {
 function T(r, t, e = r, s) {
   if (t === R) return t;
   let i = s !== void 0 ? e._$Co?.[s] : e._$Cl;
-  const o = j(t) ? void 0 : t._$litDirective$;
+  const o = L(t) ? void 0 : t._$litDirective$;
   return i?.constructor !== o && (i?._$AO?.(!1), o === void 0 ? i = void 0 : (i = new o(r), i._$AT(r, e, s)), s !== void 0 ? (e._$Co ??= [])[s] = i : e._$Cl = i), i !== void 0 && (t = T(r, i._$AS(r, t.values), i, s)), t;
 }
 class de {
@@ -321,23 +321,23 @@ class de {
   }
   u(t) {
     const { el: { content: e }, parts: s } = this._$AD, i = (t?.creationScope ?? C).importNode(e, !0);
-    M.currentNode = i;
-    let o = M.nextNode(), n = 0, l = 0, a = s[0];
+    E.currentNode = i;
+    let o = E.nextNode(), n = 0, l = 0, a = s[0];
     for (; a !== void 0; ) {
       if (n === a.index) {
         let h;
-        a.type === 2 ? h = new L(o, o.nextSibling, this, t) : a.type === 1 ? h = new a.ctor(o, a.name, a.strings, this, t) : a.type === 6 && (h = new ge(o, this, t)), this._$AV.push(h), a = s[++l];
+        a.type === 2 ? h = new B(o, o.nextSibling, this, t) : a.type === 1 ? h = new a.ctor(o, a.name, a.strings, this, t) : a.type === 6 && (h = new ge(o, this, t)), this._$AV.push(h), a = s[++l];
       }
-      n !== a?.index && (o = M.nextNode(), n++);
+      n !== a?.index && (o = E.nextNode(), n++);
     }
-    return M.currentNode = C, i;
+    return E.currentNode = C, i;
   }
   p(t) {
     let e = 0;
     for (const s of this._$AV) s !== void 0 && (s.strings !== void 0 ? (s._$AI(t, s, e), e += s.strings.length - 2) : s._$AI(t[e])), e++;
   }
 }
-class L {
+class B {
   get _$AU() {
     return this._$AM?._$AU ?? this._$Cv;
   }
@@ -356,7 +356,7 @@ class L {
     return this._$AB;
   }
   _$AI(t, e = this) {
-    t = T(this, t, e), j(t) ? t === d || t == null || t === "" ? (this._$AH !== d && this._$AR(), this._$AH = d) : t !== this._$AH && t !== R && this._(t) : t._$litType$ !== void 0 ? this.$(t) : t.nodeType !== void 0 ? this.T(t) : le(t) ? this.k(t) : this._(t);
+    t = T(this, t, e), L(t) ? t === d || t == null || t === "" ? (this._$AH !== d && this._$AR(), this._$AH = d) : t !== this._$AH && t !== R && this._(t) : t._$litType$ !== void 0 ? this.$(t) : t.nodeType !== void 0 ? this.T(t) : le(t) ? this.k(t) : this._(t);
   }
   O(t) {
     return this._$AA.parentNode.insertBefore(t, this._$AB);
@@ -365,10 +365,10 @@ class L {
     this._$AH !== t && (this._$AR(), this._$AH = this.O(t));
   }
   _(t) {
-    this._$AH !== d && j(this._$AH) ? this._$AA.nextSibling.data = t : this.T(C.createTextNode(t)), this._$AH = t;
+    this._$AH !== d && L(this._$AH) ? this._$AA.nextSibling.data = t : this.T(C.createTextNode(t)), this._$AH = t;
   }
   $(t) {
-    const { values: e, _$litType$: s } = t, i = typeof s == "number" ? this._$AC(t) : (s.el === void 0 && (s.el = B.createElement(Dt(s.h, s.h[0]), this.options)), s);
+    const { values: e, _$litType$: s } = t, i = typeof s == "number" ? this._$AC(t) : (s.el === void 0 && (s.el = j.createElement(Dt(s.h, s.h[0]), this.options)), s);
     if (this._$AH?._$AD === i) this._$AH.p(e);
     else {
       const o = new de(i, this), n = o.u(this.options);
@@ -376,14 +376,14 @@ class L {
     }
   }
   _$AC(t) {
-    let e = kt.get(t.strings);
-    return e === void 0 && kt.set(t.strings, e = new B(t)), e;
+    let e = At.get(t.strings);
+    return e === void 0 && At.set(t.strings, e = new j(t)), e;
   }
   k(t) {
     dt(this._$AH) || (this._$AH = [], this._$AR());
     const e = this._$AH;
     let s, i = 0;
-    for (const o of t) i === e.length ? e.push(s = new L(this.O(D()), this.O(D()), this, this.options)) : s = e[i], s._$AI(o), i++;
+    for (const o of t) i === e.length ? e.push(s = new B(this.O(D()), this.O(D()), this, this.options)) : s = e[i], s._$AI(o), i++;
     i < e.length && (this._$AR(s && s._$AB.nextSibling, i), e.length = i);
   }
   _$AR(t = this._$AA.nextSibling, e) {
@@ -396,7 +396,7 @@ class L {
     this._$AM === void 0 && (this._$Cv = t, this._$AP?.(t));
   }
 }
-class Q {
+class G {
   get tagName() {
     return this.element.tagName;
   }
@@ -409,11 +409,11 @@ class Q {
   _$AI(t, e = this, s, i) {
     const o = this.strings;
     let n = !1;
-    if (o === void 0) t = T(this, t, e, 0), n = !j(t) || t !== this._$AH && t !== R, n && (this._$AH = t);
+    if (o === void 0) t = T(this, t, e, 0), n = !L(t) || t !== this._$AH && t !== R, n && (this._$AH = t);
     else {
       const l = t;
       let a, h;
-      for (t = o[0], a = 0; a < o.length - 1; a++) h = T(this, l[s + a], e, a), h === R && (h = this._$AH[a]), n ||= !j(h) || h !== this._$AH[a], h === d ? t = d : t !== d && (t += (h ?? "") + o[a + 1]), this._$AH[a] = h;
+      for (t = o[0], a = 0; a < o.length - 1; a++) h = T(this, l[s + a], e, a), h === R && (h = this._$AH[a]), n ||= !L(h) || h !== this._$AH[a], h === d ? t = d : t !== d && (t += (h ?? "") + o[a + 1]), this._$AH[a] = h;
     }
     n && !i && this.j(t);
   }
@@ -421,7 +421,7 @@ class Q {
     t === d ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, t ?? "");
   }
 }
-class pe extends Q {
+class pe extends G {
   constructor() {
     super(...arguments), this.type = 3;
   }
@@ -429,7 +429,7 @@ class pe extends Q {
     this.element[this.name] = t === d ? void 0 : t;
   }
 }
-class he extends Q {
+class he extends G {
   constructor() {
     super(...arguments), this.type = 4;
   }
@@ -437,7 +437,7 @@ class he extends Q {
     this.element.toggleAttribute(this.name, !!t && t !== d);
   }
 }
-class ue extends Q {
+class ue extends G {
   constructor(t, e, s, i, o) {
     super(t, e, s, i, o), this.type = 5;
   }
@@ -462,13 +462,13 @@ class ge {
   }
 }
 const fe = ct.litHtmlPolyfillSupport;
-fe?.(B, L), (ct.litHtmlVersions ??= []).push("3.3.3");
-const _e = (r, t, e) => {
+fe?.(j, B), (ct.litHtmlVersions ??= []).push("3.3.3");
+const me = (r, t, e) => {
   const s = e?.renderBefore ?? t;
   let i = s._$litPart$;
   if (i === void 0) {
     const o = e?.renderBefore ?? null;
-    s._$litPart$ = i = new L(t.insertBefore(D(), o), o, void 0, e ?? {});
+    s._$litPart$ = i = new B(t.insertBefore(D(), o), o, void 0, e ?? {});
   }
   return i._$AI(r), i;
 };
@@ -483,7 +483,7 @@ class z extends P {
   }
   update(t) {
     const e = this.render();
-    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(t), this._$Do = _e(e, this.renderRoot, this.renderOptions);
+    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(t), this._$Do = me(e, this.renderRoot, this.renderOptions);
   }
   connectedCallback() {
     super.connectedCallback(), this._$Do?.setConnected(!0);
@@ -496,8 +496,8 @@ class z extends P {
   }
 }
 z._$litElement$ = !0, z.finalized = !0, pt.litElementHydrateSupport?.({ LitElement: z });
-const me = pt.litElementPolyfillSupport;
-me?.({ LitElement: z });
+const _e = pt.litElementPolyfillSupport;
+_e?.({ LitElement: z });
 (pt.litElementVersions ??= []).push("4.2.2");
 function ht(r, t) {
   return r.callWS ? r.callWS(t) : Promise.reject(
@@ -508,7 +508,7 @@ function be(r, t) {
   return ht(r, { type: "spatial_presence/map/get", map_id: t });
 }
 function $e(r, t, e) {
-  const s = jt(e);
+  const s = Lt(e);
   return ht(r, {
     type: "spatial_presence/map/save",
     map_id: t,
@@ -516,7 +516,7 @@ function $e(r, t, e) {
     config: { ...s, schema_version: "0.1" }
   });
 }
-function jt(r) {
+function Lt(r) {
   const { type: t, backend_map_id: e, ...s } = r;
   return { ...s, schema_version: "0.1" };
 }
@@ -546,7 +546,7 @@ function xe(r, t, e, s) {
     pixelsPerMeter: o * 1e3 / i
   };
 }
-function st(r, t, e = 1) {
+function it(r, t, e = 1) {
   const s = (r.range_m ?? 6) * t * e, i = (r.fov_degrees ?? 120) / 2, o = St(r, s, -i), n = St(r, s, i), l = i * 2 > 180 ? 1 : 0;
   return [
     `M ${w(r.x)} ${w(r.y)}`,
@@ -566,7 +566,7 @@ function w(r) {
   return Math.round(r * 100) / 100;
 }
 function we(r, t, e, s) {
-  const i = Et(r.width * e, s.width * 0.08, s.width * 4), o = Et(
+  const i = Mt(r.width * e, s.width * 0.08, s.width * 4), o = Mt(
     r.height * e,
     s.height * 0.08,
     s.height * 4
@@ -581,35 +581,35 @@ function we(r, t, e, s) {
 function F(r) {
   return r.map((t) => `${t.x},${t.y}`).join(" ");
 }
-function it(r, t, e, s) {
+function rt(r, t, e, s) {
   return {
     x: s.x + (r - e.left) / e.width * s.width,
     y: s.y + (t - e.top) / e.height * s.height
   };
 }
-function Et(r, t, e) {
+function Mt(r, t, e) {
   return Math.min(e, Math.max(t, r));
 }
-const Ae = /^sensor\.(.+)_target_([1-9]\d*)_x$/;
-function ke(r) {
+const ke = /^sensor\.(.+)_target_([1-9]\d*)_x$/;
+function Ae(r) {
   const t = /* @__PURE__ */ new Set();
   for (const e of Object.keys(r.states)) {
-    const s = Ae.exec(e);
+    const s = ke.exec(e);
     if (!s) continue;
     const i = s[1], o = s[2];
     i && o && r.states[`sensor.${i}_target_${o}_y`] && t.add(i);
   }
   return [...t].sort();
 }
-function Mt(r, t, e = !0, s = Date.now()) {
+function Et(r, t, e = !0, s = Date.now()) {
   const i = [...t.sensors ?? []], o = new Set(
     i.map((n) => n.entity_prefix ?? n.id)
   );
   if (e)
-    for (const n of ke(r))
+    for (const n of Ae(r))
       o.has(n) || i.push({
         id: n,
-        name: Bt(n),
+        name: jt(n),
         entity_prefix: n,
         x: t.width / 2,
         y: t.height * 0.85,
@@ -625,14 +625,17 @@ function Se(r, t, e, s) {
   for (let a = 1; a <= 9; a += 1) {
     const h = r.states[`sensor.${i}_target_${a}_x`], p = r.states[`sensor.${i}_target_${a}_y`];
     if (!h || !p) continue;
-    const c = Ct(h), f = Ct(p);
+    const c = Ct(h), f = Ct(p), m = Ee(
+      r.states[`sensor.${i}_target_${a}_speed`]
+    );
     c === void 0 || f === void 0 || c === 0 && f === 0 || o.push({
       id: `${e.id}:${a}`,
       sensorId: e.id,
-      sensorName: e.name ?? Bt(i),
+      sensorName: e.name ?? jt(i),
       index: a,
       localXmm: c,
       localYmm: f,
+      ...m === void 0 ? {} : { speedMmPerSecond: m },
       floorPoint: ye(
         e,
         c,
@@ -642,66 +645,73 @@ function Se(r, t, e, s) {
       updatedAt: s
     });
   }
-  const n = ot(r.states[`sensor.${i}_temperature`]), l = ot(r.states[`sensor.${i}_humidity`]);
+  const n = V(r.states[`sensor.${i}_temperature`]), l = V(r.states[`sensor.${i}_humidity`]);
   return {
     sensor: e,
     targets: o,
     ...n === void 0 ? {} : { temperature: n },
     ...l === void 0 ? {} : { humidity: l },
-    online: Ee(r, i),
+    online: Me(r, i),
     discovered: !(t.sensors ?? []).some((a) => a.id === e.id)
   };
 }
-function Ee(r, t) {
+function Me(r, t) {
   const e = r.states[`binary_sensor.${t}_online`] ?? r.states[`binary_sensor.${t}_status`];
   if (e) return e.state === "on";
   const s = r.states[`binary_sensor.${t}_presence`];
   return s ? !["unavailable", "unknown"].includes(s.state) : !0;
 }
 function Ct(r) {
-  const t = ot(r);
+  const t = V(r);
   if (t === void 0) return;
   const e = String(r.attributes.unit_of_measurement ?? "mm").toLowerCase();
   return e === "m" ? t * 1e3 : e === "cm" ? t * 10 : t;
 }
-function ot(r) {
+function Ee(r) {
+  if (!r) return;
+  const t = V(r);
+  if (t === void 0) return;
+  const e = String(r.attributes.unit_of_measurement ?? "mm/s").toLowerCase();
+  return e === "m/s" ? t * 1e3 : e === "cm/s" ? t * 10 : e === "in/s" ? t * 25.4 : e === "ft/s" ? t * 304.8 : e === "mph" ? t * 447.04 : t;
+}
+function V(r) {
   if (!r || ["unknown", "unavailable"].includes(r.state)) return;
   const t = Number(r.state);
   return Number.isFinite(t) ? t : void 0;
 }
-function Bt(r) {
+function jt(r) {
   return r.split("_").filter(Boolean).map((t) => t[0]?.toUpperCase() + t.slice(1)).join(" ");
 }
-function Me(r, t = 100) {
+function Ce(r, t = 100) {
   if (!$(r)) throw new Error("Easy Floorplan configuration must be an object");
   const e = r, s = O(e.width, 1e3), i = O(e.height, 700), o = Array.isArray(e.floors) && e.floors.length ? e.floors : [e], n = [], l = /* @__PURE__ */ new Set(), a = o.map((c, f) => {
-    const _ = H(c.id ?? `floor-${f + 1}`, l), y = /* @__PURE__ */ new Set(), G = /* @__PURE__ */ new Set(), tt = (c.walls ?? []).flatMap((g, v) => [g.x1, g.y1, g.x2, g.y2].every(k) ? [{
+    const m = H(c.id ?? `floor-${f + 1}`, l), y = /* @__PURE__ */ new Set(), tt = /* @__PURE__ */ new Set(), et = (c.walls ?? []).flatMap((g, v) => [g.x1, g.y1, g.x2, g.y2].every(A) ? [{
       id: H(String(g.id ?? `wall-${v + 1}`), y),
       points: [
         { x: Number(g.x1), y: Number(g.y1) },
         { x: Number(g.x2), y: Number(g.y2) }
       ]
-    }] : (n.push(`${_}: skipped wall ${g.id ?? v + 1} with invalid coordinates`), [])), gt = (c.areas ?? []).flatMap((g, v) => {
-      const m = Lt(g.points);
-      return m.length < 3 ? (n.push(`${_}: skipped area ${g.id ?? v + 1} with fewer than three points`), []) : [{
-        id: H(String(g.id ?? `room-${v + 1}`), G),
+    }] : (n.push(`${m}: skipped wall ${g.id ?? v + 1} with invalid coordinates`), [])), gt = (c.areas ?? []).flatMap((g, v) => {
+      const b = Bt(g.points);
+      return b.length < 3 ? (n.push(`${m}: skipped area ${g.id ?? v + 1} with fewer than three points`), []) : [{
+        id: H(String(g.id ?? `room-${v + 1}`), tt),
         ...g.name ? { name: g.name } : {},
         ...g.haArea ? { area_id: g.haArea } : {},
-        points: m
+        points: b
       }];
     });
     for (const g of ["openings", "items", "texts", "furniture", "trackers"]) {
       const v = c[g]?.length ?? 0;
-      v && n.push(`${_}: ${v} ${g} retained only by Easy Floorplan`);
+      v && n.push(`${m}: ${v} ${g} retained only by Easy Floorplan`);
     }
     return {
-      id: _,
+      id: m,
       name: c.name ?? `Floor ${f + 1}`,
       width: s,
       height: i,
       pixels_per_meter: O(t, 100),
       ...qt(c.image) ? { background: c.image } : {},
-      walls: tt,
+      walls: et,
       rooms: gt,
       zones: [],
       sensors: []
@@ -723,7 +733,7 @@ function Me(r, t = 100) {
     warnings: n
   };
 }
-function Ce(r) {
+function Pe(r) {
   const t = r.floors[0];
   if (!t) throw new Error("Spatial map has no floors");
   return {
@@ -762,7 +772,7 @@ function Ce(r) {
     }))
   };
 }
-function Pe(r) {
+function Ie(r) {
   if (!$(r)) throw new Error("Radar Map Manager backup must be an object");
   const t = $(r.maps) ? r.maps : {}, e = Object.keys(t).length ? t : { default: {} }, s = $(r.radars) ? r.radars : {}, i = [
     "Radar Map Manager uses percentage coordinates; verify floor scale and background alignment",
@@ -775,48 +785,48 @@ function Pe(r) {
       auto_discover: !0,
       target_trail_seconds: 8,
       floors: Object.entries(e).map(([l, a], h) => {
-        const p = $(a) ? a : {}, c = $(p.config) ? p.config : {}, f = 1e3, _ = 1e3, y = /* @__PURE__ */ new Set(), G = Object.entries(s).flatMap(([m, x]) => {
+        const p = $(a) ? a : {}, c = $(p.config) ? p.config : {}, f = 1e3, m = 1e3, y = /* @__PURE__ */ new Set(), tt = Object.entries(s).flatMap(([b, x]) => {
           if (!$(x) || String(x.map_group ?? "default") !== l) return [];
           const S = $(x.layout) ? x.layout : {}, Zt = O(S.scale_x, 5), Jt = O(S.scale_y, 5);
-          return Math.abs(Zt - Jt) > 0.01 && i.push(`${l}/${m}: non-uniform RMM scale requires manual calibration`), Array.isArray(x.monitor_zones) && x.monitor_zones.length && i.push(`${l}/${m}: radar-local monitor zones require manual review`), [{
-            id: H(m, y),
-            name: m,
-            entity_prefix: Yt(m),
+          return Math.abs(Zt - Jt) > 0.01 && i.push(`${l}/${b}: non-uniform RMM scale requires manual calibration`), Array.isArray(x.monitor_zones) && x.monitor_zones.length && i.push(`${l}/${b}: radar-local monitor zones require manual review`), [{
+            id: H(b, y),
+            name: b,
+            entity_prefix: Yt(b),
             x: Pt(S.origin_x, 50) * f,
-            y: Pt(S.origin_y, 50) * _,
-            heading: k(S.rotation) ? Number(S.rotation) : 0,
+            y: Pt(S.origin_y, 50) * m,
+            heading: A(S.rotation) ? Number(S.rotation) : 0,
             range_m: 6,
             fov_degrees: 120,
             mount: S.ceiling_mount ? "ceiling" : "wall"
           }];
-        }), tt = $(p.zones) ? p.zones : {}, g = [
+        }), et = $(p.zones) ? p.zones : {}, g = [
           ["include_zones", "detection"],
           ["exclude_zones", "exclusion"],
           ["entrance_zones", "entrance"],
           ["stationary_zones", "stationary"]
         ].flatMap(
-          ([m, x]) => Ie(tt[m], m, f, _, x, i)
-        ), v = [c.bg_image, c.background_image, c.background].find((m) => qt(m));
+          ([b, x]) => ze(et[b], b, f, m, x, i)
+        ), v = [c.bg_image, c.background_image, c.background].find((b) => qt(b));
         return {
           id: H(l || `floor-${h + 1}`, o),
           name: l === "default" ? "Main floor" : l,
           width: f,
-          height: _,
+          height: m,
           pixels_per_meter: 100,
           ...typeof v == "string" ? { background: v } : {},
           walls: [],
           rooms: [],
           zones: g,
-          sensors: G
+          sensors: tt
         };
       })
     },
     warnings: i
   };
 }
-function Ie(r, t, e, s, i, o) {
+function ze(r, t, e, s, i, o) {
   return Array.isArray(r) ? r.flatMap((n, l) => {
-    const a = $(n) && Array.isArray(n.points) ? n.points : n, h = Lt(a).map((p) => ({
+    const a = $(n) && Array.isArray(n.points) ? n.points : n, h = Bt(a).map((p) => ({
       x: Math.abs(p.x) <= 100 ? p.x / 100 * e : p.x,
       y: Math.abs(p.y) <= 100 ? p.y / 100 * s : p.y
     }));
@@ -828,20 +838,20 @@ function Ie(r, t, e, s, i, o) {
     }];
   }) : [];
 }
-function Lt(r) {
-  return Array.isArray(r) ? r.flatMap((t) => Array.isArray(t) && k(t[0]) && k(t[1]) ? [{ x: Number(t[0]), y: Number(t[1]) }] : $(t) && k(t.x) && k(t.y) ? [{ x: Number(t.x), y: Number(t.y) }] : []) : [];
+function Bt(r) {
+  return Array.isArray(r) ? r.flatMap((t) => Array.isArray(t) && A(t[0]) && A(t[1]) ? [{ x: Number(t[0]), y: Number(t[1]) }] : $(t) && A(t.x) && A(t.y) ? [{ x: Number(t.x), y: Number(t.y) }] : []) : [];
 }
 function $(r) {
   return typeof r == "object" && r !== null && !Array.isArray(r);
 }
-function k(r) {
+function A(r) {
   return typeof r == "number" && Number.isFinite(r);
 }
 function O(r, t) {
-  return k(r) && Number(r) > 0 ? Number(r) : t;
+  return A(r) && Number(r) > 0 ? Number(r) : t;
 }
 function Pt(r, t) {
-  const e = k(r) ? Number(r) : t;
+  const e = A(r) ? Number(r) : t;
   return Math.max(0, Math.min(100, e)) / 100;
 }
 function Yt(r) {
@@ -856,7 +866,7 @@ function H(r, t) {
 function qt(r) {
   return typeof r == "string" && /^(\/|https?:\/\/)/i.test(r.trim());
 }
-const ze = "0.1.0-alpha.5", Wt = { states: {} }, Z = class Z extends z {
+const Re = "0.1.0-alpha.6", Wt = { states: {} }, J = class J extends z {
   constructor() {
     super(...arguments), this.hass = Wt, this.editorMode = !1, this._floorId = "", this._view = { x: 0, y: 0, width: 1200, height: 800 }, this._tool = "pan", this._draftPoints = [], this._showCoverage = !0, this._showTrails = !0, this._pointerMoved = !1, this._trails = /* @__PURE__ */ new Map(), this._fit = () => {
       const t = this._floor;
@@ -898,7 +908,7 @@ const ze = "0.1.0-alpha.5", Wt = { states: {} }, Z = class Z extends z {
     const t = this._config, e = this._floor;
     if (!t || !e)
       return u`<ha-card><p class="empty">Add a floor to begin.</p></ha-card>`;
-    const s = Mt(
+    const s = Et(
       this.hass,
       e,
       t.auto_discover !== !1
@@ -1001,7 +1011,7 @@ const ze = "0.1.0-alpha.5", Wt = { states: {} }, Z = class Z extends z {
           @click=${this._mapClick}
         >
           <rect class="paper" width=${t.width} height=${t.height}></rect>
-          ${t.background ? b`<image
+          ${t.background ? _`<image
                 class="background"
                 href=${t.background}
                 width=${t.width}
@@ -1011,7 +1021,7 @@ const ze = "0.1.0-alpha.5", Wt = { states: {} }, Z = class Z extends z {
           <g class="rooms">${(t.rooms ?? []).map((i) => this._renderRoom(i))}</g>
           <g class="zones">${(t.zones ?? []).map((i) => this._renderZone(i))}</g>
           <g class="walls">${(t.walls ?? []).map((i) => this._renderWall(i))}</g>
-          ${this._showCoverage ? b`<g class="coverage">${e.map((i) => this._renderCoverage(i, t))}</g>` : d}
+          ${this._showCoverage ? _`<g class="coverage">${e.map((i) => this._renderCoverage(i, t))}</g>` : d}
           ${this._showTrails ? this._renderTrails() : d}
           <g class="targets">
             ${e.flatMap(
@@ -1021,9 +1031,9 @@ const ze = "0.1.0-alpha.5", Wt = { states: {} }, Z = class Z extends z {
           <g class="sensors">
             ${e.map((i) => this._renderSensor(i))}
           </g>
-          ${this._draftPoints.length ? b`<polyline class="draft" points=${F(this._draftPoints)}></polyline>
+          ${this._draftPoints.length ? _`<polyline class="draft" points=${F(this._draftPoints)}></polyline>
                 ${this._draftPoints.map(
-      (i) => b`<circle class="draft-point" cx=${i.x} cy=${i.y} r="6"></circle>`
+      (i) => _`<circle class="draft-point" cx=${i.x} cy=${i.y} r="6"></circle>`
     )}` : d}
         </svg>
         ${e.length === 0 ? u`<div class="map-empty">
@@ -1034,47 +1044,84 @@ const ze = "0.1.0-alpha.5", Wt = { states: {} }, Z = class Z extends z {
     `;
   }
   _renderRoom(t) {
-    return b`
+    return _`
       <polygon points=${F(t.points)}></polygon>
-      ${t.name && t.points[0] ? b`<text x=${t.points[0].x + 12} y=${t.points[0].y + 24}>${t.name}</text>` : d}
+      ${t.name && t.points[0] ? _`<text x=${t.points[0].x + 12} y=${t.points[0].y + 24}>${t.name}</text>` : d}
     `;
   }
   _renderZone(t) {
-    return b`<polygon points=${F(t.points)}></polygon>`;
+    return _`<polygon points=${F(t.points)}></polygon>`;
   }
   _renderWall(t) {
-    return b`<polyline points=${F(t.points)}></polyline>`;
+    return _`<polyline points=${F(t.points)}></polyline>`;
   }
   _renderCoverage(t, e) {
     const s = t.sensor;
-    return b`
-      <path class="coverage-fringe" d=${st(s, e.pixels_per_meter, 1)}></path>
-      <path class="coverage-usable" d=${st(s, e.pixels_per_meter, 0.72)}></path>
-      <path class="coverage-strong" d=${st(s, e.pixels_per_meter, 0.4)}></path>
+    return _`
+      <path class="coverage-fringe" d=${it(s, e.pixels_per_meter, 1)}></path>
+      <path class="coverage-usable" d=${it(s, e.pixels_per_meter, 0.72)}></path>
+      <path class="coverage-strong" d=${it(s, e.pixels_per_meter, 0.4)}></path>
     `;
   }
   _renderTrails() {
     const t = Date.now() - (this._config?.target_trail_seconds ?? 8) * 1e3, e = [...this._trails.entries()].map(([s, i]) => {
       const o = i.filter((n) => n.updatedAt >= t);
-      return o.length > 1 ? b`<polyline class="trail" data-track=${s} points=${F(
+      return o.length > 1 ? _`<polyline class="trail" data-track=${s} points=${F(
         o.map((n) => n.floorPoint)
       )}></polyline>` : d;
     });
-    return b`<g class="trails">${e}</g>`;
+    return _`<g class="trails">${e}</g>`;
   }
   _renderTarget(t) {
-    return b`
-      <g class="target" transform="translate(${t.floorPoint.x} ${t.floorPoint.y})">
-        <circle class="target-halo" r="28"></circle>
-        <circle r="18"></circle>
-        <circle class="target-core" r="6"></circle>
-        <text x="26" y="7">${t.index}</text>
+    const e = this._targetMotion(t), s = e.moving ? "moving" : "stationary", i = t.speedMmPerSecond === void 0 ? "" : ` at ${(Math.abs(t.speedMmPerSecond) / 1e3).toFixed(1)} metres per second`;
+    return _`
+      <g
+        class="target ${e.moving ? "moving" : "stationary"}"
+        data-motion=${s}
+        data-speed-mm-s=${t.speedMmPerSecond ?? "unknown"}
+        style="transform: translate(${t.floorPoint.x}px, ${t.floorPoint.y}px); --walk-cycle: ${e.cycleSeconds}s; --motion-cycle: ${e.cycleSeconds * 2}s"
+        role="img"
+        aria-label="Target ${t.index}, ${s}${i}"
+      >
+        <title>Target ${t.index} · ${s}${i}</title>
+        <circle class="target-halo" r="40"></circle>
+        ${e.moving ? _`<circle class="motion-ring" r="34"></circle>` : d}
+        <circle class="target-disc" r="27"></circle>
+        <g class="person-body" aria-hidden="true">
+          <circle class="person-head" cy="-12" r="5"></circle>
+          <path class="person-torso" d="M 0 -6 L 0 8"></path>
+          <path class="person-arm person-arm-left" d="M 0 -2 L -9 6"></path>
+          <path class="person-arm person-arm-right" d="M 0 -2 L 9 6"></path>
+          <path class="person-leg person-leg-left" d="M 0 8 L -8 19"></path>
+          <path class="person-leg person-leg-right" d="M 0 8 L 8 19"></path>
+        </g>
+        <text class="target-index" x="35" y="8">${t.index}</text>
       </g>
     `;
   }
+  _targetMotion(t) {
+    let e = Math.abs(t.speedMmPerSecond ?? 0);
+    if (t.speedMmPerSecond === void 0) {
+      const s = [...this._trails.get(t.id) ?? []].reverse().find((i) => i.updatedAt < t.updatedAt);
+      if (s) {
+        const i = (t.updatedAt - s.updatedAt) / 1e3;
+        if (i > 0) {
+          const o = Math.hypot(
+            t.floorPoint.x - s.floorPoint.x,
+            t.floorPoint.y - s.floorPoint.y
+          ), n = this._floor?.pixels_per_meter ?? 100;
+          e = o / n / i * 1e3;
+        }
+      }
+    }
+    return {
+      moving: e >= 80,
+      cycleSeconds: Math.min(1.05, Math.max(0.42, 800 / Math.max(e, 1)))
+    };
+  }
   _renderSensor(t) {
     const e = t.sensor, s = e.id === this._selectedSensorId;
-    return b`
+    return _`
       <g
         class="sensor ${s ? "selected" : ""} ${t.online ? "" : "offline"}"
         data-sensor=${e.id}
@@ -1209,7 +1256,7 @@ const ze = "0.1.0-alpha.5", Wt = { states: {} }, Z = class Z extends z {
     const e = this._floor, s = t.currentTarget;
     if (!e) return;
     t.preventDefault();
-    const i = it(
+    const i = rt(
       t.clientX,
       t.clientY,
       s.getBoundingClientRect(),
@@ -1241,7 +1288,7 @@ const ze = "0.1.0-alpha.5", Wt = { states: {} }, Z = class Z extends z {
     if (!this._drag) return;
     const e = t.currentTarget;
     if (this._pointerMoved = !0, this._drag.kind === "sensor") {
-      const n = this._drag.sensorId, l = it(
+      const n = this._drag.sensorId, l = rt(
         t.clientX,
         t.clientY,
         e.getBoundingClientRect(),
@@ -1265,7 +1312,7 @@ const ze = "0.1.0-alpha.5", Wt = { states: {} }, Z = class Z extends z {
   }
   _mapClick(t) {
     if (!this.editorMode || this._pointerMoved) return;
-    const e = t.currentTarget, s = it(
+    const e = t.currentTarget, s = rt(
       t.clientX,
       t.clientY,
       e.getBoundingClientRect(),
@@ -1392,14 +1439,14 @@ const ze = "0.1.0-alpha.5", Wt = { states: {} }, Z = class Z extends z {
   }
   get _runtimes() {
     const t = this._floor;
-    return t ? Mt(
+    return t ? Et(
       this.hass,
       t,
       this._config?.auto_discover !== !1
     ) : [];
   }
 };
-Z.properties = {
+J.properties = {
   hass: { attribute: !1 },
   editorMode: { attribute: !1 },
   _config: { state: !0 },
@@ -1412,7 +1459,7 @@ Z.properties = {
   _showCoverage: { state: !0 },
   _showTrails: { state: !0 },
   _calibration: { state: !0 }
-}, Z.styles = Tt`
+}, J.styles = Tt`
     :host {
       display: block;
       --sp-ink: #14232b;
@@ -1618,28 +1665,103 @@ Z.properties = {
       stroke-linejoin: round;
     }
 
+    .target {
+      transform-box: view-box;
+      transform-origin: 0 0;
+      transition: transform 180ms linear;
+      pointer-events: none;
+    }
+
     .target-halo {
       fill: color-mix(in srgb, var(--sp-target) 12%, transparent) !important;
       stroke: none !important;
     }
 
-    .target circle:nth-child(2) {
+    .target-disc {
       fill: color-mix(in srgb, var(--sp-target) 16%, transparent);
       stroke: var(--sp-target);
       stroke-width: 3;
       vector-effect: non-scaling-stroke;
     }
 
-    .target-core { fill: var(--sp-target); }
+    .motion-ring {
+      fill: none;
+      stroke: var(--sp-target);
+      stroke-width: 2;
+      stroke-dasharray: 7 8;
+      vector-effect: non-scaling-stroke;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: motion-orbit var(--motion-cycle) linear infinite;
+    }
 
-    .target text {
+    .person-head {
+      fill: #fff;
+      stroke: none;
+    }
+
+    .person-torso,
+    .person-arm,
+    .person-leg {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 3.2;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      transform-box: fill-box;
+      transform-origin: 50% 10%;
+    }
+
+    .target.moving .target-halo {
+      animation: target-pulse 1.4s ease-out infinite;
+    }
+
+    .target.moving .person-body {
+      animation: person-bob var(--walk-cycle) ease-in-out infinite;
+    }
+
+    .target.moving .person-arm-left,
+    .target.moving .person-leg-right {
+      animation: stride-forward var(--walk-cycle) ease-in-out infinite alternate;
+    }
+
+    .target.moving .person-arm-right,
+    .target.moving .person-leg-left {
+      animation: stride-back var(--walk-cycle) ease-in-out infinite alternate;
+    }
+
+    .target-index {
       fill: var(--sp-target);
-      font-size: 22px;
+      font-size: 26px;
       font-weight: 750;
       paint-order: stroke;
       stroke: var(--sp-paper);
       stroke-width: 4px;
       vector-effect: non-scaling-stroke;
+    }
+
+    @keyframes target-pulse {
+      0% { opacity: 0.55; transform: scale(0.82); }
+      75%, 100% { opacity: 0; transform: scale(1.18); }
+    }
+
+    @keyframes person-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+
+    @keyframes motion-orbit {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes stride-forward {
+      from { transform: rotate(-16deg); }
+      to { transform: rotate(18deg); }
+    }
+
+    @keyframes stride-back {
+      from { transform: rotate(16deg); }
+      to { transform: rotate(-18deg); }
     }
 
     .sensor {
@@ -1845,15 +1967,19 @@ Z.properties = {
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+      }
     }
   `;
-let V = Z;
-const J = class J extends z {
+let Z = J;
+const K = class K extends z {
   constructor() {
     super(...arguments), this.hass = Wt, this._config = {
       type: "custom:spatial-presence-card",
-      ...V.getStubConfig()
+      ...Z.getStubConfig()
     }, this._radarPrefix = "", this._mapId = "house", this._storageStatus = "";
   }
   setConfig(t) {
@@ -1989,7 +2115,7 @@ const J = class J extends z {
     const t = this._activeFloor, e = this._radarPrefix.trim();
     if (!t || !e) return;
     const i = {
-      id: Re(e.replace(/[^a-z0-9_]+/gi, "_"), t.sensors ?? []),
+      id: Te(e.replace(/[^a-z0-9_]+/gi, "_"), t.sensors ?? []),
       name: e.split("_").map((o) => o[0]?.toUpperCase() + o.slice(1)).join(" "),
       entity_prefix: e,
       x: t.width / 2,
@@ -2005,11 +2131,11 @@ const J = class J extends z {
     t.stopPropagation(), this._commit({ ...this._config, default_floor: t.detail.floorId });
   }
   _exportMap() {
-    zt(jt(this._config), "spatial-presence-map.json");
+    zt(Lt(this._config), "spatial-presence-map.json");
   }
   _exportEasyFloorplan() {
     zt(
-      Ce(this._config),
+      Pe(this._config),
       "spatial-presence-easy-floorplan.json"
     );
   }
@@ -2025,13 +2151,13 @@ const J = class J extends z {
             type: "custom:spatial-presence-card"
           });
         else if (String(i.type ?? "").includes("easy-floorplan") || Array.isArray(i.areas) || Array.isArray(i.walls)) {
-          const l = Me(i);
+          const l = Ce(i);
           o = I({
             ...l.map,
             type: "custom:spatial-presence-card"
           }), n = l.warnings;
         } else if (It(i.maps) || It(i.radars)) {
-          const l = Pe(i);
+          const l = Ie(i);
           o = I({
             ...l.map,
             type: "custom:spatial-presence-card"
@@ -2118,10 +2244,10 @@ const J = class J extends z {
     return /^[a-z0-9][a-z0-9_-]{0,63}$/.test(this._mapId);
   }
 };
-J.properties = {
+K.properties = {
   hass: { attribute: !1 },
   _config: { state: !0 }
-}, J.styles = Tt`
+}, K.styles = Tt`
     :host { display: grid; gap: 16px; }
     .editor-fields {
       display: grid;
@@ -2171,7 +2297,7 @@ J.properties = {
       .editor-fields { grid-template-columns: 1fr; }
     }
   `;
-let nt = J;
+let nt = K;
 function I(r) {
   return {
     ...r,
@@ -2206,7 +2332,7 @@ function Xt(r = "main", t = "Main floor") {
     sensors: []
   };
 }
-function Re(r, t) {
+function Te(r, t) {
   const e = r || "radar";
   if (!t.some((i) => i.id === e)) return e;
   let s = 2;
@@ -2226,7 +2352,7 @@ function zt(r, t) {
   const e = JSON.stringify(r, null, 2), s = URL.createObjectURL(new Blob([e], { type: "application/json" })), i = document.createElement("a");
   i.href = s, i.download = t, i.click(), URL.revokeObjectURL(s);
 }
-customElements.get("spatial-presence-card") || customElements.define("spatial-presence-card", V);
+customElements.get("spatial-presence-card") || customElements.define("spatial-presence-card", Z);
 customElements.get("spatial-presence-card-editor") || customElements.define("spatial-presence-card-editor", nt);
 window.customCards = window.customCards ?? [];
 window.customCards.push({
@@ -2237,12 +2363,12 @@ window.customCards.push({
   documentationURL: "https://github.com/daredoole/spatial-presence"
 });
 console.info(
-  `%c SPATIAL PRESENCE %c ${ze} `,
+  `%c SPATIAL PRESENCE %c ${Re} `,
   "color:white;background:#14232b;font-weight:700;padding:3px 5px",
   "color:#14232b;background:#f2a93b;font-weight:700;padding:3px 5px"
 );
 export {
-  V as SpatialPresenceCard,
+  Z as SpatialPresenceCard,
   nt as SpatialPresenceCardEditor
 };
 //# sourceMappingURL=spatial-presence-card.js.map

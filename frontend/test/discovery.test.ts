@@ -41,6 +41,7 @@ describe("LD2450 discovery", () => {
       states: {
         "sensor.ld2450_presence_target_1_x": entity("0.5", "m"),
         "sensor.ld2450_presence_target_1_y": entity("2", "m"),
+        "sensor.ld2450_presence_target_1_speed": entity("12", "in/s"),
         "sensor.ld2450_presence_target_2_x": entity("0"),
         "sensor.ld2450_presence_target_2_y": entity("0"),
         "sensor.ld2450_presence_temperature": entity("77.4", "°F"),
@@ -51,6 +52,7 @@ describe("LD2450 discovery", () => {
     expect(runtime?.targets).toHaveLength(1);
     expect(runtime?.targets[0]?.localXmm).toBe(500);
     expect(runtime?.targets[0]?.localYmm).toBe(2000);
+    expect(runtime?.targets[0]?.speedMmPerSecond).toBeCloseTo(304.8);
     expect(runtime?.targets[0]?.floorPoint).toEqual({ x: 550, y: 500 });
     expect(runtime?.temperature).toBe(77.4);
     expect(runtime?.humidity).toBe(45.6);

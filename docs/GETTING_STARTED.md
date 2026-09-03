@@ -15,7 +15,13 @@ inches, and feet are normalized automatically.
 
 ## Install with HACS
 
-1. Open **HACS → Integrations**.
+[![Open Spatial Presence in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=daredoole&repository=spatial-presence&category=integration)
+
+The button opens the repository in your own Home Assistant instance. If your
+browser has not been connected to that instance yet, the My Home Assistant
+page asks for its address first.
+
+1. Use **Open in HACS** above, or open **HACS → Integrations**.
 2. Open the three-dot menu and choose **Custom repositories**.
 3. Add `https://github.com/daredoole/spatial-presence` with category
    **Integration**.

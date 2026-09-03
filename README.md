@@ -9,6 +9,8 @@ A local-first Home Assistant floorplan editor and live whole-home mmWave map.
 Place radars where they actually live, calibrate them against a known point,
 and see anonymous detections move through rooms and zones.
 
+[![Open Spatial Presence in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=daredoole&repository=spatial-presence&category=integration)
+
 ![Spatial Presence showing two live mmWave detections over a floorplan](docs/images/spatial-presence-overview.webp)
 
 > Alpha software. Map editing, persistent storage, ESPHome LD2450 discovery,
@@ -19,7 +21,8 @@ and see anonymous detections move through rooms and zones.
 
 - Fits even tall floorplans inside a compact, fixed-height viewport—no giant
   page or floorplan scrolling.
-- Draws every live target and optional trail directly over the selected floor.
+- Draws every live target as a moving person with an optional trail directly
+  over the selected floor; stationary detections remain visually still.
 - Supports multiple floors and multiple radars without changing cards.
 - Draws rooms, walls, detection zones, exclusions, entrances, and stationary
   zones in the visual editor.
@@ -32,8 +35,8 @@ and see anonymous detections move through rooms and zones.
 
 ## Quick start
 
-1. In HACS, open **Custom repositories** and add
-   `https://github.com/daredoole/spatial-presence` as an **Integration**.
+1. Use **Open in HACS** above, or add
+   `https://github.com/daredoole/spatial-presence` as a custom **Integration**.
 2. Install **Spatial Presence**, restart Home Assistant, then add it from
    **Settings → Devices & services → Add integration**.
 3. Add the **Spatial Presence** card to a dashboard.
@@ -48,8 +51,9 @@ full setup, manual installation, LD2450 entity requirements, and troubleshooting
 
 The map opens fitted to the available card area. Pan or zoom inside the map;
 the dashboard page stays put. The header always reports live target and online
-radar counts, while magenta target markers, trails, and teal coverage bands
-remain visible over imported floorplans.
+radar counts, while magenta person markers, speed-aware walking motion, trails,
+and teal coverage bands remain visible over imported floorplans. Motion is
+disabled automatically when the browser requests reduced motion.
 
 ![Compact mobile Spatial Presence floorplan](docs/images/spatial-presence-mobile.webp)
 

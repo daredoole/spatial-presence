@@ -11,8 +11,10 @@ const hass: HomeAssistant = {
   states: {
     "sensor.ld2450_presence_target_1_x": state("-620"),
     "sensor.ld2450_presence_target_1_y": state("2820"),
+    "sensor.ld2450_presence_target_1_speed": state("14.2", "in/s"),
     "sensor.ld2450_presence_target_2_x": state("1320"),
     "sensor.ld2450_presence_target_2_y": state("4170"),
+    "sensor.ld2450_presence_target_2_speed": state("0", "in/s"),
     "sensor.ld2450_presence_temperature": state("77.4", "°F"),
     "sensor.ld2450_presence_humidity": state("45.6", "%"),
     "binary_sensor.ld2450_presence_status": state("on", ""),
@@ -114,4 +116,3 @@ if (preview) {
   preview.hass = hass;
   preview.setConfig(config);
 }
-

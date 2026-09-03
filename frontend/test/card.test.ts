@@ -68,6 +68,10 @@ describe("Spatial Presence card", () => {
           state: "2000",
           attributes: { unit_of_measurement: "mm" },
         },
+        "sensor.radar_target_1_speed": {
+          state: "12",
+          attributes: { unit_of_measurement: "in/s" },
+        },
       },
     };
     card.setConfig(config);
@@ -76,6 +80,13 @@ describe("Spatial Presence card", () => {
 
     expect(card.renderRoot.querySelectorAll(".target")).toHaveLength(1);
     expect(card.renderRoot.querySelector(".target-halo")).not.toBeNull();
+    expect(card.renderRoot.querySelector(".person-body")).not.toBeNull();
+    expect(card.renderRoot.querySelector(".target")?.getAttribute("data-motion")).toBe(
+      "moving",
+    );
+    expect(card.renderRoot.querySelector(".target")?.getAttribute("aria-label")).toContain(
+      "0.3 metres per second",
+    );
     const summary = card.renderRoot.textContent?.replace(/\s+/g, " ").trim();
     expect(summary).toContain("1 live target");
     expect(summary).toContain("1/1 radar online");

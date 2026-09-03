@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.0-alpha.6 — 2026-09-03
+
+- Add a one-click Open in HACS button to the README and setup guide.
+- Render detections as accessible person markers with speed-aware walking
+  motion, smooth position updates, and a reduced-motion fallback.
+- Normalize LD2450 speed entities in metric and imperial Home Assistant units.
+
 ## 0.1.0-alpha.5 — 2026-09-03
 
 - Fit floorplans inside a verified no-page-scroll, six-row responsive card.

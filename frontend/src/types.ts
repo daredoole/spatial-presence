@@ -69,6 +69,7 @@ export interface RadarTarget {
   index: number;
   localXmm: number;
   localYmm: number;
+  speedMmPerSecond?: number;
   floorPoint: Point;
   updatedAt: number;
 }
