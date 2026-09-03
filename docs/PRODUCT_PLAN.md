@@ -33,13 +33,14 @@ Assistant room and zone entities without hand-editing YAML.
 - Responsive pan/zoom map, multiple floors, wall/room drawing, radar placement,
   rotation, coverage bands, trails and climate inspection.
 - Unit tests, CI, privacy and security policy.
+- Validated map persistence, one-revision rollback and editor controls.
+- Easy Floorplan and Radar Map Manager import spikes with conversion warnings.
 
 ### Beta
 
-- Persistent integration-owned maps with migrations and automatic backups.
 - Guided scale and sensor calibration.
 - Detection, exclusion, entrance and stationary-hold zone entities.
-- Easy Floorplan import adapter and a Radar Map Manager interoperability spike.
+- Expand upstream adapters based on maintainer feedback.
 - Touch-first editing, undo/redo and accessible keyboard placement.
 
 ### 1.0

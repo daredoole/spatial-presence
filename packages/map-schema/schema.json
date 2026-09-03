@@ -7,6 +7,14 @@
   "required": ["schema_version", "floors"],
   "properties": {
     "schema_version": { "const": "0.1" },
+    "title": { "type": "string", "maxLength": 128 },
+    "default_floor": { "type": "string", "minLength": 1 },
+    "auto_discover": { "type": "boolean" },
+    "target_trail_seconds": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 300
+    },
     "floors": {
       "type": "array",
       "minItems": 1,
@@ -31,6 +39,9 @@
         "id": { "type": "string", "minLength": 1 },
         "name": { "type": "string" },
         "area_id": { "type": "string" },
+        "kind": {
+          "enum": ["detection", "exclusion", "entrance", "stationary"]
+        },
         "points": {
           "type": "array",
           "minItems": 2,
@@ -93,4 +104,3 @@
     }
   }
 }
-

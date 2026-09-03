@@ -2,7 +2,18 @@ import { LitElement, css, html, nothing, svg } from "lit";
 import type { PropertyValues, TemplateResult } from "lit";
 import { repeat } from "lit/directives/repeat.js";
 
+import {
+  loadStoredMap,
+  restoreStoredMap,
+  saveStoredMap,
+  toPortableMap,
+} from "./backend";
 import { runtimeForFloor } from "./discovery";
+import {
+  exportEasyFloorplan,
+  importEasyFloorplan,
+  importRadarMapManager,
+} from "./interoperability";
 import {
   clientToFloorPoint,
   coverageSectorPath,
@@ -22,7 +33,7 @@ import type {
   ViewBox,
 } from "./types";
 
-const CARD_VERSION = "0.1.0-alpha.1";
+const CARD_VERSION = "0.1.0-alpha.2";
 
 type DrawingTool = "pan" | "wall" | "room" | "zone";
 type DragState =
@@ -36,6 +47,7 @@ export class SpatialPresenceCard extends LitElement {
     hass: { attribute: false },
     editorMode: { attribute: false },
     _config: { state: true },
+    _storageStatus: { state: true },
     _floorId: { state: true },
     _view: { state: true },
     _selectedSensorId: { state: true },
@@ -506,9 +518,12 @@ export class SpatialPresenceCard extends LitElement {
     const feature: PathFeature = {
       id: `${this._tool}-${crypto.randomUUID()}`,
       ...(this._tool === "room"
-        ? { name: `Room ${(floor.rooms?.length ?? 0) + 1}` }
-        : this._tool === "zone"
-          ? { name: `Zone ${(floor.zones?.length ?? 0) + 1}` }
+          ? { name: `Room ${(floor.rooms?.length ?? 0) + 1}` }
+          : this._tool === "zone"
+          ? {
+              name: `Zone ${(floor.zones?.length ?? 0) + 1}`,
+              kind: "detection" as const,
+            }
           : {}),
       points: [...this._draftPoints],
     };
@@ -960,9 +975,12 @@ export class SpatialPresenceCardEditor extends LitElement {
     ...SpatialPresenceCard.getStubConfig(),
   };
   private _radarPrefix = "";
+  private _mapId = "house";
+  private _storageStatus = "";
 
   setConfig(config: SpatialPresenceConfig): void {
     this._config = normalizeConfig(config);
+    this._mapId = config.backend_map_id ?? "house";
   }
 
   protected render(): TemplateResult {
@@ -1003,6 +1021,15 @@ export class SpatialPresenceCardEditor extends LitElement {
               (this._radarPrefix = (event.target as HTMLInputElement).value)}
           />
         </label>
+        <label>
+          <span>Saved map id</span>
+          <input
+            pattern="[a-z0-9][a-z0-9_-]{0,63}"
+            .value=${this._mapId}
+            @input=${(event: Event) =>
+              (this._mapId = (event.target as HTMLInputElement).value)}
+          />
+        </label>
         <div class="editor-actions">
           <button type="button" @click=${this._addRadar}>Add radar</button>
           <button type="button" @click=${this._addFloor}>Add floor</button>
@@ -1010,11 +1037,18 @@ export class SpatialPresenceCardEditor extends LitElement {
             ? html`<button type="button" class="danger" @click=${this._removeFloor}>Remove floor</button>`
             : nothing}
           <button type="button" @click=${this._exportMap}>Export JSON</button>
+          <button type="button" @click=${this._exportEasyFloorplan}>Export for Easy Floorplan</button>
+          <button type="button" @click=${this._saveBackend}>Save map</button>
+          <button type="button" @click=${this._loadBackend}>Load saved</button>
+          <button type="button" @click=${this._restoreBackend}>Restore previous</button>
           <label class="file-button">
             Import JSON
             <input type="file" accept="application/json,.json" @change=${this._importMap} />
           </label>
         </div>
+        ${this._storageStatus
+          ? html`<p class="storage-status" role="status">${this._storageStatus}</p>`
+          : nothing}
       </div>
       <spatial-presence-card
         .hass=${this.hass}
@@ -1112,13 +1146,14 @@ export class SpatialPresenceCardEditor extends LitElement {
   }
 
   private _exportMap(): void {
-    const payload = JSON.stringify(this._config, null, 2);
-    const url = URL.createObjectURL(new Blob([payload], { type: "application/json" }));
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = "spatial-presence-map.json";
-    anchor.click();
-    URL.revokeObjectURL(url);
+    downloadJson(toPortableMap(this._config), "spatial-presence-map.json");
+  }
+
+  private _exportEasyFloorplan(): void {
+    downloadJson(
+      exportEasyFloorplan(this._config),
+      "spatial-presence-easy-floorplan.json",
+    );
   }
 
   private async _importMap(event: Event): Promise<void> {
@@ -1126,13 +1161,93 @@ export class SpatialPresenceCardEditor extends LitElement {
     const file = input.files?.[0];
     if (!file || file.size > 2_000_000) return;
     try {
-      const candidate = JSON.parse(await file.text()) as SpatialPresenceConfig;
-      if (candidate.schema_version !== "0.1" || !Array.isArray(candidate.floors) || !candidate.floors.length) {
-        throw new Error("Unsupported Spatial Map file");
+      const candidate = JSON.parse(await file.text()) as Record<string, unknown>;
+      let converted: SpatialPresenceConfig;
+      let warnings: string[] = [];
+      if (candidate.schema_version === "0.1" && Array.isArray(candidate.floors)) {
+        converted = normalizeConfig({
+          ...(candidate as unknown as SpatialPresenceConfig),
+          type: "custom:spatial-presence-card",
+        });
+      } else if (
+        String(candidate.type ?? "").includes("easy-floorplan") ||
+        Array.isArray(candidate.areas) ||
+        Array.isArray(candidate.walls)
+      ) {
+        const result = importEasyFloorplan(candidate);
+        converted = normalizeConfig({
+          ...result.map,
+          type: "custom:spatial-presence-card",
+        });
+        warnings = result.warnings;
+      } else if (isRecord(candidate.maps) || isRecord(candidate.radars)) {
+        const result = importRadarMapManager(candidate);
+        converted = normalizeConfig({
+          ...result.map,
+          type: "custom:spatial-presence-card",
+        });
+        warnings = result.warnings;
+      } else {
+        throw new Error("Use a Spatial Presence, Easy Floorplan or Radar Map Manager JSON file");
       }
-      this._commit(normalizeConfig({ ...candidate, type: "custom:spatial-presence-card" }));
+      this._commit(converted);
+      this._storageStatus = warnings.length
+        ? `Imported with ${warnings.length} review note${warnings.length === 1 ? "" : "s"}: ${warnings.join(" ")}`
+        : "Map imported.";
+    } catch (error) {
+      this._storageStatus = `Map was not imported: ${errorMessage(error)}`;
     } finally {
       input.value = "";
+    }
+  }
+
+  private async _saveBackend(): Promise<void> {
+    if (!this._validMapId) {
+      this._storageStatus = "Use lowercase letters, numbers, underscores or hyphens for the map id.";
+      return;
+    }
+    this._storageStatus = "Saving map…";
+    try {
+      const result = await saveStoredMap(this.hass, this._mapId, this._config);
+      this._commit({ ...this._config, backend_map_id: this._mapId });
+      this._storageStatus = `Saved revision ${result.revision}.`;
+    } catch (error) {
+      this._storageStatus = `Map was not saved: ${errorMessage(error)}`;
+    }
+  }
+
+  private async _loadBackend(): Promise<void> {
+    if (!this._validMapId) {
+      this._storageStatus = "Enter a valid saved map id first.";
+      return;
+    }
+    this._storageStatus = "Loading map…";
+    try {
+      const result = await loadStoredMap(this.hass, this._mapId);
+      this._commit(
+        normalizeConfig({
+          ...result.config,
+          type: "custom:spatial-presence-card",
+          backend_map_id: this._mapId,
+        }),
+      );
+      this._storageStatus = `Loaded revision ${result.revision}.`;
+    } catch (error) {
+      this._storageStatus = `Map was not loaded: ${errorMessage(error)}`;
+    }
+  }
+
+  private async _restoreBackend(): Promise<void> {
+    if (!this._validMapId) {
+      this._storageStatus = "Enter a valid saved map id first.";
+      return;
+    }
+    this._storageStatus = "Restoring previous revision…";
+    try {
+      await restoreStoredMap(this.hass, this._mapId);
+      await this._loadBackend();
+    } catch (error) {
+      this._storageStatus = `Previous revision was not restored: ${errorMessage(error)}`;
     }
   }
 
@@ -1169,6 +1284,10 @@ export class SpatialPresenceCardEditor extends LitElement {
     );
   }
 
+  private get _validMapId(): boolean {
+    return /^[a-z0-9][a-z0-9_-]{0,63}$/.test(this._mapId);
+  }
+
   static styles = css`
     :host { display: grid; gap: 16px; }
     .editor-fields {
@@ -1195,6 +1314,14 @@ export class SpatialPresenceCardEditor extends LitElement {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+    }
+    .storage-status {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 9px 11px;
+      border-left: 3px solid #00a7a5;
+      background: color-mix(in srgb, #00a7a5 9%, transparent);
+      font-size: 13px;
     }
     .danger { color: var(--error-color, #b3261e); }
     .file-button {
@@ -1261,6 +1388,24 @@ function uniqueId(base: string, sensors: RadarSensor[]): string {
 
 function safeImageUrl(value: string): boolean {
   return /^(\/|https?:\/\/)/i.test(value.trim());
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function downloadJson(value: unknown, filename: string): void {
+  const payload = JSON.stringify(value, null, 2);
+  const url = URL.createObjectURL(new Blob([payload], { type: "application/json" }));
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
 }
 
 if (!customElements.get("spatial-presence-card")) {

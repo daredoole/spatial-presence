@@ -9,7 +9,9 @@ from homeassistant.components.frontend import add_extra_js_url
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN, FRONTEND_BASE_URL, FRONTEND_PATH, FRONTEND_URL
+from .const import DATA_STORE, DOMAIN, FRONTEND_BASE_URL, FRONTEND_PATH, FRONTEND_URL
+from .store import SpatialMapStore
+from .websocket import async_register_websocket_commands
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,6 +26,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         return False
 
     domain_data = hass.data.setdefault(DOMAIN, {})
+    if DATA_STORE not in domain_data:
+        map_store = SpatialMapStore(hass)
+        await map_store.async_load()
+        domain_data[DATA_STORE] = map_store
+        async_register_websocket_commands(hass)
     if not domain_data.get("frontend_registered"):
         await hass.http.async_register_static_paths(
             [StaticPathConfig(FRONTEND_BASE_URL, str(FRONTEND_PATH.parent), False)]

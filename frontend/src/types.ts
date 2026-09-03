@@ -9,6 +9,7 @@ export interface HassEntity {
 export interface HomeAssistant {
   states: Record<string, HassEntity>;
   locale?: { language: string };
+  callWS?: <T>(message: Record<string, unknown>) => Promise<T>;
 }
 
 export interface Point {
@@ -20,6 +21,7 @@ export interface PathFeature {
   id: string;
   name?: string;
   area_id?: string;
+  kind?: "detection" | "exclusion" | "entrance" | "stationary";
   points: Point[];
 }
 
@@ -56,6 +58,7 @@ export interface SpatialPresenceConfig {
   default_floor?: string;
   auto_discover?: boolean;
   target_trail_seconds?: number;
+  backend_map_id?: string;
 }
 
 export interface RadarTarget {
@@ -84,4 +87,3 @@ export interface ViewBox {
   width: number;
   height: number;
 }
-

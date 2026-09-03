@@ -1,0 +1,4 @@
+# Bundled Lit templates contain intentional whitespace inside JavaScript string
+# literals. Source TypeScript remains subject to Git's normal whitespace checks.
+custom_components/spatial_presence/frontend/*.js -whitespace
+custom_components/spatial_presence/frontend/*.js.map -whitespace

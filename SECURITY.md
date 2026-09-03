@@ -9,3 +9,6 @@ are ephemeral and local to the browser by default. Reports involving script
 execution, path traversal, unauthorized Home Assistant state changes or target
 history disclosure are high priority.
 
+Backend map writes and rollback require a Home Assistant administrator; reads
+use the authenticated websocket session. Payloads are capped at 2 MB and
+validated for finite, bounded geometry before storage receives them.

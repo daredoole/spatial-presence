@@ -25,9 +25,20 @@ updates from rewriting dashboard or integration configuration.
 The normative draft is `packages/map-schema/schema.json`; examples are in
 `packages/map-schema/examples/`.
 
+## Persistence contract
+
+The optional Home Assistant backend exposes authenticated websocket commands:
+
+- `spatial_presence/map/list` — metadata only.
+- `spatial_presence/map/get` — one stored map and its revision.
+- `spatial_presence/map/save` — admin-only validated save.
+- `spatial_presence/map/restore_previous` — admin-only one-revision rollback.
+
+Dashboard configuration can still carry and export the complete map. Backend
+storage is an explicit portability and recovery boundary, not a lock-in point.
+
 ## Compatibility
 
 Readers must reject unsupported major versions and preserve unknown fields when
 round-tripping a compatible minor version. Schema migrations must be pure,
 tested functions.
-

@@ -22,4 +22,22 @@ describe("Spatial Map Schema", () => {
     const validate = new Ajv2020({ strict: true }).compile(schema);
     expect(validate({ schema_version: "9.0", floors: [] })).toBe(false);
   });
+
+  it("accepts portable map metadata", () => {
+    const schema = readJson("../../packages/map-schema/schema.json") as AnySchema;
+    const example = readJson(
+      "../../packages/map-schema/examples/demo-home.json",
+    ) as Record<string, unknown>;
+    const validate = new Ajv2020({ strict: true }).compile(schema);
+    expect(
+      validate({
+        ...example,
+        title: "My house",
+        default_floor: "main",
+        auto_discover: true,
+        target_trail_seconds: 8,
+      }),
+      JSON.stringify(validate.errors),
+    ).toBe(true);
+  });
 });

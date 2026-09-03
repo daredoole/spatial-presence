@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0-alpha.2 — unreleased
+
+- Add validated, authenticated Home Assistant map storage websocket commands.
+- Retain one prior map revision and expose admin-only rollback.
+- Add graphical save, load and restore controls with actionable status text.
+- Import Easy Floorplan walls/areas and Radar Map Manager poses/zones.
+- Export Spatial Presence architectural geometry to Easy Floorplan.
+- Add Python validation/storage tests and frontend adapter/backend tests.
+
 ## 0.1.0-alpha.1 — unreleased
 
 - Initial HACS custom-integration and Lovelace-card packaging.
@@ -10,4 +19,3 @@
 - Radar drag placement, fine/coarse rotation and confidence-band coverage.
 - Ephemeral target trails plus temperature and humidity inspection.
 - JSON import/export, test suite, CI and upstream interoperability RFC.
-

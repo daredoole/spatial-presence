@@ -5,8 +5,8 @@ Assistant. Draw or trace floors, place mmWave sensors, calibrate their heading,
 and turn anonymous target coordinates into useful room and zone occupancy.
 
 > Early development preview. The map card, LD2450 adapter, geometry engine,
-> graphical editor and HACS integration packaging are functional foundations;
-> multi-radar fusion and persistent backend map storage are roadmap work.
+> graphical editor, validated backend storage and HACS integration packaging
+> are functional foundations; live multi-radar fusion is roadmap work.
 
 ## Why this project
 
@@ -16,6 +16,9 @@ is a strong radar placement and fusion tool. Spatial Presence is being built
 upstream-first around the gap between those capabilities, not as an attempt to
 silently clone either project. See [the product decision](docs/PRODUCT_PLAN.md)
 and [the interoperability RFC](docs/RFC-0001-SPATIAL-MAP.md).
+Supported field mappings and conversion limits are documented in
+[INTEROPERABILITY.md](docs/INTEROPERABILITY.md); backend commands are documented
+in [BACKEND_API.md](docs/BACKEND_API.md).
 
 ## Current preview
 
@@ -28,6 +31,10 @@ and [the interoperability RFC](docs/RFC-0001-SPATIAL-MAP.md).
   three confidence bands instead of a misleading precision triangle.
 - Live target trails and optional temperature/humidity in the inspector.
 - Versioned Spatial Map JSON Schema with migration-ready versions.
+- Admin-only integration storage with bounded input validation, map revisions
+  and one-step rollback; dashboard JSON export remains available.
+- Import Easy Floorplan configuration and Radar Map Manager backups with
+  explicit review warnings; export architectural geometry to Easy Floorplan.
 
 ## Development
 
@@ -42,6 +49,12 @@ python -m compileall custom_components/spatial_presence
 
 The production frontend bundle is written to
 `custom_components/spatial_presence/frontend/spatial-presence-card.js`.
+
+Python validation and storage tests run with:
+
+```bash
+python -m unittest discover -s tests/python -v
+```
 
 ## Manual preview installation
 
