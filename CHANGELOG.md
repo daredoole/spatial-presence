@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0-alpha.5 — unreleased
+## 0.1.0-alpha.5 — 2026-09-03
 
 - Fit floorplans inside a verified no-page-scroll, six-row responsive card.
 - Add a live target/radar summary and larger target halos for tall plans.

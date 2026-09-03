@@ -2,6 +2,6 @@
   "name": "Spatial Presence",
   "render_readme": true,
   "homeassistant": "2026.6.0",
-  "zip_release": false
+  "zip_release": true,
+  "filename": "spatial_presence.zip"
 }
-
