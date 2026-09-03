@@ -1,88 +1,87 @@
 # Spatial Presence
 
-A local-first spatial presence editor and live whole-home radar map for Home
-Assistant. Draw or trace floors, place mmWave sensors, calibrate their heading,
-and turn anonymous target coordinates into useful room and zone occupancy.
+[![CI](https://github.com/daredoole/spatial-presence/actions/workflows/ci.yml/badge.svg)](https://github.com/daredoole/spatial-presence/actions/workflows/ci.yml)
+[![HACS custom repository](https://img.shields.io/badge/HACS-custom-41BDF5.svg)](https://www.hacs.xyz/docs/faq/custom_repositories/)
+[![Home Assistant 2026.6+](https://img.shields.io/badge/Home%20Assistant-2026.6%2B-18BCF2.svg)](https://www.home-assistant.io/)
+[![MIT license](https://img.shields.io/badge/license-MIT-334155.svg)](LICENSE)
 
-> Early development preview. The map card, LD2450 adapter, geometry engine,
-> graphical editor, validated backend storage, native occupancy entities and
-> HACS integration packaging are functional foundations; cross-radar target
-> fusion remains roadmap work.
+A local-first Home Assistant floorplan editor and live whole-home mmWave map.
+Place radars where they actually live, calibrate them against a known point,
+and see anonymous detections move through rooms and zones.
 
-## Why this project
+![Spatial Presence showing two live mmWave detections over a floorplan](docs/images/spatial-presence-overview.webp)
+
+> Alpha software. Map editing, persistent storage, ESPHome LD2450 discovery,
+> native occupancy entities, and HACS packaging work today. Cross-radar target
+> fusion is still on the roadmap.
+
+## What it does
+
+- Fits even tall floorplans inside a compact, fixed-height viewport—no giant
+  page or floorplan scrolling.
+- Draws every live target and optional trail directly over the selected floor.
+- Supports multiple floors and multiple radars without changing cards.
+- Draws rooms, walls, detection zones, exclusions, entrances, and stationary
+  zones in the visual editor.
+- Creates native occupancy, target-count, and enter/leave entities for named
+  rooms and zones.
+- Auto-discovers ESPHome LD2450 coordinate families and handles metric or
+  Home Assistant-converted imperial units.
+- Keeps floorplans, maps, and short-lived target trails local to Home Assistant
+  and the browser.
+
+## Quick start
+
+1. In HACS, open **Custom repositories** and add
+   `https://github.com/daredoole/spatial-presence` as an **Integration**.
+2. Install **Spatial Presence**, restart Home Assistant, then add it from
+   **Settings → Devices & services → Add integration**.
+3. Add the **Spatial Presence** card to a dashboard.
+4. Open the visual editor, add a floorplan, place your radar, and choose
+   **Calibrate placement**.
+5. Draw rooms or zones, then choose **Save map**.
+
+See the illustrated [getting-started guide](docs/GETTING_STARTED.md) for the
+full setup, manual installation, LD2450 entity requirements, and troubleshooting.
+
+## Interface
+
+The map opens fitted to the available card area. Pan or zoom inside the map;
+the dashboard page stays put. The header always reports live target and online
+radar counts, while magenta target markers, trails, and teal coverage bands
+remain visible over imported floorplans.
+
+![Compact mobile Spatial Presence floorplan](docs/images/spatial-presence-mobile.webp)
+
+## Ecosystem fit
 
 [Easy Floorplan](https://github.com/nicosandller/easy-floorplan) is a strong
 visual floorplan editor. [Radar Map Manager](https://github.com/Moe8383/radar_map_manager)
-is a strong radar placement and fusion tool. Spatial Presence is being built
-upstream-first around the gap between those capabilities, not as an attempt to
-silently clone either project. See [the product decision](docs/PRODUCT_PLAN.md)
-and [the interoperability RFC](docs/RFC-0001-SPATIAL-MAP.md).
-Supported field mappings and conversion limits are documented in
-[INTEROPERABILITY.md](docs/INTEROPERABILITY.md); backend commands are documented
-in [BACKEND_API.md](docs/BACKEND_API.md), and native derived entities in
-[ENTITY_MODEL.md](docs/ENTITY_MODEL.md).
-
-## Current preview
-
-- Full-viewport, no-page-scroll map with fit, pan and zoom.
-- Multi-floor selector.
-- Draw walls and room polygons in the graphical card editor.
-- Use a local `/local/...` image or SVG as a traceable background.
-- Auto-discover ESPHome LD2450 `target_N_x` / `target_N_y` entity families.
-- Drag radars, rotate them in one-degree or fifteen-degree steps, and render
-  three confidence bands instead of a misleading precision triangle.
-- Calibrate radar position, heading and floor scale from one live target at a
-  known point on the floorplan.
-- Live target trails and optional temperature/humidity in the inspector.
-- Create native occupancy, target-count and enter/leave event entities for
-  every room and detection zone; exclusion zones suppress false detections and
-  stationary zones can hold occupancy after a target disappears.
-- Versioned Spatial Map JSON Schema with migration-ready versions.
-- Admin-only integration storage with bounded input validation, map revisions
-  and one-step rollback; dashboard JSON export remains available.
-- Import Easy Floorplan configuration and Radar Map Manager backups with
-  explicit review warnings; export architectural geometry to Easy Floorplan.
+is a strong radar placement and fusion tool. Spatial Presence focuses on the
+gap between them and ships explicit import/export adapters instead of copying
+either project. See [interoperability](docs/INTEROPERABILITY.md) and the
+[schema RFC](docs/RFC-0001-SPATIAL-MAP.md).
 
 ## Development
 
 Requirements: Node.js 20+ and Python 3.12+.
 
 ```bash
-npm install
+npm ci
+npm run typecheck
 npm test
 npm run build
-python -m compileall custom_components/spatial_presence
-```
-
-The production frontend bundle is written to
-`custom_components/spatial_presence/frontend/spatial-presence-card.js`.
-
-Python validation and storage tests run with:
-
-```bash
 python -m unittest discover -s tests/python -v
 ```
 
-## Manual preview installation
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before changing the schema or an
+adapter. Security issues belong in GitHub private vulnerability reporting, not
+public issues; see [SECURITY.md](SECURITY.md).
 
-1. Run `npm install && npm run build`.
-2. Copy `custom_components/spatial_presence` into Home Assistant's
-   `custom_components` directory.
-3. Restart Home Assistant and add **Spatial Presence** from Devices & services.
-4. Refresh the browser after setup; the integration registers its bundled card
-   automatically.
-5. Add the **Spatial Presence** card from the graphical card picker.
+## Support the project
 
-HACS release installation will replace these manual steps once the first beta
-release is published.
+Spatial Presence is free and MIT-licensed. If it saves you time, you can
+[buy Darrian a coffee](https://buymeacoffee.com/daredoole). Sponsorship never
+buys feature priority, private support, or access to unreleased security fixes.
 
-## Safety and privacy
-
-Target history stays in browser memory and expires quickly. It is not persisted
-or uploaded. Imported SVGs are treated as images, never injected into the DOM.
-Spatial Presence maps anonymous tracks; it does not identify people.
-
-## Contributing
-
-Read [CONTRIBUTING.md](CONTRIBUTING.md). Architecture proposals start as an
-issue or RFC so the map schema stays useful to other Home Assistant projects.
+For help and project boundaries, see [SUPPORT.md](SUPPORT.md).

@@ -21,7 +21,7 @@ scale establish hierarchy; the card downloads no decorative font.
 ## Layout
 
 ```text
-┌ floor switcher ─────────────── fit  layers  edit ┐
+┌ floor switcher · 2 targets · 1/1 online · layers ┐
 │                                                  │
 │             viewport-sized house map             │
 │                                                  │
@@ -31,6 +31,10 @@ scale establish hierarchy; the card downloads no decorative font.
 
 On phones, the inspector becomes a bottom sheet. The document never grows to
 the floorplan's aspect ratio: pan and zoom remain inside the map viewport.
+The normal card is six dashboard rows and capped at 680 pixels / 64dvh; mobile
+is capped at 620 pixels / 68dvh. The entire floor is fitted on load and after a
+floor change. Live target and radar counts stay in the compact header, while
+larger magenta target halos remain legible when a tall plan is scaled down.
 
 Calibration stays inside the selected-radar inspector so the map remains the
 working surface. It is a two-step field procedure, not a settings form:

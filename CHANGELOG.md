@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.0-alpha.5 — unreleased
+
+- Fit floorplans inside a verified no-page-scroll, six-row responsive card.
+- Add a live target/radar summary and larger target halos for tall plans.
+- Add illustrated quick-start and support docs, verified project funding,
+  dependency updates, issue routing, and commit-pinned GitHub Actions.
+
 ## 0.1.0-alpha.4 — unreleased
 
 - Normalize Home Assistant imperial coordinate states in inches or feet before

@@ -44,6 +44,9 @@ describe("Spatial Presence card", () => {
     expect(SpatialPresenceCard.getConfigElement()).toBeInstanceOf(
       SpatialPresenceCardEditor,
     );
+    const card = new SpatialPresenceCard();
+    expect(card.getCardSize()).toBe(6);
+    expect(card.getGridOptions()).toEqual({ rows: 6, columns: 12, min_rows: 4 });
   });
 
   it("rejects a configuration without floors", () => {
@@ -72,6 +75,10 @@ describe("Spatial Presence card", () => {
     await card.updateComplete;
 
     expect(card.renderRoot.querySelectorAll(".target")).toHaveLength(1);
+    expect(card.renderRoot.querySelector(".target-halo")).not.toBeNull();
+    const summary = card.renderRoot.textContent?.replace(/\s+/g, " ").trim();
+    expect(summary).toContain("1 live target");
+    expect(summary).toContain("1/1 radar online");
     const radar = card.renderRoot.querySelector<SVGGElement>("[data-sensor=radar]");
     expect(radar).not.toBeNull();
     radar?.dispatchEvent(new MouseEvent("pointerdown", { bubbles: true }));

@@ -34,7 +34,7 @@ import type {
   ViewBox,
 } from "./types";
 
-const CARD_VERSION = "0.1.0-alpha.4";
+const CARD_VERSION = "0.1.0-alpha.5";
 
 type DrawingTool = "pan" | "wall" | "room" | "zone";
 type DragState =
@@ -111,11 +111,11 @@ export class SpatialPresenceCard extends LitElement {
   }
 
   getCardSize(): number {
-    return 8;
+    return 6;
   }
 
   getGridOptions(): { rows: number; columns: number; min_rows: number } {
-    return { rows: 8, columns: 12, min_rows: 4 };
+    return { rows: 6, columns: 12, min_rows: 4 };
   }
 
   protected updated(changed: PropertyValues<this>): void {
@@ -137,11 +137,22 @@ export class SpatialPresenceCard extends LitElement {
     const selected = runtimes.find(
       (runtime) => runtime.sensor.id === this._selectedSensorId,
     );
+    const targetCount = runtimes.reduce(
+      (count, runtime) => count + runtime.targets.length,
+      0,
+    );
+    const onlineCount = runtimes.filter((runtime) => runtime.online).length;
 
     return html`
       <ha-card>
         <section class="shell" aria-label=${config.title ?? "Spatial presence"}>
-          ${this._renderToolbar(config, floor)}
+          ${this._renderToolbar(
+            config,
+            floor,
+            targetCount,
+            onlineCount,
+            runtimes.length,
+          )}
           <div class="workspace">
             ${this._renderMap(floor, runtimes)}
             ${selected ? this._renderInspector(selected, floor) : nothing}
@@ -155,6 +166,9 @@ export class SpatialPresenceCard extends LitElement {
   private _renderToolbar(
     config: SpatialPresenceConfig,
     floor: Floor,
+    targetCount: number,
+    onlineCount: number,
+    radarCount: number,
   ): TemplateResult {
     return html`
       <header class="toolbar">
@@ -166,6 +180,13 @@ export class SpatialPresenceCard extends LitElement {
             )}
           </select>
         </label>
+        <div class="live-summary" aria-live="polite">
+          <span class="target-swatch" aria-hidden="true"></span>
+          <strong>${targetCount}</strong>
+          <span>${targetCount === 1 ? "live target" : "live targets"}</span>
+          <span class="summary-divider" aria-hidden="true"></span>
+          <span>${onlineCount}/${radarCount} ${radarCount === 1 ? "radar" : "radars"} online</span>
+        </div>
         <div class="toolbar-actions">
           <button type="button" @click=${this._fit} title="Fit entire floor">Fit</button>
           <button
@@ -312,9 +333,10 @@ export class SpatialPresenceCard extends LitElement {
   private _renderTarget(target: RadarTarget): TemplateResult {
     return svg`
       <g class="target" transform="translate(${target.floorPoint.x} ${target.floorPoint.y})">
-        <circle r="12"></circle>
-        <circle class="target-core" r="4"></circle>
-        <text x="17" y="5">${target.index}</text>
+        <circle class="target-halo" r="28"></circle>
+        <circle r="18"></circle>
+        <circle class="target-core" r="6"></circle>
+        <text x="26" y="7">${target.index}</text>
       </g>
     `;
   }
@@ -790,8 +812,9 @@ export class SpatialPresenceCard extends LitElement {
     }
 
     ha-card {
-      height: min(78dvh, 920px);
-      min-height: 430px;
+      display: block;
+      box-sizing: border-box;
+      height: clamp(380px, 64dvh, 680px);
       overflow: hidden;
       background: var(--ha-card-background, #fff);
     }
@@ -812,6 +835,35 @@ export class SpatialPresenceCard extends LitElement {
       background: color-mix(in srgb, var(--sp-paper) 92%, transparent);
       position: relative;
       z-index: 3;
+    }
+
+    .live-summary {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+      color: var(--sp-muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .live-summary strong { color: var(--sp-ink); font-size: 14px; }
+
+    .target-swatch {
+      width: 10px;
+      height: 10px;
+      flex: 0 0 auto;
+      border: 2px solid color-mix(in srgb, var(--sp-target) 25%, white);
+      border-radius: 50%;
+      background: var(--sp-target);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-target) 13%, transparent);
+    }
+
+    .summary-divider {
+      width: 1px;
+      height: 14px;
+      margin: 0 4px;
+      background: color-mix(in srgb, var(--sp-ink) 18%, transparent);
     }
 
     select,
@@ -953,18 +1005,28 @@ export class SpatialPresenceCard extends LitElement {
       stroke-linejoin: round;
     }
 
-    .target circle:first-child {
+    .target-halo {
+      fill: color-mix(in srgb, var(--sp-target) 12%, transparent) !important;
+      stroke: none !important;
+    }
+
+    .target circle:nth-child(2) {
       fill: color-mix(in srgb, var(--sp-target) 16%, transparent);
       stroke: var(--sp-target);
       stroke-width: 3;
+      vector-effect: non-scaling-stroke;
     }
 
     .target-core { fill: var(--sp-target); }
 
     .target text {
       fill: var(--sp-target);
-      font-size: 17px;
+      font-size: 22px;
       font-weight: 750;
+      paint-order: stroke;
+      stroke: var(--sp-paper);
+      stroke-width: 4px;
+      vector-effect: non-scaling-stroke;
     }
 
     .sensor {
@@ -1146,10 +1208,18 @@ export class SpatialPresenceCard extends LitElement {
     }
 
     @media (max-width: 720px) {
-      ha-card { height: min(76dvh, 760px); min-height: 460px; }
-      .toolbar { align-items: stretch; flex-direction: column; gap: 7px; }
+      ha-card { height: clamp(420px, 68dvh, 620px); }
+      .toolbar {
+        display: grid;
+        grid-template-columns: minmax(132px, 1fr) auto;
+        align-items: center;
+        gap: 6px 8px;
+        padding: 8px;
+      }
       .floor-select select { width: 100%; }
-      .toolbar-actions { padding-bottom: 2px; }
+      .live-summary { justify-content: end; padding: 0 3px; }
+      .toolbar-actions { grid-column: 1 / -1; padding-bottom: 0; }
+      .toolbar-actions button { min-height: 32px; }
       .inspector {
         top: auto;
         right: 8px;

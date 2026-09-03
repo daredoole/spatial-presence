@@ -1,7 +1,12 @@
 # Security policy
 
-Do not report vulnerabilities in public issues. Use GitHub private vulnerability
-reporting when the repository is published.
+Do not report vulnerabilities in public issues. Use
+[GitHub private vulnerability reporting](https://github.com/daredoole/spatial-presence/security/advisories/new).
+
+Only the newest published alpha or beta receives security fixes. Include the
+Spatial Presence and Home Assistant versions, a minimal reproduction, and the
+security impact. Remove access tokens, private URLs, real-home floorplans, and
+recorded target data before attaching evidence.
 
 The project accepts floorplan URLs and renders them through an SVG `<image>`
 element. It never inserts imported SVG markup into the document. Target trails

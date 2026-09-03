@@ -63,7 +63,7 @@ const { is: Gt, defineProperty: te, getOwnPropertyDescriptor: ee, getOwnProperty
       }
   }
   return e;
-} }, Nt = (r, t) => !Gt(r, t), $t = { attribute: !0, type: String, converter: rt, reflect: !1, useDefault: !1, hasChanged: Nt };
+} }, Nt = (r, t) => !Gt(r, t), bt = { attribute: !0, type: String, converter: rt, reflect: !1, useDefault: !1, hasChanged: Nt };
 Symbol.metadata ??= /* @__PURE__ */ Symbol("metadata"), K.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
 let P = class extends HTMLElement {
   static addInitializer(t) {
@@ -72,7 +72,7 @@ let P = class extends HTMLElement {
   static get observedAttributes() {
     return this.finalize(), this._$Eh && [...this._$Eh.keys()];
   }
-  static createProperty(t, e = $t) {
+  static createProperty(t, e = bt) {
     if (e.state && (e.attribute = !1), this._$Ei(), this.prototype.hasOwnProperty(t) && ((e = Object.create(e)).wrapped = !0), this.elementProperties.set(t, e), !e.noAccessor) {
       const s = /* @__PURE__ */ Symbol(), i = this.getPropertyDescriptor(t, s, e);
       i !== void 0 && te(this.prototype, t, i);
@@ -90,7 +90,7 @@ let P = class extends HTMLElement {
     }, configurable: !0, enumerable: !0 };
   }
   static getPropertyOptions(t) {
-    return this.elementProperties.get(t) ?? $t;
+    return this.elementProperties.get(t) ?? bt;
   }
   static _$Ei() {
     if (this.hasOwnProperty(U("elementProperties"))) return;
@@ -247,9 +247,9 @@ let P = class extends HTMLElement {
   }
 };
 P.elementStyles = [], P.shadowRootOptions = { mode: "open" }, P[U("elementProperties")] = /* @__PURE__ */ new Map(), P[U("finalized")] = /* @__PURE__ */ new Map(), ne?.({ ReactiveElement: P }), (K.reactiveElementVersions ??= []).push("2.1.2");
-const ct = globalThis, bt = (r) => r, W = ct.trustedTypes, vt = W ? W.createPolicy("lit-html", { createHTML: (r) => r }) : void 0, Ft = "$lit$", A = `lit$${Math.random().toFixed(9).slice(2)}$`, Ut = "?" + A, ae = `<${Ut}>`, C = document, D = () => C.createComment(""), j = (r) => r === null || typeof r != "object" && typeof r != "function", dt = Array.isArray, le = (r) => dt(r) || typeof r?.[Symbol.iterator] == "function", et = `[ 	
+const ct = globalThis, $t = (r) => r, W = ct.trustedTypes, vt = W ? W.createPolicy("lit-html", { createHTML: (r) => r }) : void 0, Ft = "$lit$", A = `lit$${Math.random().toFixed(9).slice(2)}$`, Ut = "?" + A, ae = `<${Ut}>`, C = document, D = () => C.createComment(""), j = (r) => r === null || typeof r != "object" && typeof r != "function", dt = Array.isArray, le = (r) => dt(r) || typeof r?.[Symbol.iterator] == "function", et = `[ 	
 \f\r]`, N = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, yt = /-->/g, xt = />/g, E = RegExp(`>|${et}(?:([^\\s"'>=/]+)(${et}*=${et}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), wt = /'/g, At = /"/g, Ot = /^(?:script|style|textarea|title)$/i, Ht = (r) => (t, ...e) => ({ _$litType$: r, strings: t, values: e }), u = Ht(1), $ = Ht(2), R = /* @__PURE__ */ Symbol.for("lit-noChange"), d = /* @__PURE__ */ Symbol.for("lit-nothing"), kt = /* @__PURE__ */ new WeakMap(), M = C.createTreeWalker(C, 129);
+\f\r"'\`<>=]|("|')|))|$)`, "g"), wt = /'/g, At = /"/g, Ot = /^(?:script|style|textarea|title)$/i, Ht = (r) => (t, ...e) => ({ _$litType$: r, strings: t, values: e }), u = Ht(1), b = Ht(2), R = /* @__PURE__ */ Symbol.for("lit-noChange"), d = /* @__PURE__ */ Symbol.for("lit-nothing"), kt = /* @__PURE__ */ new WeakMap(), M = C.createTreeWalker(C, 129);
 function Dt(r, t) {
   if (!dt(r) || !r.hasOwnProperty("raw")) throw Error("invalid template strings array");
   return vt !== void 0 ? vt.createHTML(t) : t;
@@ -388,8 +388,8 @@ class L {
   }
   _$AR(t = this._$AA.nextSibling, e) {
     for (this._$AP?.(!1, !0, e); t !== this._$AB; ) {
-      const s = bt(t).nextSibling;
-      bt(t).remove(), t = s;
+      const s = $t(t).nextSibling;
+      $t(t).remove(), t = s;
     }
   }
   setConnected(t) {
@@ -504,10 +504,10 @@ function ht(r, t) {
     new Error("Spatial Presence integration is not connected")
   );
 }
-function $e(r, t) {
+function be(r, t) {
   return ht(r, { type: "spatial_presence/map/get", map_id: t });
 }
-function be(r, t, e) {
+function $e(r, t, e) {
   const s = jt(e);
   return ht(r, {
     type: "spatial_presence/map/save",
@@ -673,7 +673,7 @@ function Bt(r) {
   return r.split("_").filter(Boolean).map((t) => t[0]?.toUpperCase() + t.slice(1)).join(" ");
 }
 function Me(r, t = 100) {
-  if (!b(r)) throw new Error("Easy Floorplan configuration must be an object");
+  if (!$(r)) throw new Error("Easy Floorplan configuration must be an object");
   const e = r, s = O(e.width, 1e3), i = O(e.height, 700), o = Array.isArray(e.floors) && e.floors.length ? e.floors : [e], n = [], l = /* @__PURE__ */ new Set(), a = o.map((c, f) => {
     const _ = H(c.id ?? `floor-${f + 1}`, l), y = /* @__PURE__ */ new Set(), G = /* @__PURE__ */ new Set(), tt = (c.walls ?? []).flatMap((g, v) => [g.x1, g.y1, g.x2, g.y2].every(k) ? [{
       id: H(String(g.id ?? `wall-${v + 1}`), y),
@@ -763,8 +763,8 @@ function Ce(r) {
   };
 }
 function Pe(r) {
-  if (!b(r)) throw new Error("Radar Map Manager backup must be an object");
-  const t = b(r.maps) ? r.maps : {}, e = Object.keys(t).length ? t : { default: {} }, s = b(r.radars) ? r.radars : {}, i = [
+  if (!$(r)) throw new Error("Radar Map Manager backup must be an object");
+  const t = $(r.maps) ? r.maps : {}, e = Object.keys(t).length ? t : { default: {} }, s = $(r.radars) ? r.radars : {}, i = [
     "Radar Map Manager uses percentage coordinates; verify floor scale and background alignment",
     "Fusion and smoothing settings stay in Radar Map Manager and are not imported"
   ], o = /* @__PURE__ */ new Set();
@@ -775,9 +775,9 @@ function Pe(r) {
       auto_discover: !0,
       target_trail_seconds: 8,
       floors: Object.entries(e).map(([l, a], h) => {
-        const p = b(a) ? a : {}, c = b(p.config) ? p.config : {}, f = 1e3, _ = 1e3, y = /* @__PURE__ */ new Set(), G = Object.entries(s).flatMap(([m, x]) => {
-          if (!b(x) || String(x.map_group ?? "default") !== l) return [];
-          const S = b(x.layout) ? x.layout : {}, Zt = O(S.scale_x, 5), Jt = O(S.scale_y, 5);
+        const p = $(a) ? a : {}, c = $(p.config) ? p.config : {}, f = 1e3, _ = 1e3, y = /* @__PURE__ */ new Set(), G = Object.entries(s).flatMap(([m, x]) => {
+          if (!$(x) || String(x.map_group ?? "default") !== l) return [];
+          const S = $(x.layout) ? x.layout : {}, Zt = O(S.scale_x, 5), Jt = O(S.scale_y, 5);
           return Math.abs(Zt - Jt) > 0.01 && i.push(`${l}/${m}: non-uniform RMM scale requires manual calibration`), Array.isArray(x.monitor_zones) && x.monitor_zones.length && i.push(`${l}/${m}: radar-local monitor zones require manual review`), [{
             id: H(m, y),
             name: m,
@@ -789,7 +789,7 @@ function Pe(r) {
             fov_degrees: 120,
             mount: S.ceiling_mount ? "ceiling" : "wall"
           }];
-        }), tt = b(p.zones) ? p.zones : {}, g = [
+        }), tt = $(p.zones) ? p.zones : {}, g = [
           ["include_zones", "detection"],
           ["exclude_zones", "exclusion"],
           ["entrance_zones", "entrance"],
@@ -816,22 +816,22 @@ function Pe(r) {
 }
 function Ie(r, t, e, s, i, o) {
   return Array.isArray(r) ? r.flatMap((n, l) => {
-    const a = b(n) && Array.isArray(n.points) ? n.points : n, h = Lt(a).map((p) => ({
+    const a = $(n) && Array.isArray(n.points) ? n.points : n, h = Lt(a).map((p) => ({
       x: Math.abs(p.x) <= 100 ? p.x / 100 * e : p.x,
       y: Math.abs(p.y) <= 100 ? p.y / 100 * s : p.y
     }));
     return h.length < 3 ? (o.push(`${t}[${l}]: skipped zone with fewer than three points`), []) : [{
       id: `${t}-${l + 1}`,
-      name: b(n) && typeof n.name == "string" ? n.name : `${i} ${l + 1}`,
+      name: $(n) && typeof n.name == "string" ? n.name : `${i} ${l + 1}`,
       kind: i,
       points: h
     }];
   }) : [];
 }
 function Lt(r) {
-  return Array.isArray(r) ? r.flatMap((t) => Array.isArray(t) && k(t[0]) && k(t[1]) ? [{ x: Number(t[0]), y: Number(t[1]) }] : b(t) && k(t.x) && k(t.y) ? [{ x: Number(t.x), y: Number(t.y) }] : []) : [];
+  return Array.isArray(r) ? r.flatMap((t) => Array.isArray(t) && k(t[0]) && k(t[1]) ? [{ x: Number(t[0]), y: Number(t[1]) }] : $(t) && k(t.x) && k(t.y) ? [{ x: Number(t.x), y: Number(t.y) }] : []) : [];
 }
-function b(r) {
+function $(r) {
   return typeof r == "object" && r !== null && !Array.isArray(r);
 }
 function k(r) {
@@ -856,7 +856,7 @@ function H(r, t) {
 function qt(r) {
   return typeof r == "string" && /^(\/|https?:\/\/)/i.test(r.trim());
 }
-const ze = "0.1.0-alpha.4", Wt = { states: {} }, Z = class Z extends z {
+const ze = "0.1.0-alpha.5", Wt = { states: {} }, Z = class Z extends z {
   constructor() {
     super(...arguments), this.hass = Wt, this.editorMode = !1, this._floorId = "", this._view = { x: 0, y: 0, width: 1200, height: 800 }, this._tool = "pan", this._draftPoints = [], this._showCoverage = !0, this._showTrails = !0, this._pointerMoved = !1, this._trails = /* @__PURE__ */ new Map(), this._fit = () => {
       const t = this._floor;
@@ -886,10 +886,10 @@ const ze = "0.1.0-alpha.4", Wt = { states: {} }, Z = class Z extends z {
     (!this._floorId || !this._config.floors.some((s) => s.id === this._floorId)) && (this._floorId = (e && this._config.floors.some((s) => s.id === e) ? e : this._config.floors[0]?.id) ?? "", this._fit());
   }
   getCardSize() {
-    return 8;
+    return 6;
   }
   getGridOptions() {
-    return { rows: 8, columns: 12, min_rows: 4 };
+    return { rows: 6, columns: 12, min_rows: 4 };
   }
   updated(t) {
     t.has("hass") && this._captureTrails();
@@ -903,12 +903,21 @@ const ze = "0.1.0-alpha.4", Wt = { states: {} }, Z = class Z extends z {
       e,
       t.auto_discover !== !1
     ), i = s.find(
-      (o) => o.sensor.id === this._selectedSensorId
-    );
+      (l) => l.sensor.id === this._selectedSensorId
+    ), o = s.reduce(
+      (l, a) => l + a.targets.length,
+      0
+    ), n = s.filter((l) => l.online).length;
     return u`
       <ha-card>
         <section class="shell" aria-label=${t.title ?? "Spatial presence"}>
-          ${this._renderToolbar(t, e)}
+          ${this._renderToolbar(
+      t,
+      e,
+      o,
+      n,
+      s.length
+    )}
           <div class="workspace">
             ${this._renderMap(e, s)}
             ${i ? this._renderInspector(i, e) : d}
@@ -918,17 +927,24 @@ const ze = "0.1.0-alpha.4", Wt = { states: {} }, Z = class Z extends z {
       </ha-card>
     `;
   }
-  _renderToolbar(t, e) {
+  _renderToolbar(t, e, s, i, o) {
     return u`
       <header class="toolbar">
         <label class="floor-select">
           <span class="sr-only">Floor</span>
           <select @change=${this._changeFloor} .value=${e.id}>
             ${t.floors.map(
-      (s) => u`<option value=${s.id}>${s.name}</option>`
+      (n) => u`<option value=${n.id}>${n.name}</option>`
     )}
           </select>
         </label>
+        <div class="live-summary" aria-live="polite">
+          <span class="target-swatch" aria-hidden="true"></span>
+          <strong>${s}</strong>
+          <span>${s === 1 ? "live target" : "live targets"}</span>
+          <span class="summary-divider" aria-hidden="true"></span>
+          <span>${i}/${o} ${o === 1 ? "radar" : "radars"} online</span>
+        </div>
         <div class="toolbar-actions">
           <button type="button" @click=${this._fit} title="Fit entire floor">Fit</button>
           <button
@@ -985,7 +1001,7 @@ const ze = "0.1.0-alpha.4", Wt = { states: {} }, Z = class Z extends z {
           @click=${this._mapClick}
         >
           <rect class="paper" width=${t.width} height=${t.height}></rect>
-          ${t.background ? $`<image
+          ${t.background ? b`<image
                 class="background"
                 href=${t.background}
                 width=${t.width}
@@ -995,7 +1011,7 @@ const ze = "0.1.0-alpha.4", Wt = { states: {} }, Z = class Z extends z {
           <g class="rooms">${(t.rooms ?? []).map((i) => this._renderRoom(i))}</g>
           <g class="zones">${(t.zones ?? []).map((i) => this._renderZone(i))}</g>
           <g class="walls">${(t.walls ?? []).map((i) => this._renderWall(i))}</g>
-          ${this._showCoverage ? $`<g class="coverage">${e.map((i) => this._renderCoverage(i, t))}</g>` : d}
+          ${this._showCoverage ? b`<g class="coverage">${e.map((i) => this._renderCoverage(i, t))}</g>` : d}
           ${this._showTrails ? this._renderTrails() : d}
           <g class="targets">
             ${e.flatMap(
@@ -1005,9 +1021,9 @@ const ze = "0.1.0-alpha.4", Wt = { states: {} }, Z = class Z extends z {
           <g class="sensors">
             ${e.map((i) => this._renderSensor(i))}
           </g>
-          ${this._draftPoints.length ? $`<polyline class="draft" points=${F(this._draftPoints)}></polyline>
+          ${this._draftPoints.length ? b`<polyline class="draft" points=${F(this._draftPoints)}></polyline>
                 ${this._draftPoints.map(
-      (i) => $`<circle class="draft-point" cx=${i.x} cy=${i.y} r="6"></circle>`
+      (i) => b`<circle class="draft-point" cx=${i.x} cy=${i.y} r="6"></circle>`
     )}` : d}
         </svg>
         ${e.length === 0 ? u`<div class="map-empty">
@@ -1018,20 +1034,20 @@ const ze = "0.1.0-alpha.4", Wt = { states: {} }, Z = class Z extends z {
     `;
   }
   _renderRoom(t) {
-    return $`
+    return b`
       <polygon points=${F(t.points)}></polygon>
-      ${t.name && t.points[0] ? $`<text x=${t.points[0].x + 12} y=${t.points[0].y + 24}>${t.name}</text>` : d}
+      ${t.name && t.points[0] ? b`<text x=${t.points[0].x + 12} y=${t.points[0].y + 24}>${t.name}</text>` : d}
     `;
   }
   _renderZone(t) {
-    return $`<polygon points=${F(t.points)}></polygon>`;
+    return b`<polygon points=${F(t.points)}></polygon>`;
   }
   _renderWall(t) {
-    return $`<polyline points=${F(t.points)}></polyline>`;
+    return b`<polyline points=${F(t.points)}></polyline>`;
   }
   _renderCoverage(t, e) {
     const s = t.sensor;
-    return $`
+    return b`
       <path class="coverage-fringe" d=${st(s, e.pixels_per_meter, 1)}></path>
       <path class="coverage-usable" d=${st(s, e.pixels_per_meter, 0.72)}></path>
       <path class="coverage-strong" d=${st(s, e.pixels_per_meter, 0.4)}></path>
@@ -1040,24 +1056,25 @@ const ze = "0.1.0-alpha.4", Wt = { states: {} }, Z = class Z extends z {
   _renderTrails() {
     const t = Date.now() - (this._config?.target_trail_seconds ?? 8) * 1e3, e = [...this._trails.entries()].map(([s, i]) => {
       const o = i.filter((n) => n.updatedAt >= t);
-      return o.length > 1 ? $`<polyline class="trail" data-track=${s} points=${F(
+      return o.length > 1 ? b`<polyline class="trail" data-track=${s} points=${F(
         o.map((n) => n.floorPoint)
       )}></polyline>` : d;
     });
-    return $`<g class="trails">${e}</g>`;
+    return b`<g class="trails">${e}</g>`;
   }
   _renderTarget(t) {
-    return $`
+    return b`
       <g class="target" transform="translate(${t.floorPoint.x} ${t.floorPoint.y})">
-        <circle r="12"></circle>
-        <circle class="target-core" r="4"></circle>
-        <text x="17" y="5">${t.index}</text>
+        <circle class="target-halo" r="28"></circle>
+        <circle r="18"></circle>
+        <circle class="target-core" r="6"></circle>
+        <text x="26" y="7">${t.index}</text>
       </g>
     `;
   }
   _renderSensor(t) {
     const e = t.sensor, s = e.id === this._selectedSensorId;
-    return $`
+    return b`
       <g
         class="sensor ${s ? "selected" : ""} ${t.online ? "" : "offline"}"
         data-sensor=${e.id}
@@ -1408,8 +1425,9 @@ Z.properties = {
     }
 
     ha-card {
-      height: min(78dvh, 920px);
-      min-height: 430px;
+      display: block;
+      box-sizing: border-box;
+      height: clamp(380px, 64dvh, 680px);
       overflow: hidden;
       background: var(--ha-card-background, #fff);
     }
@@ -1430,6 +1448,35 @@ Z.properties = {
       background: color-mix(in srgb, var(--sp-paper) 92%, transparent);
       position: relative;
       z-index: 3;
+    }
+
+    .live-summary {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+      color: var(--sp-muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .live-summary strong { color: var(--sp-ink); font-size: 14px; }
+
+    .target-swatch {
+      width: 10px;
+      height: 10px;
+      flex: 0 0 auto;
+      border: 2px solid color-mix(in srgb, var(--sp-target) 25%, white);
+      border-radius: 50%;
+      background: var(--sp-target);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-target) 13%, transparent);
+    }
+
+    .summary-divider {
+      width: 1px;
+      height: 14px;
+      margin: 0 4px;
+      background: color-mix(in srgb, var(--sp-ink) 18%, transparent);
     }
 
     select,
@@ -1571,18 +1618,28 @@ Z.properties = {
       stroke-linejoin: round;
     }
 
-    .target circle:first-child {
+    .target-halo {
+      fill: color-mix(in srgb, var(--sp-target) 12%, transparent) !important;
+      stroke: none !important;
+    }
+
+    .target circle:nth-child(2) {
       fill: color-mix(in srgb, var(--sp-target) 16%, transparent);
       stroke: var(--sp-target);
       stroke-width: 3;
+      vector-effect: non-scaling-stroke;
     }
 
     .target-core { fill: var(--sp-target); }
 
     .target text {
       fill: var(--sp-target);
-      font-size: 17px;
+      font-size: 22px;
       font-weight: 750;
+      paint-order: stroke;
+      stroke: var(--sp-paper);
+      stroke-width: 4px;
+      vector-effect: non-scaling-stroke;
     }
 
     .sensor {
@@ -1764,10 +1821,18 @@ Z.properties = {
     }
 
     @media (max-width: 720px) {
-      ha-card { height: min(76dvh, 760px); min-height: 460px; }
-      .toolbar { align-items: stretch; flex-direction: column; gap: 7px; }
+      ha-card { height: clamp(420px, 68dvh, 620px); }
+      .toolbar {
+        display: grid;
+        grid-template-columns: minmax(132px, 1fr) auto;
+        align-items: center;
+        gap: 6px 8px;
+        padding: 8px;
+      }
       .floor-select select { width: 100%; }
-      .toolbar-actions { padding-bottom: 2px; }
+      .live-summary { justify-content: end; padding: 0 3px; }
+      .toolbar-actions { grid-column: 1 / -1; padding-bottom: 0; }
+      .toolbar-actions button { min-height: 32px; }
       .inspector {
         top: auto;
         right: 8px;
@@ -1987,7 +2052,7 @@ const J = class J extends z {
     }
     this._storageStatus = "Saving map…";
     try {
-      const t = await be(this.hass, this._mapId, this._config);
+      const t = await $e(this.hass, this._mapId, this._config);
       this._commit({ ...this._config, backend_map_id: this._mapId }), this._storageStatus = `Saved revision ${t.revision}.`;
     } catch (t) {
       this._storageStatus = `Map was not saved: ${Y(t)}`;
@@ -2000,7 +2065,7 @@ const J = class J extends z {
     }
     this._storageStatus = "Loading map…";
     try {
-      const t = await $e(this.hass, this._mapId);
+      const t = await be(this.hass, this._mapId);
       this._commit(
         I({
           ...t.config,
