@@ -34,7 +34,7 @@ import type {
   ViewBox,
 } from "./types";
 
-const CARD_VERSION = "0.1.0-alpha.6";
+const CARD_VERSION = "0.1.0-alpha.7";
 
 type DrawingTool = "pan" | "wall" | "room" | "zone";
 type DragState =
@@ -862,7 +862,10 @@ export class SpatialPresenceCard extends LitElement {
     ha-card {
       display: block;
       box-sizing: border-box;
-      height: clamp(380px, 64dvh, 680px);
+      height: max(
+        480px,
+        calc(100dvh - var(--header-height, 56px) - 16px)
+      );
       overflow: hidden;
       background: var(--ha-card-background, #fff);
     }
@@ -1331,7 +1334,9 @@ export class SpatialPresenceCard extends LitElement {
     }
 
     @media (max-width: 720px) {
-      ha-card { height: clamp(420px, 68dvh, 620px); }
+      ha-card {
+        height: max(420px, calc(100dvh - var(--header-height, 56px)));
+      }
       .toolbar {
         display: grid;
         grid-template-columns: minmax(132px, 1fr) auto;

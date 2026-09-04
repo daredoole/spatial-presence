@@ -866,7 +866,7 @@ function H(r, t) {
 function qt(r) {
   return typeof r == "string" && /^(\/|https?:\/\/)/i.test(r.trim());
 }
-const Re = "0.1.0-alpha.6", Wt = { states: {} }, J = class J extends z {
+const Re = "0.1.0-alpha.7", Wt = { states: {} }, J = class J extends z {
   constructor() {
     super(...arguments), this.hass = Wt, this.editorMode = !1, this._floorId = "", this._view = { x: 0, y: 0, width: 1200, height: 800 }, this._tool = "pan", this._draftPoints = [], this._showCoverage = !0, this._showTrails = !0, this._pointerMoved = !1, this._trails = /* @__PURE__ */ new Map(), this._fit = () => {
       const t = this._floor;
@@ -1474,7 +1474,10 @@ J.properties = {
     ha-card {
       display: block;
       box-sizing: border-box;
-      height: clamp(380px, 64dvh, 680px);
+      height: max(
+        480px,
+        calc(100dvh - var(--header-height, 56px) - 16px)
+      );
       overflow: hidden;
       background: var(--ha-card-background, #fff);
     }
@@ -1943,7 +1946,9 @@ J.properties = {
     }
 
     @media (max-width: 720px) {
-      ha-card { height: clamp(420px, 68dvh, 620px); }
+      ha-card {
+        height: max(420px, calc(100dvh - var(--header-height, 56px)));
+      }
       .toolbar {
         display: grid;
         grid-template-columns: minmax(132px, 1fr) auto;

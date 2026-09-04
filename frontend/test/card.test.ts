@@ -49,6 +49,13 @@ describe("Spatial Presence card", () => {
     expect(card.getGridOptions()).toEqual({ rows: 6, columns: 12, min_rows: 4 });
   });
 
+  it("fills a dashboard viewport without restoring the old half-page cap", () => {
+    const styles = SpatialPresenceCard.styles.cssText;
+    expect(styles).toContain("100dvh - var(--header-height, 56px)");
+    expect(styles).not.toContain("64dvh");
+    expect(styles).not.toContain("680px");
+  });
+
   it("rejects a configuration without floors", () => {
     const card = new SpatialPresenceCard();
     expect(() => card.setConfig({ ...config, floors: [] })).toThrow(

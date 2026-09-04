@@ -1,9 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.1.0-alpha.7 — 2026-09-03
 
 - Add clearly disclosed affiliate links for the recommended LD2450 radar and
   ESP32-S3 board, including the S3 wiring compatibility caveat.
+- Fill dedicated dashboard views to the available viewport height instead of
+  capping the floorplan at roughly two-thirds of the screen.
 
 ## 0.1.0-alpha.6 — 2026-09-03
 
