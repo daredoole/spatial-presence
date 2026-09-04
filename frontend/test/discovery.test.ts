@@ -58,6 +58,24 @@ describe("LD2450 discovery", () => {
     expect(runtime?.humidity).toBe(45.6);
   });
 
+  it("normalizes Home Assistant imperial target coordinates", () => {
+    const hass: HomeAssistant = {
+      states: {
+        "sensor.ld2450_presence_target_1_x": entity("-14.0944881889764", "in"),
+        "sensor.ld2450_presence_target_1_y": entity("79.7244094488189", "in"),
+        "sensor.ld2450_presence_target_2_x": entity("1", "ft"),
+        "sensor.ld2450_presence_target_2_y": entity("6", "ft"),
+      },
+    };
+    const [runtime] = runtimeForFloor(hass, floor, true, 1234);
+    expect(runtime?.targets[0]?.localXmm).toBeCloseTo(-358);
+    expect(runtime?.targets[0]?.localYmm).toBeCloseTo(2025);
+    expect(runtime?.targets[0]?.floorPoint.x).toBeCloseTo(464.2);
+    expect(runtime?.targets[0]?.floorPoint.y).toBeCloseTo(497.5);
+    expect(runtime?.targets[1]?.localXmm).toBeCloseTo(304.8);
+    expect(runtime?.targets[1]?.localYmm).toBeCloseTo(1828.8);
+  });
+
   it("places newly discovered sensors at a safe visible default", () => {
     const hass: HomeAssistant = {
       states: {

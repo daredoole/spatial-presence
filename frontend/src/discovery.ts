@@ -121,6 +121,8 @@ function stateToMillimetres(entity: HassEntity): number | undefined {
   const unit = String(entity.attributes.unit_of_measurement ?? "mm").toLowerCase();
   if (unit === "m") return value * 1000;
   if (unit === "cm") return value * 10;
+  if (unit === "in") return value * 25.4;
+  if (unit === "ft") return value * 304.8;
   return value;
 }
 

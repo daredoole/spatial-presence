@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.0-alpha.8 — 2026-09-03
+
+- Correctly convert Home Assistant target coordinates reported in inches or
+  feet before projecting them onto the floorplan.
+
 ## 0.1.0-alpha.7 — 2026-09-03
 
 - Add clearly disclosed affiliate links for the recommended LD2450 radar and

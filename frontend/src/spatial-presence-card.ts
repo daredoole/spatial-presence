@@ -34,7 +34,7 @@ import type {
   ViewBox,
 } from "./types";
 
-const CARD_VERSION = "0.1.0-alpha.7";
+const CARD_VERSION = "0.1.0-alpha.8";
 
 type DrawingTool = "pan" | "wall" | "room" | "zone";
 type DragState =

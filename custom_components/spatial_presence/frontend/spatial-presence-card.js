@@ -665,7 +665,7 @@ function Ct(r) {
   const t = V(r);
   if (t === void 0) return;
   const e = String(r.attributes.unit_of_measurement ?? "mm").toLowerCase();
-  return e === "m" ? t * 1e3 : e === "cm" ? t * 10 : t;
+  return e === "m" ? t * 1e3 : e === "cm" ? t * 10 : e === "in" ? t * 25.4 : e === "ft" ? t * 304.8 : t;
 }
 function Ee(r) {
   if (!r) return;
@@ -866,7 +866,7 @@ function H(r, t) {
 function qt(r) {
   return typeof r == "string" && /^(\/|https?:\/\/)/i.test(r.trim());
 }
-const Re = "0.1.0-alpha.7", Wt = { states: {} }, J = class J extends z {
+const Re = "0.1.0-alpha.8", Wt = { states: {} }, J = class J extends z {
   constructor() {
     super(...arguments), this.hass = Wt, this.editorMode = !1, this._floorId = "", this._view = { x: 0, y: 0, width: 1200, height: 800 }, this._tool = "pan", this._draftPoints = [], this._showCoverage = !0, this._showTrails = !0, this._pointerMoved = !1, this._trails = /* @__PURE__ */ new Map(), this._fit = () => {
       const t = this._floor;
