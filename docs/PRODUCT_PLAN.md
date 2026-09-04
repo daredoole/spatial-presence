@@ -38,13 +38,15 @@ Assistant room and zone entities without hand-editing YAML.
 - Alpha.3 push runtime with native room/zone occupancy, target-count and
   enter/leave event entities, exclusion filtering and stationary hold.
 - Guided one-reference calibration for radar placement, heading and map scale.
+- Floor-authoritative radar assignment with an unplaced-device tray, direct
+  touch/mouse editing, undo/redo/cancel, and accessible keyboard placement.
 
 ### Beta
 
 - Validate calibration and native entities on multiple real Home Assistant
   installations and radar orientations.
 - Expand upstream adapters based on maintainer feedback.
-- Touch-first editing, undo/redo and accessible keyboard placement.
+- Validate direct layout editing across desktop, mobile and tablet dashboards.
 
 ### 1.0
 

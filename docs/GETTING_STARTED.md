@@ -48,17 +48,25 @@ browser once after installation if it is not immediately available.
 ## Add the first map
 
 1. Edit a dashboard and add the **Spatial Presence** card.
-2. Open its visual editor and add a floor.
+2. Open its visual editor and add every floor.
 3. Optional: copy a PNG, WebP, or SVG plan to
    `/config/www/floorplans/`, then use a URL such as
    `/local/floorplans/main-floor.svg`.
 4. Enter the plan dimensions and an initial pixels-per-metre estimate.
-5. Select the discovered radar, drag it to its physical wall location, and
-   rotate it toward the room.
-6. Choose **Calibrate placement**. Have one person stand at a recognizable
+5. Return to the live card and choose **Edit layout**. Each newly discovered
+   radar appears once in the **Unplaced radars** tray; place it on the floor
+   where it physically exists.
+6. Drag or touch the radar to its wall location and rotate it toward the room.
+   Arrow keys nudge it 5 cm; Shift+arrow nudges it 25 cm. Use the selected
+   radar's Floor control to move it between floors without duplicating it.
+7. Choose **Calibrate placement**. Have one person stand at a recognizable
    point, select their live target, and click that point on the plan.
-7. Draw room and zone polygons. Give each useful area a stable ID and name.
-8. Choose **Save map**.
+8. Draw room and zone polygons. Give each useful area a stable ID and name.
+9. Choose **Save layout**. Undo, redo, and cancel are available before saving.
+
+Only radars assigned to the selected floor—and only their people and trails—are
+rendered. **Remove from this floor** returns a radar to the setup tray; it does
+not remove the ESPHome device or its Home Assistant entities.
 
 The card always starts fitted to the floor. Pan and wheel/pinch zoom operate
 inside the compact map viewport, so a tall scan never makes the dashboard page
@@ -97,6 +105,11 @@ Assistant, and add the integration from **Devices & services**.
 - **Radar unavailable:** check the ESPHome device and its status binary sensor.
 - **Target appears in the wrong place:** repeat calibration with one stationary
   person and verify the floor scale.
+- **Radar or person appears on the wrong floor:** choose **Edit layout**, select
+  the radar, set its real Floor, and save. Unassigned radars never render live
+  targets on a floor.
+- **Radar will not move:** first choose **Edit layout**, then drag/touch the
+  radar marker or focus it and use the arrow keys.
 - **Card missing after installation:** hard-refresh the browser and confirm the
   integration loaded successfully.
 - **No occupancy entities:** save at least one named room or non-exclusion zone,

@@ -64,6 +64,7 @@ export interface SpatialPresenceConfig {
 
 export interface RadarTarget {
   id: string;
+  floorId: string;
   sensorId: string;
   sensorName: string;
   index: number;

@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { discoverLd2450Prefixes, runtimeForFloor } from "../src/discovery";
+import {
+  discoverLd2450Prefixes,
+  discoveredRadarForFloor,
+  runtimeForFloor,
+  unassignedLd2450Prefixes,
+} from "../src/discovery";
 import type { Floor, HomeAssistant } from "../src/types";
 
 const floor: Floor = {
@@ -48,7 +53,7 @@ describe("LD2450 discovery", () => {
         "sensor.ld2450_presence_humidity": entity("45.6", "%"),
       },
     };
-    const [runtime] = runtimeForFloor(hass, floor, true, 1234);
+    const [runtime] = runtimeForFloor(hass, floor, 1234);
     expect(runtime?.targets).toHaveLength(1);
     expect(runtime?.targets[0]?.localXmm).toBe(500);
     expect(runtime?.targets[0]?.localYmm).toBe(2000);
@@ -67,7 +72,7 @@ describe("LD2450 discovery", () => {
         "sensor.ld2450_presence_target_2_y": entity("6", "ft"),
       },
     };
-    const [runtime] = runtimeForFloor(hass, floor, true, 1234);
+    const [runtime] = runtimeForFloor(hass, floor, 1234);
     expect(runtime?.targets[0]?.localXmm).toBeCloseTo(-358);
     expect(runtime?.targets[0]?.localYmm).toBeCloseTo(2025);
     expect(runtime?.targets[0]?.floorPoint.x).toBeCloseTo(464.2);
@@ -76,17 +81,32 @@ describe("LD2450 discovery", () => {
     expect(runtime?.targets[1]?.localYmm).toBeCloseTo(1828.8);
   });
 
-  it("places newly discovered sensors at a safe visible default", () => {
+  it("keeps discovered sensors unplaced until a floor claims them", () => {
     const hass: HomeAssistant = {
       states: {
         "sensor.kitchen_target_1_x": entity("100"),
         "sensor.kitchen_target_1_y": entity("1000"),
       },
     };
-    const runtimes = runtimeForFloor(hass, { ...floor, sensors: [] });
-    expect(runtimes[0]?.sensor.x).toBe(600);
-    expect(runtimes[0]?.sensor.y).toBe(680);
-    expect(runtimes[0]?.discovered).toBe(true);
+    const emptyFloor = { ...floor, sensors: [] };
+    expect(runtimeForFloor(hass, emptyFloor)).toEqual([]);
+    expect(unassignedLd2450Prefixes(hass, [emptyFloor])).toEqual(["kitchen"]);
+
+    const discovered = discoveredRadarForFloor("kitchen", emptyFloor);
+    expect(discovered.x).toBe(600);
+    expect(discovered.y).toBe(680);
+  });
+
+  it("does not offer a radar already assigned to another floor", () => {
+    const hass: HomeAssistant = {
+      states: {
+        "sensor.ld2450_presence_target_1_x": entity("100"),
+        "sensor.ld2450_presence_target_1_y": entity("1000"),
+      },
+    };
+    expect(
+      unassignedLd2450Prefixes(hass, [floor, { ...floor, id: "upstairs", sensors: [] }]),
+    ).toEqual([]);
   });
 
   it("does not treat an empty presence state as an offline device", () => {

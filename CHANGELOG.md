@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0-alpha.10 — 2026-09-03
+
+- Make floor assignment authoritative so radars, people and target trails only
+  appear on the floor where the radar is placed.
+- Keep discovered-but-unassigned radars in a setup tray instead of silently
+  injecting them into every floor.
+- Add direct dashboard layout editing with mouse/touch drag, keyboard nudging,
+  move-floor and unplace actions, plus undo, redo, cancel and persistent save.
+
 ## 0.1.0-alpha.9 — 2026-09-03
 
 - Package HACS release archives with integration files at the archive root so

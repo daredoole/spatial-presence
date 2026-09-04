@@ -8,7 +8,11 @@ import {
   saveStoredMap,
   toPortableMap,
 } from "./backend";
-import { runtimeForFloor } from "./discovery";
+import {
+  discoveredRadarForFloor,
+  runtimeForFloor,
+  unassignedLd2450Prefixes,
+} from "./discovery";
 import {
   exportEasyFloorplan,
   importEasyFloorplan,
@@ -34,7 +38,7 @@ import type {
   ViewBox,
 } from "./types";
 
-const CARD_VERSION = "0.1.0-alpha.9";
+const CARD_VERSION = "0.1.0-alpha.10";
 
 type DrawingTool = "pan" | "wall" | "room" | "zone";
 type DragState =
@@ -63,6 +67,8 @@ export class SpatialPresenceCard extends LitElement {
     _showCoverage: { state: true },
     _showTrails: { state: true },
     _calibration: { state: true },
+    _layoutEditing: { state: true },
+    _layoutDirty: { state: true },
   };
 
   hass: HomeAssistant = EMPTY_HASS;
@@ -76,6 +82,14 @@ export class SpatialPresenceCard extends LitElement {
   private _showCoverage = true;
   private _showTrails = true;
   private _calibration: CalibrationState | undefined;
+  private _layoutEditing = false;
+  private _layoutDirty = false;
+  private _storageStatus = "";
+  private _layoutSnapshot: SpatialPresenceConfig | undefined;
+  private _undoStack: SpatialPresenceConfig[] = [];
+  private _redoStack: SpatialPresenceConfig[] = [];
+  private _loadedMapId: string | undefined;
+  private _loadingMapId: string | undefined;
   private _drag: DragState | undefined;
   private _pointerMoved = false;
   private _trails = new Map<string, RadarTarget[]>();
@@ -88,6 +102,7 @@ export class SpatialPresenceCard extends LitElement {
     return {
       schema_version: "0.1",
       title: "Spatial presence",
+      backend_map_id: "house",
       auto_discover: true,
       target_trail_seconds: 8,
       stationary_hold_seconds: 30,
@@ -99,7 +114,12 @@ export class SpatialPresenceCard extends LitElement {
     if (!Array.isArray(config.floors) || config.floors.length === 0) {
       throw new Error("Add at least one floor to Spatial Presence.");
     }
+    const previousMapId = this._config?.backend_map_id;
     this._config = normalizeConfig(config);
+    if (previousMapId !== this._config.backend_map_id) {
+      this._loadedMapId = undefined;
+      this._loadingMapId = undefined;
+    }
     const requested = config.default_floor;
     if (!this._floorId || !this._config.floors.some((floor) => floor.id === this._floorId)) {
       this._floorId =
@@ -108,6 +128,7 @@ export class SpatialPresenceCard extends LitElement {
           : this._config.floors[0]?.id) ?? "";
       this._fit();
     }
+    void this._loadStoredLayout();
   }
 
   getCardSize(): number {
@@ -118,8 +139,9 @@ export class SpatialPresenceCard extends LitElement {
     return { rows: 6, columns: 12, min_rows: 4 };
   }
 
-  protected updated(changed: PropertyValues<this>): void {
+  protected willUpdate(changed: PropertyValues<this>): void {
     if (changed.has("hass")) this._captureTrails();
+    if (changed.has("hass")) void this._loadStoredLayout();
   }
 
   protected render(): TemplateResult {
@@ -129,11 +151,10 @@ export class SpatialPresenceCard extends LitElement {
       return html`<ha-card><p class="empty">Add a floor to begin.</p></ha-card>`;
     }
 
-    const runtimes = runtimeForFloor(
-      this.hass,
-      floor,
-      config.auto_discover !== false,
-    );
+    const runtimes = runtimeForFloor(this.hass, floor);
+    const unassigned = config.auto_discover === false
+      ? []
+      : unassignedLd2450Prefixes(this.hass, config.floors);
     const selected = runtimes.find(
       (runtime) => runtime.sensor.id === this._selectedSensorId,
     );
@@ -145,19 +166,26 @@ export class SpatialPresenceCard extends LitElement {
 
     return html`
       <ha-card>
-        <section class="shell" aria-label=${config.title ?? "Spatial presence"}>
-          ${this._renderToolbar(
-            config,
-            floor,
-            targetCount,
-            onlineCount,
-            runtimes.length,
-          )}
+        <section class="shell ${this._isEditing ? "editing" : ""}" aria-label=${config.title ?? "Spatial presence"}>
+          <div class="chrome">
+            ${this._renderToolbar(
+              config,
+              floor,
+              targetCount,
+              onlineCount,
+              runtimes.length,
+            )}
+            ${this._isEditing && unassigned.length > 0
+              ? this._renderUnassignedTray(unassigned, floor)
+              : nothing}
+          </div>
           <div class="workspace">
-            ${this._renderMap(floor, runtimes)}
+            ${this._renderMap(floor, runtimes, unassigned.length)}
             ${selected ? this._renderInspector(selected, floor) : nothing}
           </div>
-          ${this.editorMode ? this._renderEditorHint() : nothing}
+          ${this._isEditing || this._storageStatus
+            ? this._renderEditorHint()
+            : nothing}
         </section>
       </ha-card>
     `;
@@ -201,7 +229,23 @@ export class SpatialPresenceCard extends LitElement {
             @click=${() => (this._showTrails = !this._showTrails)}
             aria-pressed=${this._showTrails}
           >Trails</button>
-          ${this.editorMode
+          ${!this.editorMode
+            ? this._layoutEditing
+              ? html`
+                  <span class="tool-separator" aria-hidden="true"></span>
+                  <button type="button" @click=${this._undo} ?disabled=${this._undoStack.length === 0}>Undo</button>
+                  <button type="button" @click=${this._redo} ?disabled=${this._redoStack.length === 0}>Redo</button>
+                  <button type="button" @click=${this._cancelLayoutEditing}>Cancel</button>
+                  <button
+                    type="button"
+                    class="commit"
+                    @click=${this._saveLayout}
+                    aria-label=${this._layoutDirty ? "Save layout changes" : "Save layout"}
+                  >Save layout</button>
+                `
+              : html`<button type="button" class="edit-layout" @click=${this._beginLayoutEditing}>Edit layout</button>`
+            : nothing}
+          ${this._isEditing
             ? html`
                 <span class="tool-separator" aria-hidden="true"></span>
                 ${this._toolButton("pan", "Move")}
@@ -220,6 +264,28 @@ export class SpatialPresenceCard extends LitElement {
     `;
   }
 
+  private _renderUnassignedTray(
+    prefixes: string[],
+    floor: Floor,
+  ): TemplateResult {
+    return html`
+      <section class="setup-tray" aria-label="Unplaced radars">
+        <div>
+          <strong>Unplaced radars</strong>
+          <span>Choose one to place on ${floor.name}.</span>
+        </div>
+        <div class="setup-actions">
+          ${prefixes.map(
+            (prefix) => html`<button
+              type="button"
+              @click=${() => this._placeDiscoveredRadar(prefix, floor)}
+            >Place ${friendlyName(prefix)}</button>`,
+          )}
+        </div>
+      </section>
+    `;
+  }
+
   private _toolButton(tool: DrawingTool, label: string): TemplateResult {
     return html`<button
       type="button"
@@ -232,7 +298,11 @@ export class SpatialPresenceCard extends LitElement {
     >${label}</button>`;
   }
 
-  private _renderMap(floor: Floor, runtimes: RadarRuntime[]): TemplateResult {
+  private _renderMap(
+    floor: Floor,
+    runtimes: RadarRuntime[],
+    unassignedCount: number,
+  ): TemplateResult {
     const view = this._view;
     return html`
       <div class="map-frame">
@@ -265,7 +335,7 @@ export class SpatialPresenceCard extends LitElement {
           ${this._showCoverage
             ? svg`<g class="coverage">${runtimes.map((runtime) => this._renderCoverage(runtime, floor))}</g>`
             : nothing}
-          ${this._showTrails ? this._renderTrails() : nothing}
+          ${this._showTrails ? this._renderTrails(runtimes) : nothing}
           <g class="targets">
             ${runtimes.flatMap((runtime) =>
               runtime.targets.map((target) => this._renderTarget(target)),
@@ -283,8 +353,10 @@ export class SpatialPresenceCard extends LitElement {
         </svg>
         ${runtimes.length === 0
           ? html`<div class="map-empty">
-              <strong>No compatible radar found</strong>
-              <span>Add an LD2450 sensor or configure an entity prefix.</span>
+              <strong>No radar placed on ${floor.name}</strong>
+              <span>${this._isEditing && unassignedCount > 0
+                ? "Choose an unplaced radar above, then drag it into position."
+                : "Use Edit layout to place a radar on this floor."}</span>
             </div>`
           : nothing}
       </div>
@@ -317,9 +389,13 @@ export class SpatialPresenceCard extends LitElement {
     `;
   }
 
-  private _renderTrails(): TemplateResult {
+  private _renderTrails(runtimes: RadarRuntime[]): TemplateResult {
     const cutoff = Date.now() - (this._config?.target_trail_seconds ?? 8) * 1000;
+    const floorId = this._floor?.id;
     const lines = [...this._trails.entries()].map(([id, targets]) => {
+      if (!floorId || !targets.some((target) => target.floorId === floorId)) {
+        return nothing;
+      }
       const active = targets.filter((target) => target.updatedAt >= cutoff);
       return active.length > 1
         ? svg`<polyline class="trail" data-track=${id} points=${pointsAttribute(
@@ -394,12 +470,13 @@ export class SpatialPresenceCard extends LitElement {
     const selected = sensor.id === this._selectedSensorId;
     return svg`
       <g
-        class="sensor ${selected ? "selected" : ""} ${runtime.online ? "" : "offline"}"
+        class="sensor ${selected ? "selected" : ""} ${runtime.online ? "" : "offline"} ${this._isEditing ? "movable" : ""}"
         data-sensor=${sensor.id}
         transform="translate(${sensor.x} ${sensor.y}) rotate(${sensor.heading})"
         tabindex="0"
         role="button"
-        aria-label="${sensor.name ?? sensor.id} radar"
+        aria-label="${sensor.name ?? sensor.id} radar${this._isEditing ? ", use arrow keys to move" : ""}"
+        @keydown=${this._sensorKeyDown}
       >
         <circle r="20"></circle>
         <path d="M 0 -28 L -8 -12 L 8 -12 Z"></path>
@@ -419,9 +496,6 @@ export class SpatialPresenceCard extends LitElement {
           </div>
           <button type="button" class="icon-button" @click=${() => (this._selectedSensorId = undefined)} aria-label="Close inspector">×</button>
         </div>
-        ${runtime.discovered
-          ? html`<p class="notice">Discovered automatically. Move it in the editor to save its placement.</p>`
-          : nothing}
         <dl>
           <div><dt>Targets</dt><dd>${runtime.targets.length}</dd></div>
           <div><dt>Position</dt><dd>${Math.round(sensor.x)}, ${Math.round(sensor.y)}</dd></div>
@@ -434,8 +508,20 @@ export class SpatialPresenceCard extends LitElement {
             ? nothing
             : html`<div><dt>Humidity</dt><dd>${runtime.humidity.toFixed(1)}%</dd></div>`}
         </dl>
-        ${this.editorMode
+        ${this._isEditing
           ? html`
+              <label class="floor-control">
+                <span>Floor</span>
+                <select @change=${(event: Event) => this._moveSensorToFloor(
+                  sensor,
+                  (event.target as HTMLSelectElement).value,
+                )}>
+                  ${this._config?.floors.map((entry) => html`<option
+                    value=${entry.id}
+                    ?selected=${entry.id === floor.id}
+                  >${entry.name}</option>`)}
+                </select>
+              </label>
               <div class="rotation">
                 <span>Rotate</span>
                 <button type="button" @click=${() => this._rotateSensor(sensor, -15)}>−15°</button>
@@ -457,6 +543,11 @@ export class SpatialPresenceCard extends LitElement {
                     })}
                 />
               </label>
+              <div class="placement-actions">
+                <button type="button" @click=${() => this._unplaceSensor(sensor)}>
+                  Remove from this floor
+                </button>
+              </div>
               <small>${floor.pixels_per_meter} canvas px per metre</small>
               ${this._renderCalibration(runtime, floor)}
             `
@@ -541,9 +632,14 @@ export class SpatialPresenceCard extends LitElement {
   private _renderEditorHint(): TemplateResult {
     const text =
       this._tool === "pan"
-        ? "Drag the map to pan. Drag a radar to place it."
+        ? "Drag a radar to place it. Arrow keys move 5 cm; hold Shift for 25 cm."
         : `Click to add ${this._tool} points, then choose Finish ${this._tool}.`;
-    return html`<footer class="editor-hint">${text}</footer>`;
+    return html`<footer class="editor-hint">
+      <span>${text}</span>
+      ${this._storageStatus
+        ? html`<strong role="status">${this._storageStatus}</strong>`
+        : nothing}
+    </footer>`;
   }
 
   private _changeFloor(event: Event): void {
@@ -557,6 +653,8 @@ export class SpatialPresenceCard extends LitElement {
     );
     this._selectedSensorId = undefined;
     this._draftPoints = [];
+    this._calibration = undefined;
+    this._drag = undefined;
     this._fit();
   }
 
@@ -597,10 +695,11 @@ export class SpatialPresenceCard extends LitElement {
       if (!sensorId) return;
       this._selectedSensorId = sensorId;
       if (
-        this.editorMode &&
+        this._isEditing &&
         this._tool === "pan" &&
         this._calibration?.step !== "reference"
       ) {
+        this._recordHistory();
         this._drag = { kind: "sensor", sensorId };
       }
       return;
@@ -625,12 +724,12 @@ export class SpatialPresenceCard extends LitElement {
 
     if (this._drag.kind === "sensor") {
       const sensorId = this._drag.sensorId;
-      const point = clientToFloorPoint(
+      const point = this._clampToFloor(clientToFloorPoint(
         event.clientX,
         event.clientY,
         svgElement.getBoundingClientRect(),
         this._view,
-      );
+      ));
       const sensor = this._runtimes.find(
         (entry) => entry.sensor.id === sensorId,
       )?.sensor;
@@ -653,12 +752,15 @@ export class SpatialPresenceCard extends LitElement {
     if (svgElement.hasPointerCapture(event.pointerId)) {
       svgElement.releasePointerCapture(event.pointerId);
     }
-    if (this._drag?.kind === "sensor") this._emitConfig();
+    if (this._drag?.kind === "sensor") {
+      if (this._pointerMoved) this._emitConfig();
+      else this._undoStack = this._undoStack.slice(0, -1);
+    }
     this._drag = undefined;
   }
 
   private _mapClick(event: MouseEvent): void {
-    if (!this.editorMode || this._pointerMoved) return;
+    if (!this._isEditing || this._pointerMoved) return;
     const svgElement = event.currentTarget as SVGSVGElement;
     const point = clientToFloorPoint(
       event.clientX,
@@ -694,6 +796,7 @@ export class SpatialPresenceCard extends LitElement {
     };
     const key =
       this._tool === "room" ? "rooms" : this._tool === "zone" ? "zones" : "walls";
+    this._recordHistory();
     this._replaceFloor({ ...floor, [key]: [...(floor[key] ?? []), feature] });
     this._draftPoints = [];
     this._emitConfig();
@@ -701,6 +804,92 @@ export class SpatialPresenceCard extends LitElement {
 
   private _rotateSensor(sensor: RadarSensor, delta: number): void {
     this._updateSensor(sensor, { heading: normalizeHeading(sensor.heading + delta) });
+  }
+
+  private _sensorKeyDown(event: KeyboardEvent): void {
+    const sensorId = (event.currentTarget as SVGGElement).dataset.sensor;
+    if (!sensorId) return;
+    this._selectedSensorId = sensorId;
+    if (!this._isEditing) return;
+    const sensor = this._runtimes.find(
+      (runtime) => runtime.sensor.id === sensorId,
+    )?.sensor;
+    if (!sensor) return;
+
+    const step = (this._floor?.pixels_per_meter ?? 100) * (event.shiftKey ? 0.25 : 0.05);
+    const delta: Record<string, Point> = {
+      ArrowLeft: { x: -step, y: 0 },
+      ArrowRight: { x: step, y: 0 },
+      ArrowUp: { x: 0, y: -step },
+      ArrowDown: { x: 0, y: step },
+    };
+    const movement = delta[event.key];
+    if (!movement) return;
+    event.preventDefault();
+    this._updateSensor(
+      sensor,
+      this._clampToFloor({
+        x: sensor.x + movement.x,
+        y: sensor.y + movement.y,
+      }),
+    );
+  }
+
+  private _moveSensorToFloor(sensor: RadarSensor, floorId: string): void {
+    const source = this._floor;
+    const destination = this._config?.floors.find((floor) => floor.id === floorId);
+    if (!this._config || !source || !destination || source.id === destination.id) return;
+    this._recordHistory();
+    const moved = {
+      ...sensor,
+      x: destination.width / 2,
+      y: destination.height * 0.85,
+    };
+    this._config = {
+      ...this._config,
+      floors: this._config.floors.map((floor) => {
+        if (floor.id === source.id) {
+          return {
+            ...floor,
+            sensors: (floor.sensors ?? []).filter((entry) => entry.id !== sensor.id),
+          };
+        }
+        if (floor.id === destination.id) {
+          return { ...floor, sensors: [...(floor.sensors ?? []), moved] };
+        }
+        return floor;
+      }),
+      default_floor: destination.id,
+    };
+    this._floorId = destination.id;
+    this._selectedSensorId = moved.id;
+    this._fit();
+    this._emitConfig();
+  }
+
+  private _placeDiscoveredRadar(prefix: string, floor: Floor): void {
+    if (!this._config || !this._unassignedPrefixes.includes(prefix)) return;
+    this._recordHistory();
+    const sensor = discoveredRadarForFloor(prefix, floor);
+    this._replaceFloor({
+      ...floor,
+      sensors: [...(floor.sensors ?? []), sensor],
+    });
+    this._selectedSensorId = sensor.id;
+    this._emitConfig();
+  }
+
+  private _unplaceSensor(sensor: RadarSensor): void {
+    const floor = this._floor;
+    if (!floor) return;
+    this._recordHistory();
+    this._replaceFloor({
+      ...floor,
+      sensors: (floor.sensors ?? []).filter((entry) => entry.id !== sensor.id),
+    });
+    this._selectedSensorId = undefined;
+    this._calibration = undefined;
+    this._emitConfig();
   }
 
   private _startCalibration(sensor: RadarSensor): void {
@@ -757,6 +946,7 @@ export class SpatialPresenceCard extends LitElement {
       };
       return;
     }
+    this._recordHistory();
     const sensors = (floor.sensors ?? []).map((sensor) =>
       sensor.id === runtime.sensor.id
         ? { ...sensor, heading: result.heading }
@@ -782,6 +972,134 @@ export class SpatialPresenceCard extends LitElement {
     this._calibration = undefined;
   };
 
+  private _beginLayoutEditing(): void {
+    if (!this._config) return;
+    this._layoutSnapshot = structuredClone(this._config);
+    this._undoStack = [];
+    this._redoStack = [];
+    this._layoutDirty = false;
+    this._layoutEditing = true;
+    this._storageStatus = "Editing layout. Drag a radar or use its arrow keys.";
+    this._tool = "pan";
+    this._draftPoints = [];
+  }
+
+  private _cancelLayoutEditing(): void {
+    if (this._layoutSnapshot) {
+      this._config = structuredClone(this._layoutSnapshot);
+    }
+    this._layoutEditing = false;
+    this._layoutDirty = false;
+    this._layoutSnapshot = undefined;
+    this._undoStack = [];
+    this._redoStack = [];
+    this._selectedSensorId = undefined;
+    this._storageStatus = "Layout changes discarded.";
+    this._ensureActiveFloor();
+    this._fit();
+  }
+
+  private async _saveLayout(): Promise<void> {
+    const config = this._config;
+    const mapId = config?.backend_map_id;
+    if (!config || !mapId) {
+      this._storageStatus = "Set a saved map id in the card settings before saving.";
+      return;
+    }
+    this._storageStatus = "Saving layout…";
+    try {
+      const result = await saveStoredMap(this.hass, mapId, config);
+      this._loadedMapId = mapId;
+      this._layoutSnapshot = structuredClone(config);
+      this._layoutDirty = false;
+      this._layoutEditing = false;
+      this._undoStack = [];
+      this._redoStack = [];
+      this._storageStatus = `Layout saved · revision ${result.revision}.`;
+    } catch (error) {
+      this._storageStatus = `Layout was not saved: ${errorMessage(error)}`;
+    }
+  }
+
+  private _undo(): void {
+    const previous = this._undoStack.at(-1);
+    if (!previous || !this._config) return;
+    this._redoStack = [...this._redoStack, structuredClone(this._config)].slice(-50);
+    this._undoStack = this._undoStack.slice(0, -1);
+    this._config = structuredClone(previous);
+    this._floorId = this._config.default_floor ?? this._config.floors[0]?.id ?? "";
+    this._layoutDirty = true;
+    this._storageStatus = "Undid the last layout change.";
+    this._ensureActiveFloor();
+    this._emitConfig();
+  }
+
+  private _redo(): void {
+    const next = this._redoStack.at(-1);
+    if (!next || !this._config) return;
+    this._undoStack = [...this._undoStack, structuredClone(this._config)].slice(-50);
+    this._redoStack = this._redoStack.slice(0, -1);
+    this._config = structuredClone(next);
+    this._floorId = this._config.default_floor ?? this._config.floors[0]?.id ?? "";
+    this._layoutDirty = true;
+    this._storageStatus = "Redid the layout change.";
+    this._ensureActiveFloor();
+    this._emitConfig();
+  }
+
+  private _recordHistory(): void {
+    if (!this._config || !this._isEditing) return;
+    this._undoStack = [...this._undoStack, structuredClone(this._config)].slice(-50);
+    this._redoStack = [];
+  }
+
+  private _clampToFloor(point: Point): Point {
+    const floor = this._floor;
+    if (!floor) return point;
+    return {
+      x: Math.min(floor.width, Math.max(0, point.x)),
+      y: Math.min(floor.height, Math.max(0, point.y)),
+    };
+  }
+
+  private async _loadStoredLayout(): Promise<void> {
+    const mapId = this._config?.backend_map_id;
+    if (
+      !mapId ||
+      !this.hass.callWS ||
+      this.editorMode ||
+      this._layoutEditing ||
+      this._loadedMapId === mapId ||
+      this._loadingMapId === mapId
+    ) {
+      return;
+    }
+    this._loadingMapId = mapId;
+    try {
+      const result = await loadStoredMap(this.hass, mapId);
+      if (this._config?.backend_map_id !== mapId || this._layoutEditing) return;
+      this._config = normalizeConfig({
+        ...this._config,
+        ...result.config,
+        type: "custom:spatial-presence-card",
+        backend_map_id: mapId,
+      });
+      this._ensureActiveFloor();
+      this._fit();
+    } catch {
+      // A dashboard can seed a backend map on its first direct layout save.
+    } finally {
+      this._loadedMapId = mapId;
+      this._loadingMapId = undefined;
+    }
+  }
+
+  private _ensureActiveFloor(): void {
+    if (!this._config?.floors.some((floor) => floor.id === this._floorId)) {
+      this._floorId = this._config?.default_floor ?? this._config?.floors[0]?.id ?? "";
+    }
+  }
+
   private _updateSensor(
     sensor: RadarSensor,
     patch: Partial<RadarSensor> | Point,
@@ -789,6 +1107,7 @@ export class SpatialPresenceCard extends LitElement {
   ): void {
     const floor = this._floor;
     if (!floor) return;
+    if (emit) this._recordHistory();
     const sensors = [...(floor.sensors ?? [])];
     const index = sensors.findIndex((entry) => entry.id === sensor.id);
     const updated = { ...sensor, ...patch };
@@ -810,6 +1129,10 @@ export class SpatialPresenceCard extends LitElement {
 
   private _emitConfig(): void {
     if (!this._config) return;
+    if (this._layoutEditing) {
+      this._layoutDirty = true;
+      this._storageStatus = "Unsaved layout changes.";
+    }
     this.dispatchEvent(
       new CustomEvent<SpatialPresenceConfig>("spatial-config-changed", {
         detail: structuredClone(this._config),
@@ -840,11 +1163,16 @@ export class SpatialPresenceCard extends LitElement {
   private get _runtimes(): RadarRuntime[] {
     const floor = this._floor;
     if (!floor) return [];
-    return runtimeForFloor(
-      this.hass,
-      floor,
-      this._config?.auto_discover !== false,
-    );
+    return runtimeForFloor(this.hass, floor);
+  }
+
+  private get _unassignedPrefixes(): string[] {
+    if (!this._config || this._config.auto_discover === false) return [];
+    return unassignedLd2450Prefixes(this.hass, this._config.floors);
+  }
+
+  private get _isEditing(): boolean {
+    return this.editorMode || this._layoutEditing;
   }
 
   static styles = css`
@@ -875,6 +1203,8 @@ export class SpatialPresenceCard extends LitElement {
       display: grid;
       grid-template-rows: auto minmax(0, 1fr) auto;
     }
+
+    .chrome { min-width: 0; }
 
     .toolbar {
       display: flex;
@@ -942,6 +1272,11 @@ export class SpatialPresenceCard extends LitElement {
       cursor: pointer;
     }
 
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.42;
+    }
+
     button:hover,
     button:focus-visible,
     select:focus-visible,
@@ -976,6 +1311,37 @@ export class SpatialPresenceCard extends LitElement {
       height: 26px;
       flex: 0 0 auto;
       background: color-mix(in srgb, var(--sp-ink) 20%, transparent);
+    }
+
+    .setup-tray {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 12px;
+      border-bottom: 1px solid color-mix(in srgb, var(--sp-heading) 32%, transparent);
+      background: color-mix(in srgb, var(--sp-heading) 10%, var(--sp-paper));
+    }
+
+    .setup-tray > div:first-child {
+      display: grid;
+      gap: 2px;
+    }
+
+    .setup-tray span {
+      color: var(--sp-muted);
+      font-size: 12px;
+    }
+
+    .setup-actions {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+    }
+
+    .setup-actions button {
+      white-space: nowrap;
+      border-color: var(--sp-heading);
     }
 
     .workspace,
@@ -1160,6 +1526,13 @@ export class SpatialPresenceCard extends LitElement {
       outline: none;
     }
 
+    .sensor.movable { cursor: grab; }
+    .sensor.movable:active { cursor: grabbing; }
+    .sensor:focus-visible > circle:first-child {
+      stroke: var(--sp-heading);
+      stroke-width: 6;
+    }
+
     .sensor > circle:first-child {
       fill: var(--sp-ink);
       stroke: var(--sp-paper);
@@ -1268,6 +1641,25 @@ export class SpatialPresenceCard extends LitElement {
 
     .range-control input { width: 100%; accent-color: var(--sp-radar); }
 
+    .floor-control {
+      display: grid;
+      gap: 5px;
+      color: var(--sp-muted);
+      font-size: 12px;
+    }
+
+    .floor-control select { width: 100%; }
+
+    .placement-actions {
+      display: flex;
+      margin: 12px 0;
+    }
+
+    .placement-actions button {
+      width: 100%;
+      color: var(--error-color, #b3261e);
+    }
+
     .calibration-start {
       display: grid;
       gap: 6px;
@@ -1313,11 +1705,21 @@ export class SpatialPresenceCard extends LitElement {
     .map-empty strong { color: var(--sp-ink); }
 
     .editor-hint {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
       padding: 8px 12px;
       border-top: 1px solid color-mix(in srgb, var(--sp-ink) 14%, transparent);
       background: var(--sp-paper);
       color: var(--sp-muted);
       font-size: 13px;
+    }
+
+    .editor-hint strong {
+      color: var(--sp-ink);
+      font-weight: 650;
+      text-align: right;
     }
 
     .empty { padding: 24px; }
@@ -1348,6 +1750,9 @@ export class SpatialPresenceCard extends LitElement {
       .live-summary { justify-content: end; padding: 0 3px; }
       .toolbar-actions { grid-column: 1 / -1; padding-bottom: 0; }
       .toolbar-actions button { min-height: 32px; }
+      .setup-tray { align-items: stretch; flex-direction: column; }
+      .editor-hint { align-items: start; flex-direction: column; }
+      .editor-hint strong { text-align: left; }
       .inspector {
         top: auto;
         right: 8px;
@@ -1809,6 +2214,14 @@ function uniqueId(base: string, sensors: RadarSensor[]): string {
   let index = 2;
   while (sensors.some((sensor) => sensor.id === `${safeBase}_${index}`)) index += 1;
   return `${safeBase}_${index}`;
+}
+
+function friendlyName(prefix: string): string {
+  return prefix
+    .split("_")
+    .filter(Boolean)
+    .map((part) => part[0]?.toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
 function safeImageUrl(value: string): boolean {

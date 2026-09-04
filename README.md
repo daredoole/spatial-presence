@@ -24,6 +24,10 @@ and see anonymous detections move through rooms and zones.
 - Draws every live target as a moving person with an optional trail directly
   over the selected floor; stationary detections remain visually still.
 - Supports multiple floors and multiple radars without changing cards.
+- Keeps each radar, live person, and motion trail on its assigned floor; newly
+  discovered hardware stays in an unplaced setup tray until you place it.
+- Lets you edit the live dashboard directly: drag or touch-place radars, nudge
+  with the keyboard, move them between floors, and undo, redo, cancel, or save.
 - Draws rooms, walls, detection zones, exclusions, entrances, and stationary
   zones in the visual editor.
 - Creates native occupancy, target-count, and enter/leave entities for named
@@ -40,9 +44,10 @@ and see anonymous detections move through rooms and zones.
 2. Install **Spatial Presence**, restart Home Assistant, then add it from
    **Settings → Devices & services → Add integration**.
 3. Add the **Spatial Presence** card to a dashboard.
-4. Open the visual editor, add a floorplan, place your radar, and choose
-   **Calibrate placement**.
-5. Draw rooms or zones, then choose **Save map**.
+4. Open the visual editor, add the floorplans and draw rooms or zones.
+5. On the live card, choose **Edit layout**, place each unassigned radar on its
+   real floor, and choose **Calibrate placement**.
+6. Choose **Save layout**. Future card loads use that saved map automatically.
 
 See the illustrated [getting-started guide](docs/GETTING_STARTED.md) for the
 full setup, manual installation, LD2450 entity requirements, and troubleshooting.
@@ -67,6 +72,11 @@ the dashboard page stays put. The header always reports live target and online
 radar counts, while magenta person markers, speed-aware walking motion, trails,
 and teal coverage bands remain visible over imported floorplans. Motion is
 disabled automatically when the browser requests reduced motion.
+
+Choose **Edit layout** on the card to reveal the unplaced-radar tray and layout
+controls. Drag a radar with a mouse or touch, or focus it and press an arrow key
+to move 5 cm; hold Shift for 25 cm. Select a radar to rotate it, change floors,
+or remove it from the floor without deleting the Home Assistant device.
 
 ![Compact mobile Spatial Presence floorplan](docs/images/spatial-presence-mobile.webp)
 

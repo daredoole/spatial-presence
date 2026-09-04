@@ -24,35 +24,43 @@ export function discoverLd2450Prefixes(hass: HomeAssistant): string[] {
   return [...prefixes].sort();
 }
 
+export function unassignedLd2450Prefixes(
+  hass: HomeAssistant,
+  floors: Floor[],
+): string[] {
+  const assigned = new Set(
+    floors.flatMap((floor) =>
+      (floor.sensors ?? []).map((sensor) => sensor.entity_prefix ?? sensor.id),
+    ),
+  );
+  return discoverLd2450Prefixes(hass).filter((prefix) => !assigned.has(prefix));
+}
+
+export function discoveredRadarForFloor(
+  prefix: string,
+  floor: Floor,
+): RadarSensor {
+  return {
+    id: prefix,
+    name: friendlyPrefix(prefix),
+    entity_prefix: prefix,
+    x: floor.width / 2,
+    y: floor.height * 0.85,
+    heading: 0,
+    range_m: 6,
+    fov_degrees: 120,
+    mount: "wall",
+  };
+}
+
 export function runtimeForFloor(
   hass: HomeAssistant,
   floor: Floor,
-  autoDiscover = true,
   now = Date.now(),
 ): RadarRuntime[] {
-  const configured = [...(floor.sensors ?? [])];
-  const configuredPrefixes = new Set(
-    configured.map((sensor) => sensor.entity_prefix ?? sensor.id),
+  return (floor.sensors ?? []).map((sensor) =>
+    runtimeForSensor(hass, floor, sensor, now),
   );
-
-  if (autoDiscover) {
-    for (const prefix of discoverLd2450Prefixes(hass)) {
-      if (configuredPrefixes.has(prefix)) continue;
-      configured.push({
-        id: prefix,
-        name: friendlyPrefix(prefix),
-        entity_prefix: prefix,
-        x: floor.width / 2,
-        y: floor.height * 0.85,
-        heading: 0,
-        range_m: 6,
-        fov_degrees: 120,
-        mount: "wall",
-      });
-    }
-  }
-
-  return configured.map((sensor) => runtimeForSensor(hass, floor, sensor, now));
 }
 
 function runtimeForSensor(
@@ -77,7 +85,8 @@ function runtimeForSensor(
     if (localXmm === 0 && localYmm === 0) continue;
 
     targets.push({
-      id: `${sensor.id}:${index}`,
+      id: `${floor.id}:${sensor.id}:${index}`,
+      floorId: floor.id,
       sensorId: sensor.id,
       sensorName: sensor.name ?? friendlyPrefix(prefix),
       index,
@@ -102,7 +111,7 @@ function runtimeForSensor(
     ...(temperature === undefined ? {} : { temperature }),
     ...(humidity === undefined ? {} : { humidity }),
     online: sensorOnline(hass, prefix),
-    discovered: !(floor.sensors ?? []).some((entry) => entry.id === sensor.id),
+    discovered: false,
   };
 }
 
