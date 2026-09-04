@@ -30,6 +30,7 @@ jobs:
           python-version: "3.13"
       - run: python -m compileall custom_components/spatial_presence
       - run: python -m unittest discover -s tests/python -v
+      - run: python scripts/package_integration.py --output /tmp/spatial_presence.zip
       - uses: home-assistant/actions/hassfest@a7c616ce81ccda50150bf1595786c71b1883fabb
       - uses: hacs/action@1ebf01c408f29afcb6406bd431bc98fd8cbb15aa
         with:

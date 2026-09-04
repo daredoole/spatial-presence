@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0-alpha.9 — 2026-09-03
+
+- Package HACS release archives with integration files at the archive root so
+  Home Assistant loads the custom component after installation.
+- Validate the release archive layout in CI and during every tagged release.
+
 ## 0.1.0-alpha.8 — 2026-09-03
 
 - Correctly convert Home Assistant target coordinates reported in inches or

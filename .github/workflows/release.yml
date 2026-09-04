@@ -24,9 +24,7 @@ jobs:
         run: |
           node -e 'const p=require("./package.json");const m=require("./custom_components/spatial_presence/manifest.json");if(p.version!==m.version)throw new Error(`version mismatch: ${p.version} != ${m.version}`)'
       - name: Package integration
-        run: |
-          cd custom_components
-          zip -r ../spatial_presence.zip spatial_presence
+        run: python scripts/package_integration.py
       - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: spatial_presence.zip
