@@ -47,6 +47,19 @@ and see anonymous detections move through rooms and zones.
 See the illustrated [getting-started guide](docs/GETTING_STARTED.md) for the
 full setup, manual installation, LD2450 entity requirements, and troubleshooting.
 
+## Recommended hardware
+
+**Affiliate disclosure:** As an Amazon Associate, Darrian may earn from
+qualifying purchases made through these links, at no additional cost to you.
+
+- [LD2450 24 GHz multi-target tracking radar module](https://amzn.to/4xE6x72)
+- [ESP32-S3 N16R8 USB-C development board](https://amzn.to/46EtZoP)
+
+The current reference wiring and ESPHome configuration are verified on an
+ESP-WROOM-32. The linked ESP32-S3 is a capable alternative, but it needs an
+ESP32-S3 board definition and S3-safe GPIO choices; do not copy the WROOM-32
+AHT20 GPIO22 mapping because ESP32-S3 chips do not expose GPIO22.
+
 ## Interface
 
 The map opens fitted to the available card area. Pan or zoom inside the map;

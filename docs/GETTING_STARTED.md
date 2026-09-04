@@ -13,6 +13,18 @@ binary_sensor.<prefix>_status
 Targets 2–9 are picked up when present. Millimetres, centimetres, metres,
 inches, and feet are normalized automatically.
 
+## Recommended hardware
+
+**Affiliate disclosure:** As an Amazon Associate, Darrian may earn from
+qualifying purchases made through these links, at no additional cost to you.
+
+- [LD2450 24 GHz multi-target tracking radar module](https://amzn.to/4xE6x72)
+- [ESP32-S3 N16R8 USB-C development board](https://amzn.to/46EtZoP)
+
+The tested reference build uses an ESP-WROOM-32. The linked ESP32-S3 requires
+an ESP32-S3 ESPHome board definition and different AHT20 pins; GPIO22 from the
+WROOM-32 wiring guide is not available on ESP32-S3 chips.
+
 ## Install with HACS
 
 [![Open Spatial Presence in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=daredoole&repository=spatial-presence&category=integration)

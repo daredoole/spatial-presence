@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add clearly disclosed affiliate links for the recommended LD2450 radar and
+  ESP32-S3 board, including the S3 wiring compatibility caveat.
+
 ## 0.1.0-alpha.6 — 2026-09-03
 
 - Add a one-click Open in HACS button to the README and setup guide.
