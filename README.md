@@ -49,7 +49,7 @@ full setup, manual installation, LD2450 entity requirements, and troubleshooting
 
 ## Recommended hardware
 
-**Affiliate disclosure:** As an Amazon Associate, Darrian may earn from
+**Affiliate disclosure:** As an Amazon Associate, I may earn from
 qualifying purchases made through these links, at no additional cost to you.
 
 - [LD2450 24 GHz multi-target tracking radar module](https://amzn.to/4xE6x72)
@@ -98,7 +98,7 @@ public issues; see [SECURITY.md](SECURITY.md).
 ## Support the project
 
 Spatial Presence is free and MIT-licensed. If it saves you time, you can
-[buy Darrian a coffee](https://buymeacoffee.com/daredoole). Sponsorship never
+[buy Me a coffee](https://buymeacoffee.com/daredoole). Sponsorship never
 buys feature priority, private support, or access to unreleased security fixes.
 
 For help and project boundaries, see [SUPPORT.md](SUPPORT.md).
